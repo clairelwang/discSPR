@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DisckSPR</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Intel+One+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0d2f47;
+      --bg-deep: #0a2437;
+      --bg-soft: #123a56;
+      --surface: rgba(255, 255, 255, 0.14);
+      --surface-strong: rgba(255, 255, 255, 0.2);
+      --line: rgba(170, 223, 255, 0.16);
+      --line-strong: rgba(170, 223, 255, 0.28);
+
+      --text: #f3fbff;
+      --muted: #c0dceb;
+      --muted-soft: #9fbed0;
+
+      --blue: #66d2ff;
+      --blue-soft: #9fe5ff;
+      --blue-pale: rgba(102, 210, 255, 0.14);
+
+      --orange: #ffb256;
+      --orange-soft: #ffd8a5;
+      --orange-pale: rgba(255, 178, 86, 0.13);
+
+      --shadow: 0 24px 60px rgba(5, 20, 32, 0.22);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --max: 1240px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    html, body {
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 14% 10%, rgba(102, 210, 255, 0.22), transparent 24%),
+        radial-gradient(circle at 84% 12%, rgba(255, 178, 86, 0.10), transparent 18%),
+        radial-gradient(circle at 50% 120%, rgba(102, 210, 255, 0.16), transparent 34%),
+        linear-gradient(180deg, #123e5c 0%, #1c5a7e 38%, #24709c 68%, #2b86ae 100%);
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto 0 0 0;
+      height: 360px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      background: radial-gradient(ellipse at center, rgba(120, 220, 255, 0.16), transparent 70%);
+      filter: blur(30px);
+      opacity: 0.65;
+      animation: deepGlow 12s ease-in-out infinite alternate;
+    }
+
+    body::after {
+      background: linear-gradient(to top, rgba(255,255,255,0.05), transparent 58%);
+      opacity: 0.6;
+    }
+
+    @keyframes deepGlow {
+      0% { transform: translateY(0px) scaleX(1); }
+      100% { transform: translateY(-14px) scaleX(1.03); }
+    }
+
+    .ocean-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .ocean-bg .ripple,
+    .ocean-bg .ripple2,
+    .ocean-bg .ripple3,
+    .ocean-bg .ripple4,
+    .ocean-bg .ripple5 {
+      position: absolute;
+      left: -8%;
+      width: 116%;
+      border-radius: 46%;
+      filter: blur(8px);
+    }
+
+    .ocean-bg .ripple {
+      top: 6%;
+      height: 220px;
+      background: rgba(150, 232, 255, 0.18);
+      animation: waveSlideA 12s ease-in-out infinite alternate;
+    }
+
+    .ocean-bg .ripple2 {
+      top: 23%;
+      height: 240px;
+      background: rgba(120, 220, 255, 0.14);
+      animation: waveSlideB 15s ease-in-out infinite alternate;
+    }
+
+    .ocean-bg .ripple3 {
+      top: 46%;
+      height: 230px;
+      background: rgba(255, 255, 255, 0.10);
+      animation: waveSlideC 18s ease-in-out infinite alternate;
+    }
+
+    .ocean-bg .ripple4 {
+      top: 66%;
+      height: 240px;
+      background: rgba(120, 220, 255, 0.12);
+      animation: waveSlideA 20s ease-in-out infinite alternate-reverse;
+    }
+
+    .ocean-bg .ripple5 {
+      top: 82%;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.08);
+      animation: waveSlideB 22s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes waveSlideA {
+      0% { transform: translateX(-2%) translateY(0px) scaleX(1); }
+      100% { transform: translateX(4%) translateY(-18px) scaleX(1.05); }
+    }
+
+    @keyframes waveSlideB {
+      0% { transform: translateX(3%) translateY(0px) scaleX(1.03); }
+      100% { transform: translateX(-4%) translateY(14px) scaleX(0.98); }
+    }
+
+    @keyframes waveSlideC {
+      0% { transform: translateX(-1%) translateY(0px); opacity: 0.14; }
+      50% { opacity: 0.24; }
+      100% { transform: translateX(3%) translateY(-12px); opacity: 0.14; }
+    }
+
+    .water-lines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.34;
+      background-image:
+        repeating-linear-gradient(
+          180deg,
+          rgba(255,255,255,0.16) 0px,
+          rgba(255,255,255,0.06) 2px,
+          transparent 10px,
+          transparent 28px
+        );
+      mix-blend-mode: screen;
+      animation: waterSweep 9s linear infinite;
+    }
+
+    @keyframes waterSweep {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(42px); }
+    }
+
+    .water-shimmer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.22;
+      background:
+        linear-gradient(
+          115deg,
+          transparent 18%,
+          rgba(255,255,255,0.14) 30%,
+          transparent 42%,
+          transparent 58%,
+          rgba(255,255,255,0.12) 70%,
+          transparent 82%
+        );
+      background-size: 220% 220%;
+      animation: shimmerMove 14s linear infinite;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes shimmerMove {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+
+    .bubble {
+      position: fixed;
+      bottom: -80px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.82), rgba(102,210,255,0.2));
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.14);
+      opacity: 0.34;
+      animation: bubbleRise linear infinite;
+    }
+
+    .bubble-1 { left: 7%; width: 18px; height: 18px; animation-duration: 18s; animation-delay: -2s; }
+    .bubble-2 { left: 18%; width: 10px; height: 10px; animation-duration: 13s; animation-delay: -7s; }
+    .bubble-3 { left: 44%; width: 14px; height: 14px; animation-duration: 17s; animation-delay: -5s; }
+    .bubble-4 { left: 72%; width: 22px; height: 22px; animation-duration: 20s; animation-delay: -3s; }
+    .bubble-5 { left: 89%; width: 12px; height: 12px; animation-duration: 15s; animation-delay: -11s; }
+
+    @keyframes bubbleRise {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.26;
+      }
+      50% {
+        transform: translateY(-46vh) translateX(14px);
+      }
+      100% {
+        transform: translateY(-110vh) translateX(-10px);
+        opacity: 0;
+      }
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(92%, var(--max));
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand-title,
+    .eyebrow,
+    .nav-links a,
+    .btn,
+    .method-step,
+    .tag,
+    .pill,
+    .hero-data-card .data-label,
+    .hero-main-overlay .mini-label {
+      font-family: "Intel One Mono", monospace;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      z-index: 3000;
+      background: linear-gradient(90deg, #8fe6ff, #ffd39d);
+      box-shadow: 0 0 14px rgba(255,255,255,0.22);
+    }
+
+    .back-top {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(15, 52, 75, 0.82);
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+      z-index: 2500;
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: 0.25s ease;
+    }
+
+    .back-top.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(16px);
+      background: rgba(15, 50, 72, 0.56);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 18px 0;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: white;
+    }
+
+    .brand-sub {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 500;
+      position: relative;
+      transition: 0.25s ease;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 0;
+      height: 2px;
+      background: var(--orange);
+      border-radius: 999px;
+      transition: 0.25s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: white;
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width: 100%;
+    }
+
+    .hero {
+      padding: 56px 0 34px;
+      position: relative;
+    }
+
+    .hero-layout {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 46px;
+      align-items: center;
+    }
+
+    .hero-copy {
+      padding-right: 6px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 178, 86, 0.12);
+      border: 1px solid rgba(255, 178, 86, 0.2);
+      color: #ffe0b8;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: none;
+      margin-bottom: 18px;
+    }
+
+    h1, h2 {
+      font-family: "Intel One Mono", monospace;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-copy h1 {
+      font-family: "Intel One Mono", monospace;
+      font-size: clamp(2.8rem, 5vw, 4.4rem);
+      line-height: 0.98;
+      max-width: 760px;
+      margin-bottom: 14px;
+      color: white;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-lead {
+      max-width: 640px;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.8;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 20px;
+      border-radius: 14px;
+      font-weight: 500;
+      border: 1px solid transparent;
+      transition: 0.25s ease;
+      font-size: 0.92rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #69d7ff, #abebff);
+      color: #0a2940;
+      box-shadow: 0 18px 36px rgba(70, 176, 225, 0.22);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border-color: rgba(255,255,255,0.16);
+      backdrop-filter: blur(12px);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 760px;
+    }
+
+    .hero-stat {
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 18px 18px 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 1.22rem;
+      margin-bottom: 4px;
+      color: white;
+    }
+
+    .hero-stat span {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.92rem;
+    }
+
+    .hero-panel {
+      position: relative;
+      min-height: 720px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-glow {
+      position: absolute;
+      inset: 8% 8% auto 8%;
+      height: 72%;
+      border-radius: 36px;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(130, 225, 255, 0.26), transparent 48%),
+        radial-gradient(circle at 70% 30%, rgba(255,255,255,0.14), transparent 36%);
+      filter: blur(10px);
+      z-index: 0;
+      animation: panelGlow 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes panelGlow {
+      0% { transform: scale(1) translateY(0px); }
+      100% { transform: scale(1.03) translateY(-8px); }
+    }
+
+    .hero-main-card {
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 70px;
+      height: 440px;
+      overflow: hidden;
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.12);
+      z-index: 2;
+    }
+
+    .hero-main-card img,
+    .hero-small-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-main-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(8, 35, 53, 0.88), rgba(8, 35, 53, 0.16) 56%, rgba(255,255,255,0.02));
+    }
+
+    .hero-main-overlay {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 22px;
+      z-index: 3;
+    }
+
+    .hero-main-overlay .mini-label {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #effbff;
+      font-size: 0.76rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .hero-main-overlay h3 {
+      font-size: 1.08rem;
+      margin-bottom: 6px;
+      color: white;
+    }
+
+    .hero-main-overlay p {
+      color: rgba(243,251,255,0.88);
+      font-size: 0.92rem;
+      line-height: 1.65;
+      max-width: 88%;
+    }
+
+    .hero-small-card {
+      position: absolute;
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      z-index: 3;
+    }
+
+    .hero-small-card.card-a {
+      width: 270px;
+      height: 190px;
+      right: 0;
+      top: 355px;
+    }
+
+    .hero-small-card.card-b {
+      width: 300px;
+      height: 210px;
+      left: 42px;
+      bottom: 18px;
+    }
+
+    .hero-data-card {
+      position: absolute;
+      right: 18px;
+      top: 120px;
+      width: 235px;
+      padding: 18px 18px 16px;
+      border-radius: 22px;
+      background: rgba(15, 52, 75, 0.76);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+      z-index: 4;
+    }
+
+    .hero-data-card .data-label {
+      color: #d6effb;
+      font-size: 0.76rem;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .hero-data-card .data-value {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .hero-data-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .hero-small-caption {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(11, 39, 58, 0.68);
+      backdrop-filter: blur(12px);
+      color: #f0fbff;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .quick-strip {
+      padding: 10px 0 24px;
+      border-bottom: 1px solid rgba(170, 223, 255, 0.08);
+      position: relative;
+      z-index: 2;
+    }
+
+    .quick-strip-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .quick-chip {
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 16px 18px;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+    }
+
+    .quick-chip span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 5px;
+    }
+
+    .quick-chip strong {
+      color: white;
+      font-size: 0.98rem;
+    }
+
+    section {
+      padding: 54px 0;
+      border-bottom: 1px solid rgba(170, 223, 255, 0.08);
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 30px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 2.8vw, 3rem);
+      line-height: 1.02;
+      color: white;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 710px;
+    }
+
+    .overview-band {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .accent-line {
+      width: 70px;
+      height: 3px;
+      background: linear-gradient(to right, var(--orange), transparent);
+      margin: 0 0 18px;
+      border-radius: 999px;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: var(--orange-pale);
+      border: 1px solid rgba(255, 178, 86, 0.18);
+      color: #ffe0b8;
+      font-size: 0.76rem;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .overview-copy h3,
+    .results-copy h3,
+    .impact-copy h3 {
+      font-size: 1.18rem;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .overview-copy p,
+    .results-copy p,
+    .impact-copy p {
+      color: var(--muted);
+      line-height: 1.82;
+      font-size: 0.98rem;
+    }
+
+    .overview-points {
+      display: grid;
+      gap: 18px;
+    }
+
+    .overview-point {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    .overview-point::before {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 0;
+      width: 38px;
+      height: 3px;
+      background: var(--orange);
+      border-radius: 999px;
+    }
+
+    .overview-point strong {
+      display: block;
+      margin-bottom: 6px;
+      color: white;
+      font-size: 0.98rem;
+      margin-top: 6px;
+    }
+
+    .overview-point span {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.94rem;
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+      display: grid;
+      gap: 24px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .method-card,
+    .figure-card {
+      display: block;
+    }
+
+    .method-media,
+    .figure-media,
+    .results-photo img {
+      width: 100%;
+      box-shadow: var(--shadow);
+    }
+
+    .method-media,
+    .figure-media {
+      height: 240px;
+      object-fit: cover;
+      border-radius: var(--radius-lg);
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .figure-media {
+      height: 280px;
+    }
+
+    .method-card,
+    .figure-click {
+      cursor: pointer;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .method-card:hover,
+    .figure-click:hover {
+      transform: translateY(-4px);
+      opacity: 0.96;
+    }
+
+    .method-step {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--orange-pale);
+      border: 1px solid rgba(255, 178, 86, 0.18);
+      color: #ffe0b8;
+      font-size: 0.76rem;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .method-card h3,
+    .figure-card h4 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      color: white;
+    }
+
+    .method-card p,
+    .figure-card p {
+      color: var(--muted);
+      line-height: 1.68;
+      font-size: 0.93rem;
+    }
+
+    .results-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 32px;
+      align-items: start;
+      margin-bottom: 30px;
+    }
+
+    .results-photo img {
+      height: 440px;
+      object-fit: cover;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: var(--orange-pale);
+      border: 1px solid rgba(255, 178, 86, 0.18);
+      font-size: 0.84rem;
+      color: #ffe0b8;
+      font-weight: 500;
+    }
+
+    .comparison-wrap {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      padding: 18px 20px 8px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .comparison-wrap h3 {
+      color: white;
+    }
+
+    .comparison-table {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 640px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 16px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(170, 223, 255, 0.10);
+    }
+
+    th {
+      color: white;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    td {
+      color: var(--muted);
+      line-height: 1.6;
+      background: transparent;
+    }
+
+    .impact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 34px;
+    }
+
+    .impact-copy {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      padding: 24px 24px 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      position: relative;
+    }
+
+    .impact-copy::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 24px;
+      width: 44px;
+      height: 3px;
+      background: var(--orange);
+      border-radius: 999px;
+    }
+
+    .footer {
+      padding: 44px 0 56px;
+      border-bottom: none;
+    }
+
+    .footer p {
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 900px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .image-modal,
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 28, 42, 0.82);
+      z-index: 2100;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(8px);
+    }
+
+    .image-modal.active,
+    .modal.active {
+      display: flex;
+    }
+
+    .image-modal-box,
+    .modal-box {
+      width: min(1000px, 100%);
+      background: #12344d;
+      border: 1px solid rgba(170, 223, 255, 0.28);
+      border-radius: 28px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.30);
+    }
+
+    .image-modal-box img {
+      width: 100%;
+      max-height: 76vh;
+      object-fit: contain;
+      background: #0d2436;
+      display: block;
+    }
+
+    .modal-box video {
+      width: 100%;
+      display: block;
+      background: black;
+      max-height: 72vh;
+    }
+
+    .modal-info {
+      padding: 18px 20px 22px;
+    }
+
+    .modal-info h3 {
+      margin-bottom: 6px;
+      color: white;
+    }
+
+    .modal-info p {
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.94);
+      color: #14354d;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      z-index: 2;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-layout,
+      .hero-stats,
+      .section-head,
+      .overview-band,
+      .results-layout,
+      .impact-grid,
+      .grid-2,
+      .grid-3,
+      .grid-4 {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-panel {
+        min-height: 760px;
+        margin-top: 10px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .quick-strip-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        width: 100%;
+        gap: 16px;
+      }
+
+      .hero {
+        padding-top: 40px;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(2.3rem, 10vw, 3.7rem);
+      }
+
+      .hero-panel {
+        min-height: auto;
+        display: grid;
+        gap: 16px;
+      }
+
+      .hero-main-card,
+      .hero-data-card,
+      .hero-small-card.card-a,
+      .hero-small-card.card-b {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        width: 100%;
+        margin: 0;
+      }
+
+      .hero-main-card {
+        height: 320px;
+      }
+
+      .hero-small-card.card-a,
+      .hero-small-card.card-b {
+        height: 220px;
+      }
+
+      .hero-data-card {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .quick-strip-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
+
+  <div class="ocean-bg">
+    <div class="ripple"></div>
+    <div class="ripple2"></div>
+    <div class="ripple3"></div>
+    <div class="ripple4"></div>
+    <div class="ripple5"></div>
+  </div>
+  <div class="water-lines"></div>
+  <div class="water-shimmer"></div>
+
+  <div class="bubble bubble-1"></div>
+  <div class="bubble bubble-2"></div>
+  <div class="bubble bubble-3"></div>
+  <div class="bubble bubble-4"></div>
+  <div class="bubble bubble-5"></div>
+
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-title">DisckSPR</div>
+        <div class="brand-sub">Optical disc-based SPR sensing</div>
+      </div>
+
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#method">Method</a>
+        <a href="#figures">Figures</a>
+        <a href="#results">Results</a>
+        <a href="#impact">Impact</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="overview">
+    <div class="container hero-layout">
+      <div class="hero-copy">
+        <div class="eyebrow">Materials 2026 • UNT • Optical Sensing</div>
+        <h1>DisckSPR</h1>
+        <p class="hero-lead">
+          DisckSPR explores how optical discs can be used as low-cost grating substrates for surface plasmon resonance sensing, with a focus on clear results, practical design, and strong visual presentation.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#method" class="btn btn-primary">Explore Method</a>
+          <a href="#results" class="btn btn-secondary">View Results</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong>3 disc types</strong>
+            <span>BD-R, DVD-R, and CD-R substrates tested</span>
+          </div>
+          <div class="hero-stat">
+            <strong>2 lighting modes</strong>
+            <span>Front-side and back-side setups compared</span>
+          </div>
+          <div class="hero-stat">
+            <strong>394 nm/RIU</strong>
+            <span>Highest measured sensitivity</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="hero-glow"></div>
+
+        <div class="hero-main-card">
+          <img src="sensor-hero.jpg" alt="Main sensor image">
+          <div class="hero-main-overlay">
+            <span class="mini-label">Featured View</span>
+            <h3>Main sensor image</h3>
+            <p>Use your best setup photo, coated disc image, microscopy image, or project graphic here.</p>
+          </div>
+        </div>
+
+        <div class="hero-data-card">
+          <div class="data-label">Main finding</div>
+          <div class="data-value">Ag + front-side</div>
+          <p>Silver-coated gratings with front-side illumination gave the clearest and most consistent resonances.</p>
+        </div>
+
+        <div class="hero-small-card card-a">
+          <img src="sensor-side-1.jpg" alt="Optical disc grating close-up">
+          <div class="hero-small-caption">Close-up of the optical disc grating surface</div>
+        </div>
+
+        <div class="hero-small-card card-b">
+          <img src="sensor-side-2.jpg" alt="Experimental setup or coated substrate">
+          <div class="hero-small-caption">Experimental setup or coated substrate image</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="quick-strip">
+    <div class="container quick-strip-inner">
+      <div class="quick-chip">
+        <span>Platform</span>
+        <strong>Optical disc gratings</strong>
+      </div>
+      <div class="quick-chip">
+        <span>Best metal</span>
+        <strong>Silver coating</strong>
+      </div>
+      <div class="quick-chip">
+        <span>Best setup</span>
+        <strong>Front-side illumination</strong>
+      </div>
+      <div class="quick-chip">
+        <span>Top sensitivity</span>
+        <strong>394 nm/RIU</strong>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container overview-band">
+      <div class="overview-copy">
+        <span class="tag">Overview</span>
+        <div class="accent-line"></div>
+        <h3>What this project does</h3>
+        <p>
+          This study uses commercial optical discs as low-cost grating substrates for grating-coupled surface plasmon resonance sensing. Instead of using expensive nanofabrication, it takes advantage of the nanostructures already built into the discs and compares how metal coating, disc type, and illumination direction affect performance.
+        </p>
+      </div>
+
+      <div class="overview-points">
+        <div class="overview-point">
+          <strong>Main conclusion</strong>
+          <span>Silver-coated gratings with front-side illumination gave the clearest resonance signals.</span>
+        </div>
+
+        <div class="overview-point">
+          <strong>Performance insight</strong>
+          <span>CD-R showed the biggest refractive index shift, while BD-R gave the sharpest spectral features.</span>
+        </div>
+
+        <div class="overview-point">
+          <strong>Why it matters</strong>
+          <span>This approach lowers cost and makes plasmonic sensing platforms more accessible.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="container">
+      <div class="section-head">
+        <h2>Method</h2>
+        <p>
+          The workflow is organized into four stages. Each image can open a cleaning or preparation video so the process is easier to follow.
+        </p>
+      </div>
+
+      <div class="grid-4">
+        <article class="method-card" onclick="openVideo('cleaning1.mp4','Disc Preparation','Optical discs were cut and cleaned to expose the polymer grating substrate.')">
+          <img class="method-media" src="method1.jpg" alt="Disc preparation diagram">
+          <div class="method-step">Step 01</div>
+          <h3>Disc Preparation</h3>
+          <p>Cut, clean, and isolate the polymer grating substrate.</p>
+        </article>
+
+        <article class="method-card" onclick="openVideo('cleaning2.mp4','Metal Deposition','Silver or copper thin films were sputter-coated onto the grating surface.')">
+          <img class="method-media" src="method2.jpg" alt="Metal deposition diagram">
+          <div class="method-step">Step 02</div>
+          <h3>Metal Deposition</h3>
+          <p>Apply Ag or Cu to form the plasmonic layer.</p>
+        </article>
+
+        <article class="method-card" onclick="openVideo('cleaning3.mp4','AFM Characterization','Surface period, depth, and morphology were measured before optical testing.')">
+          <img class="method-media" src="method3.jpg" alt="AFM characterization diagram">
+          <div class="method-step">Step 03</div>
+          <h3>Characterization</h3>
+          <p>Measure grating geometry and surface morphology with AFM.</p>
+        </article>
+
+        <article class="method-card" onclick="openVideo('cleaning4.mp4','Optical Testing','Reflectivity spectra were measured and compared with RCWA simulation.')">
+          <img class="method-media" src="method4.jpg" alt="Optical testing setup diagram">
+          <div class="method-step">Step 04</div>
+          <h3>Optical Testing</h3>
+          <p>Collect reflectivity spectra and compare with simulation.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="figures">
+    <div class="container">
+      <div class="section-head">
+        <h2>Figures</h2>
+        <p>
+          Use this section for your best schematics, AFM images, setup diagrams, and representative spectra.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="figure-card figure-click" onclick="openImage('figure1.jpg','Sensor Concept')">
+          <img class="figure-media" src="figure1.jpg" alt="GC-SPR sensor concept">
+          <h4>Sensor Concept</h4>
+          <p>Front-side and back-side plasmon excitation on metal-coated optical disc gratings.</p>
+        </div>
+
+        <div class="figure-card figure-click" onclick="openImage('figure2.jpg','Experimental Setup')">
+          <img class="figure-media" src="figure2.jpg" alt="Experimental setup">
+          <h4>Experimental Setup</h4>
+          <p>Optical path, angle control, polarization handling, and reflectivity collection system.</p>
+        </div>
+
+        <div class="figure-card figure-click" onclick="openImage('figure3.jpg','Morphology &amp; Spectra')">
+          <img class="figure-media" src="figure3.jpg" alt="Morphology and spectra">
+          <h4>Morphology &amp; Spectra</h4>
+          <p>AFM-derived geometry and representative resonance behavior across substrates.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results">
+    <div class="container">
+      <div class="section-head">
+        <h2>Results</h2>
+        <p>
+          The results section highlights the main findings in a simpler format with stronger visual balance.
+        </p>
+      </div>
+
+      <div class="results-layout">
+        <div class="results-copy">
+          <span class="tag">Highlights</span>
+          <div class="accent-line"></div>
+          <h3>What stood out most</h3>
+          <p>
+            BD-R produced the sharpest resonances. Front-side illumination was more reproducible. Silver outperformed copper. CD-R showed the highest wavelength sensitivity even though its resonance features were broader.
+          </p>
+
+          <div class="pill-row">
+            <div class="pill">Best resonance: BD-R</div>
+            <div class="pill">Best illumination: Front-side</div>
+            <div class="pill">Best metal: Ag</div>
+            <div class="pill">Highest sensitivity: CD-R</div>
+          </div>
+        </div>
+
+        <div class="results-photo">
+          <img src="results-photo.jpg" alt="Spectral plot or experimental results image">
+        </div>
+      </div>
+
+      <div class="comparison-wrap">
+        <h3 style="margin-bottom: 10px;">Sensitivity Summary</h3>
+        <div class="comparison-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Substrate</th>
+                <th>Sensitivity</th>
+                <th>Summary</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CD-R</td>
+                <td>394 nm/RIU</td>
+                <td>Highest wavelength shift</td>
+              </tr>
+              <tr>
+                <td>BD-R</td>
+                <td>321 nm/RIU</td>
+                <td>Best balance of clarity and consistency</td>
+              </tr>
+              <tr>
+                <td>DVD-R</td>
+                <td>290 nm/RIU</td>
+                <td>Lowest sensitivity</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="impact">
+    <div class="container">
+      <div class="section-head">
+        <h2>Impact</h2>
+        <p>
+          This project shows how common commercial materials can be turned into practical sensing platforms at lower cost.
+        </p>
+      </div>
+
+      <div class="impact-grid">
+        <div class="impact-copy">
+          <span class="tag">Why it matters</span>
+          <div class="accent-line"></div>
+          <h3>More accessible plasmonic sensing</h3>
+          <p>
+            Commercial optical discs can become functional plasmonic sensing substrates, reducing fabrication barriers for research, teaching, and future diagnostic use.
+          </p>
+        </div>
+
+        <div class="impact-copy">
+          <span class="tag">Next steps</span>
+          <div class="accent-line"></div>
+          <h3>Portable and integrated testing</h3>
+          <p>
+            Future work can add microfluidics, protective coatings, and target-specific sensing chemistry for environmental or biomedical applications.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>
+        Based on the research article by Wisansaya Jaikeandee, Asad Ullah Hil Gulib, Taeyul Choi, and Richard Z. Zhang, published in <em>Materials</em> 2026.
+      </p>
+    </div>
+  </footer>
+
+  <div class="image-modal" id="imageModal">
+    <div class="image-modal-box">
+      <button class="close-btn" onclick="closeImage()">✕</button>
+      <img id="imageModalSrc" src="" alt="">
+      <div class="modal-info">
+        <h3 id="imageModalTitle">Figure</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="videoModal">
+    <div class="modal-box">
+      <button class="close-btn" onclick="closeVideo()">✕</button>
+      <video id="modalVideo" controls>
+        <source id="modalSource" src="" type="video/mp4">
+      </video>
+      <div class="modal-info">
+        <h3 id="modalTitle">Method Video</h3>
+        <p id="modalText">Description</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openVideo(src, title, text) {
+      const modal = document.getElementById("videoModal");
+      const video = document.getElementById("modalVideo");
+      const source = document.getElementById("modalSource");
+
+      source.src = src;
+      video.load();
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalText").textContent = text;
+      modal.classList.add("active");
+    }
+
+    function closeVideo() {
+      const modal = document.getElementById("videoModal");
+      const video = document.getElementById("modalVideo");
+      video.pause();
+      modal.classList.remove("active");
+    }
+
+    function openImage(src, title) {
+      document.getElementById("imageModalSrc").src = src;
+      document.getElementById("imageModalTitle").textContent = title;
+      document.getElementById("imageModal").classList.add("active");
+    }
+
+    function closeImage() {
+      document.getElementById("imageModal").classList.remove("active");
+    }
+
+    document.getElementById("videoModal").addEventListener("click", function(e) {
+      if (e.target === this) closeVideo();
+    });
+
+    document.getElementById("imageModal").addEventListener("click", function(e) {
+      if (e.target === this) closeImage();
+    });
+
+    const backTop = document.getElementById("backTop");
+    const progressBar = document.getElementById("progressBar");
+    const sections = document.querySelectorAll("header[id], section[id]");
+    const navLinks = document.querySelectorAll(".nav-links a");
+
+    window.addEventListener("scroll", () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + "%";
+
+      if (scrollTop > 400) {
+        backTop.classList.add("show");
+      } else {
+        backTop.classList.remove("show");
+      }
+
+      let current = "";
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 140;
+        if (scrollTop >= sectionTop) {
+          current = section.getAttribute("id");
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove("active");
+        if (link.getAttribute("href") === "#" + current) {
+          link.classList.add("active");
+        }
+      });
+    });
+
+    backTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll("section, .hero-copy, .hero-panel, .hero-stats, .overview-point, .method-card, .figure-card, .impact-copy, .results-copy, .results-photo")
+      .forEach(el => {
+        el.classList.add("reveal");
+        observer.observe(el);
+      });
+  </script>
+</body>
+</html>
