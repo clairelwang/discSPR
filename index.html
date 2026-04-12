@@ -3,1609 +3,993 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DiscSPR</title>
-
+  <title>DiscSPR — Stockholm Junior Water Prize 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Intel+One+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0d2f47;
-      --bg-deep: #0a2437;
-      --bg-soft: #123a56;
-      --surface: rgba(255, 255, 255, 0.14);
-      --surface-strong: rgba(255, 255, 255, 0.2);
-      --line: rgba(170, 223, 255, 0.16);
-      --line-strong: rgba(170, 223, 255, 0.28);
-
-      --text: #f3fbff;
-      --muted: #c0dceb;
-      --muted-soft: #9fbed0;
-
-      --blue: #66d2ff;
-      --blue-soft: #9fe5ff;
-      --blue-pale: rgba(102, 210, 255, 0.14);
-
-      --orange: #ffb256;
-      --orange-soft: #ffd8a5;
-      --orange-pale: rgba(255, 178, 86, 0.13);
-
-      --shadow: 0 24px 60px rgba(5, 20, 32, 0.22);
-      --radius-xl: 30px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --max: 1240px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      scroll-behavior: smooth;
-    }
-
-    html, body {
-      overflow-x: hidden;
-    }
-
-    body {
-      font-family: "Inter", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 14% 10%, rgba(102, 210, 255, 0.22), transparent 24%),
-        radial-gradient(circle at 84% 12%, rgba(255, 178, 86, 0.10), transparent 18%),
-        radial-gradient(circle at 50% 120%, rgba(102, 210, 255, 0.16), transparent 34%),
-        linear-gradient(180deg, #123e5c 0%, #1c5a7e 38%, #24709c 68%, #2b86ae 100%);
-      position: relative;
-    }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: auto 0 0 0;
-      height: 360px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::before {
-      background: radial-gradient(ellipse at center, rgba(120, 220, 255, 0.16), transparent 70%);
-      filter: blur(30px);
-      opacity: 0.65;
-      animation: deepGlow 12s ease-in-out infinite alternate;
-    }
-
-    body::after {
-      background: linear-gradient(to top, rgba(255,255,255,0.05), transparent 58%);
-      opacity: 0.6;
-    }
-
-    @keyframes deepGlow {
-      0% { transform: translateY(0px) scaleX(1); }
-      100% { transform: translateY(-14px) scaleX(1.03); }
-    }
-
-    .ocean-bg {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .ocean-bg .ripple,
-    .ocean-bg .ripple2,
-    .ocean-bg .ripple3,
-    .ocean-bg .ripple4,
-    .ocean-bg .ripple5 {
-      position: absolute;
-      left: -8%;
-      width: 116%;
-      border-radius: 46%;
-      filter: blur(8px);
-    }
-
-    .ocean-bg .ripple {
-      top: 6%;
-      height: 220px;
-      background: rgba(150, 232, 255, 0.18);
-      animation: waveSlideA 12s ease-in-out infinite alternate;
-    }
-
-    .ocean-bg .ripple2 {
-      top: 23%;
-      height: 240px;
-      background: rgba(120, 220, 255, 0.14);
-      animation: waveSlideB 15s ease-in-out infinite alternate;
-    }
-
-    .ocean-bg .ripple3 {
-      top: 46%;
-      height: 230px;
-      background: rgba(255, 255, 255, 0.10);
-      animation: waveSlideC 18s ease-in-out infinite alternate;
-    }
-
-    .ocean-bg .ripple4 {
-      top: 66%;
-      height: 240px;
-      background: rgba(120, 220, 255, 0.12);
-      animation: waveSlideA 20s ease-in-out infinite alternate-reverse;
-    }
-
-    .ocean-bg .ripple5 {
-      top: 82%;
-      height: 200px;
-      background: rgba(255, 255, 255, 0.08);
-      animation: waveSlideB 22s ease-in-out infinite alternate-reverse;
-    }
-
-    @keyframes waveSlideA {
-      0% { transform: translateX(-2%) translateY(0px) scaleX(1); }
-      100% { transform: translateX(4%) translateY(-18px) scaleX(1.05); }
-    }
-
-    @keyframes waveSlideB {
-      0% { transform: translateX(3%) translateY(0px) scaleX(1.03); }
-      100% { transform: translateX(-4%) translateY(14px) scaleX(0.98); }
-    }
-
-    @keyframes waveSlideC {
-      0% { transform: translateX(-1%) translateY(0px); opacity: 0.14; }
-      50% { opacity: 0.24; }
-      100% { transform: translateX(3%) translateY(-12px); opacity: 0.14; }
-    }
-
-    .water-lines {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.34;
-      background-image:
-        repeating-linear-gradient(
-          180deg,
-          rgba(255,255,255,0.16) 0px,
-          rgba(255,255,255,0.06) 2px,
-          transparent 10px,
-          transparent 28px
-        );
-      mix-blend-mode: screen;
-      animation: waterSweep 9s linear infinite;
-    }
-
-    @keyframes waterSweep {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(42px); }
-    }
-
-    .water-shimmer {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.22;
-      background:
-        linear-gradient(
-          115deg,
-          transparent 18%,
-          rgba(255,255,255,0.14) 30%,
-          transparent 42%,
-          transparent 58%,
-          rgba(255,255,255,0.12) 70%,
-          transparent 82%
-        );
-      background-size: 220% 220%;
-      animation: shimmerMove 14s linear infinite;
-      mix-blend-mode: screen;
-    }
-
-    @keyframes shimmerMove {
-      0% { background-position: 0% 0%; }
-      100% { background-position: 100% 100%; }
-    }
-
-    .bubble {
-      position: fixed;
-      bottom: -80px;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.82), rgba(102,210,255,0.2));
-      box-shadow: inset 0 0 18px rgba(255,255,255,0.14);
-      opacity: 0.34;
-      animation: bubbleRise linear infinite;
-    }
-
-    .bubble-1 { left: 7%; width: 18px; height: 18px; animation-duration: 18s; animation-delay: -2s; }
-    .bubble-2 { left: 18%; width: 10px; height: 10px; animation-duration: 13s; animation-delay: -7s; }
-    .bubble-3 { left: 44%; width: 14px; height: 14px; animation-duration: 17s; animation-delay: -5s; }
-    .bubble-4 { left: 72%; width: 22px; height: 22px; animation-duration: 20s; animation-delay: -3s; }
-    .bubble-5 { left: 89%; width: 12px; height: 12px; animation-duration: 15s; animation-delay: -11s; }
-
-    @keyframes bubbleRise {
-      0% {
-        transform: translateY(0) translateX(0);
-        opacity: 0;
-      }
-      15% {
-        opacity: 0.26;
-      }
-      50% {
-        transform: translateY(-46vh) translateX(14px);
-      }
-      100% {
-        transform: translateY(-110vh) translateX(-10px);
-        opacity: 0;
-      }
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    img {
-      display: block;
-      max-width: 100%;
-    }
-
-    .container {
-      width: min(92%, var(--max));
-      margin: 0 auto;
-      position: relative;
-      z-index: 2;
-    }
-
-    .brand-title,
-    .eyebrow,
-    .nav-links a,
-    .btn,
-    .method-step,
-    .tag,
-    .pill,
-    .hero-data-card .data-label,
-    .hero-main-overlay .mini-label {
-      font-family: "Intel One Mono", monospace;
-    }
-
-    .progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 0%;
-      height: 4px;
-      z-index: 3000;
-      background: linear-gradient(90deg, #8fe6ff, #ffd39d);
-      box-shadow: 0 0 14px rgba(255,255,255,0.22);
-    }
-
-    .back-top {
-      position: fixed;
-      right: 22px;
-      bottom: 22px;
-      width: 48px;
-      height: 48px;
-      border: none;
-      border-radius: 50%;
-      background: rgba(15, 52, 75, 0.82);
-      color: white;
-      font-size: 1.1rem;
-      cursor: pointer;
-      z-index: 2500;
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255,255,255,0.16);
-      box-shadow: var(--shadow);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(10px);
-      transition: 0.25s ease;
-    }
-
-    .back-top.show {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      backdrop-filter: blur(16px);
-      background: rgba(15, 50, 72, 0.56);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .nav-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 24px;
-      padding: 18px 0;
-    }
-
-    .brand {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .brand-title {
-      font-weight: 700;
-      font-size: 1rem;
-      letter-spacing: 0.02em;
-      text-transform: none;
-      color: white;
-    }
-
-    .brand-sub {
-      font-size: 0.84rem;
-      color: var(--muted);
-    }
-
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      font-size: 0.92rem;
-      font-weight: 500;
-      position: relative;
-      transition: 0.25s ease;
-    }
-
-    .nav-links a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -6px;
-      width: 0;
-      height: 2px;
-      background: var(--orange);
-      border-radius: 999px;
-      transition: 0.25s ease;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: white;
-    }
-
-    .nav-links a:hover::after,
-    .nav-links a.active::after {
-      width: 100%;
-    }
-
-    .hero {
-      padding: 56px 0 34px;
-      position: relative;
-    }
-
-    .hero-layout {
-      display: grid;
-      grid-template-columns: 0.85fr 1.15fr;
-      gap: 46px;
-      align-items: center;
-    }
-
-    .hero-copy {
-      padding-right: 6px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255, 178, 86, 0.12);
-      border: 1px solid rgba(255, 178, 86, 0.2);
-      color: #ffe0b8;
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0;
-      text-transform: none;
-      margin-bottom: 18px;
-    }
-
-    h1, h2 {
-      font-family: "Intel One Mono", monospace;
-      letter-spacing: -0.02em;
-    }
-
-    .hero-copy h1 {
-      font-family: "Intel One Mono", monospace;
-      font-size: clamp(2.8rem, 5vw, 4.4rem);
-      line-height: 0.98;
-      max-width: 760px;
-      margin-bottom: 14px;
-      color: white;
-      letter-spacing: -0.03em;
-    }
-
-    .hero-lead {
-      max-width: 640px;
-      color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.8;
-      margin-bottom: 28px;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 13px 20px;
-      border-radius: 14px;
-      font-weight: 500;
-      border: 1px solid transparent;
-      transition: 0.25s ease;
-      font-size: 0.92rem;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #69d7ff, #abebff);
-      color: #0a2940;
-      box-shadow: 0 18px 36px rgba(70, 176, 225, 0.22);
-    }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.08);
-      color: white;
-      border-color: rgba(255,255,255,0.16);
-      backdrop-filter: blur(12px);
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      max-width: 760px;
-    }
-
-    .hero-stat {
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 20px;
-      padding: 18px 18px 16px;
-      backdrop-filter: blur(14px);
-      box-shadow: var(--shadow);
-    }
-
-    .hero-stat strong {
-      display: block;
-      font-size: 1.22rem;
-      margin-bottom: 4px;
-      color: white;
-    }
-
-    .hero-stat span {
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 0.92rem;
-    }
-
-    .hero-panel {
-      position: relative;
-      min-height: 720px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .hero-glow {
-      position: absolute;
-      inset: 8% 8% auto 8%;
-      height: 72%;
-      border-radius: 36px;
-      background:
-        radial-gradient(circle at 50% 40%, rgba(130, 225, 255, 0.26), transparent 48%),
-        radial-gradient(circle at 70% 30%, rgba(255,255,255,0.14), transparent 36%);
-      filter: blur(10px);
-      z-index: 0;
-      animation: panelGlow 6s ease-in-out infinite alternate;
-    }
-
-    @keyframes panelGlow {
-      0% { transform: scale(1) translateY(0px); }
-      100% { transform: scale(1.03) translateY(-8px); }
-    }
-
-    .hero-main-card {
-      position: absolute;
-      top: 10px;
-      left: 0;
-      right: 70px;
-      height: 440px;
-      overflow: hidden;
-      border-radius: 30px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255,255,255,0.12);
-      z-index: 2;
-    }
-
-    .hero-main-card img,
-    .hero-small-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .hero-main-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to top, rgba(8, 35, 53, 0.88), rgba(8, 35, 53, 0.16) 56%, rgba(255,255,255,0.02));
-    }
-
-    .hero-main-overlay {
-      position: absolute;
-      left: 24px;
-      right: 24px;
-      bottom: 22px;
-      z-index: 3;
-    }
-
-    .hero-main-overlay .mini-label {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.14);
-      border: 1px solid rgba(255,255,255,0.18);
-      color: #effbff;
-      font-size: 0.76rem;
-      font-weight: 500;
-      margin-bottom: 10px;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-
-    .hero-main-overlay h3 {
-      font-size: 1.08rem;
-      margin-bottom: 6px;
-      color: white;
-    }
-
-    .hero-main-overlay p {
-      color: rgba(243,251,255,0.88);
-      font-size: 0.92rem;
-      line-height: 1.65;
-      max-width: 88%;
-    }
-
-    .hero-small-card {
-      position: absolute;
-      background: rgba(255,255,255,0.10);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      z-index: 3;
-    }
-
-    .hero-small-card.card-a {
-      width: 270px;
-      height: 190px;
-      right: 0;
-      top: 355px;
-    }
-
-    .hero-small-card.card-b {
-      width: 300px;
-      height: 210px;
-      left: 42px;
-      bottom: 18px;
-    }
-
-    .hero-data-card {
-      position: absolute;
-      right: 18px;
-      top: 120px;
-      width: 235px;
-      padding: 18px 18px 16px;
-      border-radius: 22px;
-      background: rgba(15, 52, 75, 0.76);
-      border: 1px solid rgba(255,255,255,0.12);
-      backdrop-filter: blur(16px);
-      box-shadow: var(--shadow);
-      z-index: 4;
-    }
-
-    .hero-data-card .data-label {
-      color: #d6effb;
-      font-size: 0.76rem;
-      text-transform: none;
-      letter-spacing: 0;
-      font-weight: 500;
-      margin-bottom: 10px;
-    }
-
-    .hero-data-card .data-value {
-      font-size: 2rem;
-      font-weight: 800;
-      line-height: 1;
-      color: white;
-      margin-bottom: 8px;
-    }
-
-    .hero-data-card p {
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
-
-    .hero-small-caption {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 12px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      background: rgba(11, 39, 58, 0.68);
-      backdrop-filter: blur(12px);
-      color: #f0fbff;
-      font-size: 0.84rem;
-      line-height: 1.45;
-    }
-
-    .quick-strip {
-      padding: 10px 0 24px;
-      border-bottom: 1px solid rgba(170, 223, 255, 0.08);
-      position: relative;
-      z-index: 2;
-    }
-
-    .quick-strip-inner {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-
-    .quick-chip {
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 18px;
-      padding: 16px 18px;
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow);
-    }
-
-    .quick-chip span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.82rem;
-      margin-bottom: 5px;
-    }
-
-    .quick-chip strong {
-      color: white;
-      font-size: 0.98rem;
-    }
-
-    section {
-      padding: 54px 0;
-      border-bottom: 1px solid rgba(170, 223, 255, 0.08);
-      position: relative;
-      z-index: 2;
-    }
-
-    .section-head {
-      display: grid;
-      grid-template-columns: 0.95fr 1.05fr;
-      gap: 30px;
-      align-items: end;
-      margin-bottom: 28px;
-    }
-
-    .section-head h2 {
-      font-size: clamp(2rem, 2.8vw, 3rem);
-      line-height: 1.02;
-      color: white;
-    }
-
-    .section-head p {
-      color: var(--muted);
-      line-height: 1.8;
-      max-width: 710px;
-    }
-
-    .overview-band {
-      display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
-      gap: 32px;
-      align-items: start;
-    }
-
-    .accent-line {
-      width: 70px;
-      height: 3px;
-      background: linear-gradient(to right, var(--orange), transparent);
-      margin: 0 0 18px;
-      border-radius: 999px;
-    }
-
-    .tag {
-      display: inline-block;
-      margin-bottom: 12px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: var(--orange-pale);
-      border: 1px solid rgba(255, 178, 86, 0.18);
-      color: #ffe0b8;
-      font-size: 0.76rem;
-      font-weight: 500;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-
-    .overview-copy h3,
-    .results-copy h3,
-    .impact-copy h3 {
-      font-size: 1.18rem;
-      margin-bottom: 10px;
-      color: white;
-    }
-
-    .overview-copy p,
-    .results-copy p,
-    .impact-copy p {
-      color: var(--muted);
-      line-height: 1.82;
-      font-size: 0.98rem;
-    }
-
-    .overview-points {
-      display: grid;
-      gap: 18px;
-    }
-
-    .overview-point {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      position: relative;
-    }
-
-    .overview-point::before {
-      content: "";
-      position: absolute;
-      left: 20px;
-      top: 0;
-      width: 38px;
-      height: 3px;
-      background: var(--orange);
-      border-radius: 999px;
-    }
-
-    .overview-point strong {
-      display: block;
-      margin-bottom: 6px;
-      color: white;
-      font-size: 0.98rem;
-      margin-top: 6px;
-    }
-
-    .overview-point span {
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 0.94rem;
-    }
-
-    .grid-2,
-    .grid-3,
-    .grid-4 {
-      display: grid;
-      gap: 24px;
-    }
-
-    .grid-2 { grid-template-columns: repeat(2, 1fr); }
-    .grid-3 { grid-template-columns: repeat(3, 1fr); }
-    .grid-4 { grid-template-columns: repeat(4, 1fr); }
-
-    .method-card,
-    .figure-card {
-      display: block;
-    }
-
-    .method-media,
-    .figure-media,
-    .results-photo img {
-      width: 100%;
-      box-shadow: var(--shadow);
-    }
-
-    .method-media,
-    .figure-media {
-      height: 240px;
-      object-fit: cover;
-      border-radius: var(--radius-lg);
-      margin-bottom: 14px;
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-
-    .figure-media {
-      height: 280px;
-    }
-
-    .method-card,
-    .figure-click {
-      cursor: pointer;
-      transition: transform 0.25s ease, opacity 0.25s ease;
-    }
-
-    .method-card:hover,
-    .figure-click:hover {
-      transform: translateY(-4px);
-      opacity: 0.96;
-    }
-
-    .method-step {
-      display: inline-block;
-      margin-bottom: 10px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: var(--orange-pale);
-      border: 1px solid rgba(255, 178, 86, 0.18);
-      color: #ffe0b8;
-      font-size: 0.76rem;
-      font-weight: 500;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-
-    .method-card h3,
-    .figure-card h4 {
-      margin-bottom: 8px;
-      font-size: 1.05rem;
-      color: white;
-    }
-
-    .method-card p,
-    .figure-card p {
-      color: var(--muted);
-      line-height: 1.68;
-      font-size: 0.93rem;
-    }
-
-    .results-layout {
-      display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 32px;
-      align-items: start;
-      margin-bottom: 30px;
-    }
-
-    .results-photo img {
-      height: 440px;
-      object-fit: cover;
-      border-radius: var(--radius-xl);
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .pill {
-      padding: 9px 12px;
-      border-radius: 999px;
-      background: var(--orange-pale);
-      border: 1px solid rgba(255, 178, 86, 0.18);
-      font-size: 0.84rem;
-      color: #ffe0b8;
-      font-weight: 500;
-    }
-
-    .comparison-wrap {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      padding: 18px 20px 8px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-
-    .comparison-wrap h3 {
-      color: white;
-    }
-
-    .comparison-table {
-      overflow-x: auto;
-      margin-top: 10px;
-    }
-
-    table {
-      width: 100%;
-      min-width: 640px;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 16px 14px;
-      text-align: left;
-      border-bottom: 1px solid rgba(170, 223, 255, 0.10);
-    }
-
-    th {
-      color: white;
-      font-size: 0.92rem;
-      font-weight: 700;
-    }
-
-    td {
-      color: var(--muted);
-      line-height: 1.6;
-      background: transparent;
-    }
-
-    .impact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 34px;
-    }
-
-    .impact-copy {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      padding: 24px 24px 22px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      position: relative;
-    }
-
-    .impact-copy::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 24px;
-      width: 44px;
-      height: 3px;
-      background: var(--orange);
-      border-radius: 999px;
-    }
-
-    .footer {
-      padding: 44px 0 56px;
-      border-bottom: none;
-    }
-
-    .footer p {
-      color: var(--muted);
-      line-height: 1.8;
-      max-width: 900px;
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .image-modal,
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(7, 28, 42, 0.82);
-      z-index: 2100;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      backdrop-filter: blur(8px);
-    }
-
-    .image-modal.active,
-    .modal.active {
-      display: flex;
-    }
-
-    .image-modal-box,
-    .modal-box {
-      width: min(1000px, 100%);
-      background: #12344d;
-      border: 1px solid rgba(170, 223, 255, 0.28);
-      border-radius: 28px;
-      overflow: hidden;
-      position: relative;
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.30);
-    }
-
-    .image-modal-box img {
-      width: 100%;
-      max-height: 76vh;
-      object-fit: contain;
-      background: #0d2436;
-      display: block;
-    }
-
-    .modal-box video {
-      width: 100%;
-      display: block;
-      background: black;
-      max-height: 72vh;
-    }
-
-    .modal-info {
-      padding: 18px 20px 22px;
-    }
-
-    .modal-info h3 {
-      margin-bottom: 6px;
-      color: white;
-    }
-
-    .modal-info p {
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: none;
-      background: rgba(255,255,255,0.94);
-      color: #14354d;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-      z-index: 2;
-    }
-
-    @media (max-width: 1100px) {
-      .hero-layout,
-      .hero-stats,
-      .section-head,
-      .overview-band,
-      .results-layout,
-      .impact-grid,
-      .grid-2,
-      .grid-3,
-      .grid-4 {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-panel {
-        min-height: 760px;
-        margin-top: 10px;
-      }
-    }
-
-    @media (max-width: 900px) {
-      .quick-strip-inner {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 820px) {
-      .nav-inner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .nav-links {
-        width: 100%;
-        gap: 16px;
-      }
-
-      .hero {
-        padding-top: 40px;
-      }
-
-      .hero-copy h1 {
-        font-size: clamp(2.3rem, 10vw, 3.7rem);
-      }
-
-      .hero-panel {
-        min-height: auto;
-        display: grid;
-        gap: 16px;
-      }
-
-      .hero-main-card,
-      .hero-data-card,
-      .hero-small-card.card-a,
-      .hero-small-card.card-b {
-        position: relative;
-        top: auto;
-        left: auto;
-        right: auto;
-        bottom: auto;
-        width: 100%;
-        margin: 0;
-      }
-
-      .hero-main-card {
-        height: 320px;
-      }
-
-      .hero-small-card.card-a,
-      .hero-small-card.card-b {
-        height: 220px;
-      }
-
-      .hero-data-card {
-        width: 100%;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .quick-strip-inner {
-        grid-template-columns: 1fr;
-      }
+    :root{--deep:#050f1e;--mid:#0a1f3a;--bright:#0d2f55;--water:#1c6fa8;--glow:#40c8f4;--foam:#a8e8ff;--gold:#f5c842;--gold-dim:#c9a030;--cream:#f6f3ee;--slate:#1a3a56;--muted:#5a7a96;--font-d:"Bebas Neue",sans-serif;--font-s:"DM Serif Display",serif;--font-b:"DM Sans",sans-serif}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font-b);background:var(--cream);color:#0a1628;overflow-x:hidden;cursor:none}
+
+    #cursor{position:fixed;width:14px;height:14px;border-radius:50%;background:rgba(64,200,244,.8);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:screen}
+    #cursor-ring{position:fixed;width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(64,200,244,.45);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .22s,height .22s,opacity .22s}
+
+    #progress{position:fixed;top:0;left:0;width:0%;height:3px;background:linear-gradient(90deg,var(--glow),var(--gold));z-index:9999;box-shadow:0 0 12px rgba(64,200,244,.6)}
+
+    nav{position:fixed;top:3px;left:0;right:0;z-index:1000;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,15,30,.84);backdrop-filter:blur(24px);border-bottom:1px solid rgba(64,200,244,.1)}
+    .nav-brand{display:flex;align-items:baseline;gap:10px}
+    .nav-logo{font-family:var(--font-d);font-size:1.7rem;letter-spacing:.04em;color:var(--glow);text-shadow:0 0 22px rgba(64,200,244,.5)}
+    .nav-badge{font-size:.7rem;font-weight:600;color:var(--gold);background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.28);padding:3px 8px;border-radius:4px;letter-spacing:.07em;text-transform:uppercase}
+    .nav-links{display:flex;gap:28px;list-style:none}
+    .nav-links a{text-decoration:none;color:rgba(255,255,255,.52);font-size:.8rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;transition:color .2s,text-shadow .2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--glow);text-shadow:0 0 14px rgba(64,200,244,.5)}
+
+    #waterCanvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.6}
+    #particleCanvas{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.75}
+
+    .ripple-click{position:fixed;border-radius:50%;pointer-events:none;z-index:9997;background:rgba(64,200,244,.15);border:1.5px solid rgba(64,200,244,.4);transform:translate(-50%,-50%) scale(0);animation:rOut .75s ease-out forwards}
+    @keyframes rOut{to{transform:translate(-50%,-50%) scale(1);opacity:0;width:100px;height:100px}}
+
+    .hero{min-height:100vh;background:var(--deep);position:relative;overflow:hidden;display:flex;flex-direction:column}
+    .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 100%,rgba(28,111,168,.32),transparent 65%),radial-gradient(ellipse 50% 40% at 15% 60%,rgba(64,200,244,.1),transparent 55%),linear-gradient(180deg,#050f1e 0%,#0a1f3a 55%,#0d2f55 100%)}
+    .depth-glow{position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);width:140%;height:300px;background:radial-gradient(ellipse,rgba(64,200,244,.2),transparent 60%);filter:blur(32px);animation:depthP 7s ease-in-out infinite alternate;pointer-events:none}
+    @keyframes depthP{0%{opacity:.55;transform:translateX(-50%) scaleX(1)}100%{opacity:1;transform:translateX(-50%) scaleX(1.1)}}
+
+    .shimmer-band{position:absolute;left:-110%;width:320%;height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55) 40%,rgba(64,200,244,.9) 50%,rgba(255,255,255,.55) 60%,transparent);filter:blur(1px);animation:shimRun linear infinite;pointer-events:none}
+    @keyframes shimRun{from{left:-110%}to{left:110%}}
+
+    .wave-layer{position:absolute;bottom:0;left:0;right:0;pointer-events:none}
+    .wave-layer svg{display:block}
+    .wv1{animation:wv1a 9s ease-in-out infinite alternate}
+    .wv2{animation:wv2a 13s ease-in-out infinite alternate-reverse}
+    .wv3{animation:wv3a 17s ease-in-out infinite alternate}
+    .wv4{animation:wv1a 22s ease-in-out infinite alternate-reverse}
+    @keyframes wv1a{0%{transform:translateX(-2%) scaleY(1)}100%{transform:translateX(2%) scaleY(1.15)}}
+    @keyframes wv2a{0%{transform:translateX(3%) scaleY(1.07)}100%{transform:translateX(-3%) scaleY(.93)}}
+    @keyframes wv3a{0%{transform:translateX(-1%);opacity:.55}50%{opacity:.92}100%{transform:translateX(2%);opacity:.55}}
+
+    .drop-float{position:absolute;pointer-events:none;animation:dFloat linear infinite}
+    @keyframes dFloat{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:1}80%{opacity:.5}100%{transform:translateY(-100vh) translateX(28px);opacity:0}}
+
+    .hero-inner{position:relative;z-index:2;flex:1;display:grid;grid-template-columns:1fr 1fr;padding-top:64px}
+    .hero-left{padding:80px 52px 80px 80px;display:flex;flex-direction:column;justify-content:center}
+
+    .sjwp-badge{display:inline-flex;align-items:center;gap:10px;margin-bottom:22px;animation:fUp .7s ease both}
+    .wdrop{width:10px;height:13px;background:var(--gold);clip-path:polygon(50% 0%,100% 60%,80% 100%,20% 100%,0% 60%);animation:dGlow 2s ease-in-out infinite}
+    @keyframes dGlow{0%,100%{filter:drop-shadow(0 0 4px rgba(245,200,66,.4))}50%{filter:drop-shadow(0 0 12px rgba(245,200,66,.9))}}
+    @keyframes fUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+    .sjwp-badge span{font-size:.74rem;font-weight:600;color:var(--gold);letter-spacing:.12em;text-transform:uppercase}
+
+    .hero-title{font-family:var(--font-d);font-size:clamp(5.5rem,9.5vw,10rem);line-height:.87;color:#fff;letter-spacing:.02em;margin-bottom:8px;animation:fUp .8s .1s ease both}
+    .hero-title .accent{color:var(--glow);display:block;animation:gPulse 3.5s ease-in-out infinite}
+    @keyframes gPulse{0%,100%{text-shadow:0 0 40px rgba(64,200,244,.3)}50%{text-shadow:0 0 90px rgba(64,200,244,.8)}}
+    .hero-sub{font-family:var(--font-s);font-style:italic;font-size:1.3rem;color:var(--foam);margin-bottom:24px;animation:fUp .8s .2s ease both}
+    .hero-lead{color:rgba(168,232,255,.7);font-size:1rem;line-height:1.82;max-width:480px;margin-bottom:36px;animation:fUp .8s .3s ease both}
+    .hero-ctas{display:flex;gap:14px;animation:fUp .8s .4s ease both}
+
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:8px;font-family:var(--font-b);font-weight:600;font-size:.88rem;letter-spacing:.04em;text-decoration:none;transition:all .22s;cursor:pointer;border:none;position:relative;overflow:hidden}
+    .btn-gold{background:linear-gradient(135deg,var(--gold),#e8b530);color:#060e1a;box-shadow:0 8px 30px rgba(245,200,66,.32)}
+    .btn-gold:hover{transform:translateY(-3px);box-shadow:0 14px 48px rgba(245,200,66,.55)}
+    .btn-outline{background:transparent;color:var(--foam);border:1.5px solid rgba(64,200,244,.35)}
+    .btn-outline:hover{border-color:var(--glow);color:var(--glow);transform:translateY(-3px);box-shadow:0 0 22px rgba(64,200,244,.18)}
+
+    .hero-right{position:relative;overflow:hidden}
+    .hero-mosaic{position:absolute;inset:64px 0 0 0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr 1fr;gap:4px}
+    .mosaic-item{position:relative;overflow:hidden;background:var(--bright);cursor:pointer}
+    .mosaic-item.tall{grid-row:span 2}
+    .mosaic-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s,filter .4s;filter:brightness(.78) saturate(1.1)}
+    .mosaic-item:hover img{transform:scale(1.08);filter:brightness(1) saturate(1.3)}
+    .mosaic-item::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(5,15,30,.8) 100%)}
+    .mosaic-label{position:absolute;bottom:10px;left:12px;right:12px;z-index:2;font-size:.68rem;font-weight:600;letter-spacing:.08em;color:rgba(255,255,255,.82);text-transform:uppercase}
+
+    .stats-strip{position:relative;z-index:6;background:rgba(255,255,255,.04);border-top:1px solid rgba(64,200,244,.1);backdrop-filter:blur(12px)}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto}
+    .stat-item{padding:26px 30px;border-right:1px solid rgba(64,200,244,.08);position:relative;overflow:hidden}
+    .stat-item:last-child{border-right:none}
+    .stat-item::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--glow),transparent);transform:scaleX(0);transition:transform .4s}
+    .stat-item:hover::after{transform:scaleX(1)}
+    .stat-num{font-family:var(--font-d);font-size:2.8rem;color:var(--glow);line-height:1;letter-spacing:.02em}
+    .stat-label{color:rgba(168,232,255,.58);font-size:.79rem;margin-top:5px;line-height:1.4}
+
+    .section{padding:100px 0}
+    .container{max-width:1200px;margin:0 auto;padding:0 48px}
+    .sec-label{display:inline-flex;align-items:center;gap:12px;margin-bottom:14px}
+    .sec-label .bar{width:36px;height:2px;background:var(--water);border-radius:2px}
+    .sec-label span{font-size:.73rem;font-weight:700;color:var(--water);letter-spacing:.14em;text-transform:uppercase}
+    h2.sec-title{font-family:var(--font-s);font-size:clamp(2rem,3.5vw,3.2rem);line-height:1.1;margin-bottom:18px;color:#0a1628}
+    .sec-desc{color:var(--muted);font-size:1.02rem;line-height:1.82;max-width:560px}
+
+    .ticker-wrap{background:rgba(64,200,244,.07);border-top:1px solid rgba(64,200,244,.14);border-bottom:1px solid rgba(64,200,244,.14);padding:11px 0;overflow:hidden;position:relative;z-index:6}
+    .ticker-track{display:flex;animation:tickS 42s linear infinite;white-space:nowrap}
+    .ticker-track:hover{animation-play-state:paused}
+    .ticker-item{padding:0 56px;font-size:.8rem;font-weight:500;color:rgba(168,232,255,.78);letter-spacing:.04em;display:inline-flex;align-items:center;gap:10px}
+    .ticker-item::before{content:"·";font-size:1rem;opacity:.5}
+    @keyframes tickS{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    .problem-sec{background:var(--deep);padding:100px 0;position:relative;overflow:hidden}
+    .problem-sec::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 80% 50%,rgba(28,111,168,.18),transparent 65%)}
+    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+    .problem-sec h2.sec-title{color:#fff}
+    .problem-sec .sec-desc{color:rgba(168,232,255,.66);max-width:100%}
+    .blockquote{font-family:var(--font-s);font-style:italic;font-size:clamp(1.1rem,1.8vw,1.4rem);color:var(--foam);line-height:1.65;margin:28px 0;padding-left:22px;border-left:3px solid var(--gold)}
+    .photo-stack{position:relative;height:520px}
+    .ph-main{position:absolute;inset:0 60px 60px 0;border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+    .ph-accent{position:absolute;bottom:0;right:0;width:52%;height:44%;border-radius:12px;overflow:hidden;border:3px solid var(--deep);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .ph-main img,.ph-accent img{width:100%;height:100%;object-fit:cover}
+
+    .ov-sec{background:var(--cream);padding:100px 0}
+    .ov-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:80px;align-items:start}
+    .ov-cards{display:grid;gap:14px;margin-top:30px}
+    .ov-card{background:#fff;border:1px solid rgba(26,74,122,.1);border-radius:14px;padding:22px 24px;display:flex;gap:18px;align-items:flex-start;transition:box-shadow .25s,transform .25s;box-shadow:0 2px 12px rgba(10,22,40,.05)}
+    .ov-card:hover{box-shadow:0 10px 44px rgba(10,22,40,.1);transform:translateY(-2px)}
+    .ov-icon{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#0a1f3a,#1a4a7a);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+    .ov-card h4{font-size:.96rem;font-weight:600;color:#0a1628;margin-bottom:5px}
+    .ov-card p{font-size:.88rem;color:var(--muted);line-height:1.65}
+    .ov-photos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .ov-photos .ph{border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .25s;box-shadow:0 4px 20px rgba(10,22,40,.12)}
+    .ov-photos .ph:first-child{grid-column:span 2}
+    .ov-photos .ph:hover{transform:translateY(-3px)}
+    .ov-photos .ph img{width:100%;display:block;object-fit:cover}
+    .ov-photos .ph:first-child img{height:230px}
+    .ov-photos .ph:not(:first-child) img{height:175px}
+
+    .method-sec{background:#eef3f9;padding:100px 0}
+    .method-head{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:52px}
+    .method-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;border-radius:18px;overflow:hidden;box-shadow:0 24px 70px rgba(10,22,40,.16)}
+    .ms{position:relative;cursor:pointer;overflow:hidden;background:var(--bright);aspect-ratio:3/4}
+    .ms img{width:100%;height:100%;object-fit:cover;transition:transform .55s,filter .4s;filter:brightness(.55) saturate(.9)}
+    .ms:hover img{transform:scale(1.08);filter:brightness(.72) saturate(1.15)}
+    .ms-inner{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:18px 16px;background:linear-gradient(to top,rgba(5,15,30,.96) 0%,rgba(5,15,30,.4) 50%,transparent 100%);z-index:2}
+    .ms-num{font-family:var(--font-d);font-size:3.2rem;color:var(--glow);line-height:1;opacity:.42}
+    .ms-title{font-weight:700;color:#fff;font-size:.9rem;margin:4px 0}
+    .ms-desc{font-size:.76rem;color:rgba(168,232,255,.65);line-height:1.5}
+    .ms-play{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:.7rem;color:var(--gold);font-weight:700;letter-spacing:.06em}
+
+    /* ── DEMO SECTION ── */
+    .demo-sec{background:var(--deep);padding:100px 0;position:relative;overflow:hidden}
+    .demo-sec::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 50%,rgba(28,111,168,.2),transparent 65%)}
+    .demo-sec h2.sec-title{color:#fff}
+    .demo-sec .sec-desc{color:rgba(168,232,255,.62)}
+    .demo-layout{display:grid;grid-template-columns:280px 1fr;gap:2.5rem;align-items:start;margin-top:48px}
+    .demo-ctrl-panel{display:flex;flex-direction:column;gap:1.25rem}
+    .disc-tabs-row{display:flex;border:1px solid rgba(64,200,244,.2);border-radius:10px;overflow:hidden}
+    .dtab{flex:1;padding:9px 4px;font-size:.75rem;font-weight:600;text-align:center;cursor:pointer;background:transparent;color:rgba(168,232,255,.5);border:none;border-right:1px solid rgba(64,200,244,.15);transition:background .15s,color .15s;line-height:1.3;font-family:var(--font-b)}
+    .dtab:last-child{border-right:none}
+    .dtab.active{background:rgba(64,200,244,.12);color:var(--glow)}
+    .illum-row{display:flex;border:1px solid rgba(64,200,244,.2);border-radius:10px;overflow:hidden}
+    .itab{flex:1;padding:8px 4px;font-size:.75rem;font-weight:600;text-align:center;cursor:pointer;background:transparent;color:rgba(168,232,255,.5);border:none;border-right:1px solid rgba(64,200,244,.15);transition:background .15s,color .15s;font-family:var(--font-b)}
+    .itab:last-child{border-right:none}
+    .itab.active{background:rgba(64,200,244,.12);color:var(--glow)}
+    .ctrl-block{display:flex;flex-direction:column;gap:7px}
+    .ctrl-top{display:flex;justify-content:space-between;align-items:baseline}
+    .ctrl-name{font-size:.72rem;color:rgba(168,232,255,.55);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+    .ctrl-val-disp{font-size:.95rem;font-weight:600;color:var(--glow);font-family:var(--font-b)}
+    .ctrl-range-labels{display:flex;justify-content:space-between;font-size:.65rem;color:rgba(168,232,255,.35)}
+    input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(64,200,244,.18);outline:none;cursor:pointer}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--glow);box-shadow:0 0 10px rgba(64,200,244,.6);cursor:pointer;transition:transform .15s}
+    input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
+    .readout-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .readout-chip{background:rgba(255,255,255,.05);border:1px solid rgba(64,200,244,.1);border-radius:10px;padding:11px 13px}
+    .rl{font-size:.65rem;color:rgba(168,232,255,.45);text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}
+    .rv{font-family:var(--font-d);font-size:1.4rem;color:var(--glow);letter-spacing:.02em}
+    .chart-wrap{border-radius:14px;overflow:hidden;background:rgba(5,15,30,.88);border:1px solid rgba(64,200,244,.14)}
+    #sprCanvas{width:100%;display:block}
+    .chart-caption{color:rgba(168,232,255,.32);font-size:.72rem;text-align:center;margin-top:9px;letter-spacing:.04em}
+
+    .gallery-sec{background:var(--deep);padding:100px 0}
+    .gallery-sec h2.sec-title{color:#fff}
+    .gallery-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:44px}
+    .gallery-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:260px 260px;gap:8px}
+    .gi{border-radius:8px;overflow:hidden;cursor:pointer;position:relative}
+    .gi:nth-child(1){grid-column:span 5}.gi:nth-child(2){grid-column:span 4}.gi:nth-child(3){grid-column:span 3;grid-row:span 2}.gi:nth-child(4){grid-column:span 3}.gi:nth-child(5){grid-column:span 3}.gi:nth-child(6){grid-column:span 3}
+    .gi img{width:100%;height:100%;object-fit:cover;transition:transform .55s,filter .3s;filter:brightness(.78)}
+    .gi:hover img{transform:scale(1.07);filter:brightness(1.05)}
+    .gi-cap{position:absolute;bottom:0;left:0;right:0;padding:10px 14px;background:linear-gradient(to top,rgba(5,15,30,.92),transparent);font-size:.7rem;color:rgba(255,255,255,.82);font-weight:500;letter-spacing:.04em;opacity:0;transform:translateY(5px);transition:opacity .25s,transform .25s}
+    .gi:hover .gi-cap{opacity:1;transform:translateY(0)}
+    .gallery-row2{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
+    .gallery-row2 .gi{height:180px}
+
+    .results-sec{background:#fff;padding:100px 0}
+    .res-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:80px;align-items:start}
+    .pills{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0}
+    .pill{padding:8px 16px;border-radius:40px;font-size:.83rem;font-weight:600}
+    .pill-blue{background:rgba(26,74,122,.1);color:#1a4a7a;border:1px solid rgba(26,74,122,.2)}
+    .pill-gold{background:rgba(245,200,66,.12);color:#8a6a00;border:1px solid rgba(245,200,66,.32)}
+    .sens-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;box-shadow:0 4px 30px rgba(10,22,40,.07);margin-top:20px}
+    .sens-table thead{background:var(--deep)}
+    .sens-table thead th{padding:15px 18px;text-align:left;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(168,232,255,.72)}
+    .sens-table tbody tr{border-bottom:1px solid rgba(26,74,122,.07)}
+    .sens-table tbody tr:nth-child(even){background:rgba(26,74,122,.025)}
+    .sens-table tbody tr.best{background:rgba(245,200,66,.05)}
+    .sens-table tbody td{padding:16px 18px;color:var(--muted);font-size:.9rem}
+    .sens-table tbody td:first-child{font-weight:600;color:#0a1628}
+    .snum{font-family:var(--font-d);font-size:1.4rem;color:var(--water);letter-spacing:.02em}
+    .best .snum{color:var(--gold-dim)}
+    .bar-w{background:rgba(26,74,122,.1);border-radius:999px;height:5px;margin-top:5px;overflow:hidden}
+    .bar-f{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--water),var(--glow));transition:width 1.3s ease}
+    .best .bar-f{background:linear-gradient(90deg,var(--gold-dim),var(--gold))}
+    .res-photos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .rp{border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(10,22,40,.1);cursor:pointer;transition:transform .25s}
+    .rp:hover{transform:translateY(-3px)}
+    .rp.tall{grid-row:span 2;height:410px}
+    .rp:not(.tall){height:200px}
+    .rp img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .team-sec{background:var(--cream);padding:100px 0}
+    .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:48px}
+    .team-card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(10,22,40,.08);transition:transform .28s,box-shadow .28s}
+    .team-card:hover{transform:translateY(-5px);box-shadow:0 18px 55px rgba(10,22,40,.14)}
+    .tc-photo{height:220px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .tc-photo img{width:100%;height:100%;object-fit:cover}
+    .tc-initials{font-family:var(--font-d);font-size:3.5rem;color:rgba(255,255,255,.25);letter-spacing:.06em}
+    .tc-body{padding:20px 20px 22px}
+    .tc-name{font-weight:700;color:#0a1628;font-size:.98rem;margin-bottom:3px}
+    .tc-role{font-size:.82rem;color:var(--muted);margin-bottom:10px}
+    .tc-tag{display:inline-block;padding:4px 10px;border-radius:6px;background:rgba(28,111,168,.09);border:1px solid rgba(28,111,168,.16);color:var(--water);font-size:.72rem;font-weight:600;letter-spacing:.05em}
+
+    .timeline-sec{background:var(--deep);padding:100px 0}
+    .timeline-sec h2.sec-title{color:#fff}
+    .timeline-sec .sec-desc{color:rgba(168,232,255,.62)}
+    .timeline{position:relative;margin-top:52px;padding-left:40px}
+    .timeline::before{content:"";position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--glow),rgba(64,200,244,.08))}
+    .tl-item{position:relative;margin-bottom:42px;padding-left:44px}
+    .tl-dot{position:absolute;left:-32px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--glow);box-shadow:0 0 14px rgba(64,200,244,.7);border:2px solid var(--deep)}
+    .tl-phase{font-size:.7rem;font-weight:700;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+    .tl-title{font-weight:700;color:#fff;font-size:1.02rem;margin-bottom:6px}
+    .tl-desc{color:rgba(168,232,255,.58);font-size:.9rem;line-height:1.72}
+
+    /* ── IMPACT SECTION ── */
+    .impact-sec{background:var(--deep);padding:100px 0;position:relative;overflow:hidden}
+    .impact-sec::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 0%,rgba(28,111,168,.26),transparent 60%)}
+    .impact-eyebrow{font-size:.72rem;font-weight:700;color:rgba(168,232,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.75rem}
+    .impact-headline{font-family:var(--font-s);font-style:italic;font-size:clamp(1.8rem,3.5vw,3rem);color:#fff;max-width:700px;margin:0 auto 3.5rem;line-height:1.18;text-align:center}
+    .impact-headline em{font-style:normal;color:var(--gold)}
+    .impact-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(64,200,244,.1);border:1px solid rgba(64,200,244,.12);border-radius:18px;overflow:hidden}
+    .imp-card{background:rgba(5,15,30,.75);padding:2rem 1.75rem;display:flex;flex-direction:column;gap:.75rem;transition:background .25s}
+    .imp-card:hover{background:rgba(13,47,85,.65)}
+    .imp-num{font-family:var(--font-d);font-size:2.2rem;color:rgba(64,200,244,.2);line-height:1;letter-spacing:.02em}
+    .imp-divider{width:28px;height:1px;background:rgba(64,200,244,.18);margin:.1rem 0}
+    .imp-card-title{font-weight:700;color:#fff;font-size:1rem;line-height:1.3}
+    .imp-card-body{color:rgba(168,232,255,.55);font-size:.9rem;line-height:1.78;flex:1}
+    .imp-tag{display:inline-block;font-size:.7rem;font-weight:600;color:rgba(168,232,255,.5);border:1px solid rgba(64,200,244,.18);border-radius:5px;padding:3px 9px;margin-top:.5rem;align-self:flex-start;letter-spacing:.05em}
+
+    footer{background:#030a14;padding:60px 0;border-top:1px solid rgba(64,200,244,.07)}
+    .footer-inner{display:flex;justify-content:space-between;align-items:flex-start;gap:40px}
+    .foot-logo{font-family:var(--font-d);font-size:2.2rem;color:var(--glow);letter-spacing:.04em;margin-bottom:8px}
+    .foot-sub{color:rgba(168,232,255,.38);font-size:.84rem;line-height:1.72;max-width:380px}
+    .foot-right .prize-name{font-size:.76rem;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+    .foot-right p{color:rgba(168,232,255,.36);font-size:.82rem;line-height:1.7}
+
+    #btt{position:fixed;right:28px;bottom:28px;width:46px;height:46px;border-radius:50%;background:rgba(10,31,58,.88);border:1.5px solid rgba(64,200,244,.32);color:var(--glow);font-size:1.1rem;cursor:pointer;z-index:2500;opacity:0;transform:translateY(14px);transition:.3s;display:flex;align-items:center;justify-content:center}
+    #btt.show{opacity:1;transform:translateY(0)}
+    #btt:hover{background:rgba(64,200,244,.15);border-color:var(--glow)}
+
+    .lb{display:none;position:fixed;inset:0;background:rgba(3,10,20,.96);z-index:5000;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(12px)}
+    .lb.open{display:flex}
+    .lb-inner{position:relative;max-width:1020px;width:100%}
+    .lb-inner img{width:100%;max-height:80vh;object-fit:contain;border-radius:10px;display:block}
+    .lb-close{position:absolute;top:-16px;right:-16px;width:40px;height:40px;border-radius:50%;background:#fff;color:var(--deep);border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .lb-cap{text-align:center;color:rgba(168,232,255,.62);font-size:.86rem;margin-top:14px}
+    .vm{display:none;position:fixed;inset:0;background:rgba(3,10,20,.97);z-index:5000;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(12px)}
+    .vm.open{display:flex}
+    .vm-inner{position:relative;max-width:900px;width:100%;background:#0a1f3a;border-radius:18px;overflow:hidden;border:1px solid rgba(64,200,244,.2)}
+    .vm-inner video{width:100%;display:block;background:#000}
+    .vm-info{padding:18px 22px}
+    .vm-info h3{color:#fff;margin-bottom:4px}
+    .vm-info p{color:rgba(168,232,255,.58);font-size:.88rem}
+    .vm-close{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--deep);border:none;font-size:.9rem;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center}
+
+    .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+    .reveal.visible{opacity:1;transform:none}
+
+    @media(max-width:1024px){
+      .hero-inner,.problem-grid,.ov-layout,.res-layout,.method-head,.demo-layout{grid-template-columns:1fr}
+      .hero-right{display:none}.hero-left{padding:80px 48px}
+      .team-grid{grid-template-columns:repeat(2,1fr)}
+      .gallery-grid{grid-template-columns:repeat(6,1fr);grid-template-rows:200px 200px}
+      .gi:nth-child(1){grid-column:span 3}.gi:nth-child(2){grid-column:span 3}.gi:nth-child(3){grid-column:span 2;grid-row:span 1}.gi:nth-child(4){grid-column:span 2}.gi:nth-child(5){grid-column:span 2}.gi:nth-child(6){grid-column:span 6;grid-row:span 1}
+      .impact-cards-grid{grid-template-columns:1fr 1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.method-steps{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:640px){
+      .container{padding:0 24px}nav{padding:0 20px}.nav-links{display:none}
+      .team-grid,.impact-cards-grid{grid-template-columns:1fr}.gallery-row2{grid-template-columns:repeat(2,1fr)}.footer-inner{flex-direction:column}.disc-tabs-row{flex-direction:column}.illum-row{flex-direction:column}
     }
   </style>
 </head>
 <body>
-  <div class="progress-bar" id="progressBar"></div>
-  <button class="back-top" id="backTop" aria-label="Back to top">↑</button>
 
-  <div class="ocean-bg">
-    <div class="ripple"></div>
-    <div class="ripple2"></div>
-    <div class="ripple3"></div>
-    <div class="ripple4"></div>
-    <div class="ripple5"></div>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="progress"></div>
+<canvas id="waterCanvas"></canvas>
+<canvas id="particleCanvas"></canvas>
+<button id="btt" aria-label="Back to top">↑</button>
+
+<nav>
+  <div class="nav-brand">
+    <span class="nav-logo">DiscSPR</span>
+    <span class="nav-badge">SJWP 2026</span>
   </div>
-  <div class="water-lines"></div>
-  <div class="water-shimmer"></div>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#method">Method</a></li>
+    <li><a href="#demo">SPR Demo</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#impact">Impact</a></li>
+  </ul>
+</nav>
 
-  <div class="bubble bubble-1"></div>
-  <div class="bubble bubble-2"></div>
-  <div class="bubble bubble-3"></div>
-  <div class="bubble bubble-4"></div>
-  <div class="bubble bubble-5"></div>
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="depth-glow"></div>
+  <div class="shimmer-band" style="top:26%;animation-duration:4.5s;animation-delay:0s"></div>
+  <div class="shimmer-band" style="top:50%;animation-duration:5.5s;animation-delay:1.2s;opacity:.5"></div>
+  <div class="shimmer-band" style="top:72%;animation-duration:6.5s;animation-delay:2.6s;opacity:.32"></div>
+  <div class="shimmer-band" style="top:88%;animation-duration:3.8s;animation-delay:3.8s;opacity:.22"></div>
+  <div id="heroDrops"></div>
 
-  <nav class="nav">
-    <div class="container nav-inner">
-      <div class="brand">
-        <div class="brand-title">DiscSPR</div>
-        <div class="brand-sub">Optical disc-based SPR sensing</div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="sjwp-badge">
+        <div class="wdrop"></div>
+        <span>Stockholm Junior Water Prize 2026 · University of North Texas</span>
       </div>
-
-      <div class="nav-links">
-        <a href="#overview">Overview</a>
-        <a href="#method">Method</a>
-        <a href="#figures">Figures</a>
-        <a href="#results">Results</a>
-        <a href="#impact">Impact</a>
-      </div>
-    </div>
-  </nav>
-
-  <header class="hero" id="overview">
-    <div class="container hero-layout">
-      <div class="hero-copy">
-        <div class="eyebrow">Materials 2026 • UNT • Optical Sensing</div>
-        <h1>DiscSPR</h1>
-        <p class="hero-lead">
-          DiscSPR explores how optical discs can be used as low-cost grating substrates for surface plasmon resonance sensing, with a focus on clear results, practical design, and strong visual presentation.
-        </p>
-
-        <div class="hero-actions">
-          <a href="#method" class="btn btn-primary">Explore Method</a>
-          <a href="#results" class="btn btn-secondary">View Results</a>
-        </div>
-
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <strong>3 disc types</strong>
-            <span>BD-R, DVD-R, and CD-R substrates tested</span>
-          </div>
-          <div class="hero-stat">
-            <strong>2 lighting modes</strong>
-            <span>Front-side and back-side setups compared</span>
-          </div>
-          <div class="hero-stat">
-            <strong>394 nm/RIU</strong>
-            <span>Highest measured sensitivity</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="hero-panel">
-        <div class="hero-glow"></div>
-
-        <div class="hero-main-card">
-          <img src="mainsensor.png" alt="Main sensor image">
-          <div class="hero-main-overlay">
-            <span class="mini-label">Featured View</span>
-            <h3>Main sensor image</h3>
-            <p>Use your best setup photo, coated disc image, microscopy image, or project graphic here.</p>
-          </div>
-        </div>
-
-        <div class="hero-data-card">
-          <div class="data-label">Main finding</div>
-          <div class="data-value">Ag + front-side</div>
-          <p>Silver-coated gratings with front-side illumination gave the clearest and most consistent resonances.</p>
-        </div>
-
-        <div class="hero-small-card card-a">
-          <img src="discgrating.png" alt="Optical disc grating close-up">
-          <div class="hero-small-caption">Close-up of the optical disc grating surface</div>
-        </div>
-
-        <div class="hero-small-card card-b">
-          <img src="image3front.png" alt="Experimental setup or coated substrate">
-          <div class="hero-small-caption">Experimental setup or coated substrate image</div>
-        </div>
+      <h1 class="hero-title">Disc<span class="accent">SPR</span></h1>
+      <p class="hero-sub">An Affordable Plasmonic Water Toxin Sensor</p>
+      <p class="hero-lead">We turned ordinary optical discs — CDs, DVDs, Blu-rays — into precision water quality sensors, bringing plasmonic toxin detection within reach of every community on Earth.</p>
+      <div class="hero-ctas">
+        <a href="#demo" class="btn btn-gold">Try the SPR Demo ▶</a>
+        <a href="#results" class="btn btn-outline">See Results</a>
       </div>
     </div>
-  </header>
-
-  <section class="quick-strip">
-    <div class="container quick-strip-inner">
-      <div class="quick-chip">
-        <span>Platform</span>
-        <strong>Optical disc gratings</strong>
-      </div>
-      <div class="quick-chip">
-        <span>Best metal</span>
-        <strong>Silver coating</strong>
-      </div>
-      <div class="quick-chip">
-        <span>Best setup</span>
-        <strong>Front-side illumination</strong>
-      </div>
-      <div class="quick-chip">
-        <span>Top sensitivity</span>
-        <strong>394 nm/RIU</strong>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="container overview-band">
-      <div class="overview-copy">
-        <span class="tag">Overview</span>
-        <div class="accent-line"></div>
-        <h3>What this project does</h3>
-        <p>
-          This study uses commercial optical discs as low-cost grating substrates for grating-coupled surface plasmon resonance sensing. Instead of using expensive nanofabrication, it takes advantage of the nanostructures already built into the discs and compares how metal coating, disc type, and illumination direction affect performance.
-        </p>
-      </div>
-
-      <div class="overview-points">
-        <div class="overview-point">
-          <strong>Main conclusion</strong>
-          <span>Silver-coated gratings with front-side illumination gave the clearest resonance signals.</span>
+    <div class="hero-right">
+      <div class="hero-mosaic">
+        <div class="mosaic-item tall" onclick="openLb('agcoated.jpg','Ag-coated BD-R disc showing vivid plasmonic color response')">
+          <img src="agcoated.jpg" alt="Coated BD-R"><span class="mosaic-label">Ag-coated BD-R grating</span>
         </div>
-
-        <div class="overview-point">
-          <strong>Performance insight</strong>
-          <span>CD-R showed the biggest refractive index shift, while BD-R gave the sharpest spectral features.</span>
+        <div class="mosaic-item" onclick="openLb('rawdvdsubstrate.jpg','Orange DVD-R disc used as plasmonic substrate')">
+          <img src="rawdvdsubstrate.jpg" alt="DVD-R"><span class="mosaic-label">DVD-R substrate</span>
         </div>
-
-        <div class="overview-point">
-          <strong>Why it matters</strong>
-          <span>This approach lowers cost and makes plasmonic sensing platforms more accessible.</span>
+        <div class="mosaic-item" onclick="openLb('discpreperation.jpg','Lab disc preparation with gloved hands')">
+          <img src="discpreperation.jpg" alt="Preparation"><span class="mosaic-label">Disc preparation</span>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="method">
-    <div class="container">
-      <div class="section-head">
-        <h2>Method</h2>
-        <p>
-          The workflow is organized into four stages. Each image can open a cleaning or preparation video so the process is easier to follow.
-        </p>
-      </div>
-
-      <div class="grid-4">
-        <article class="method-card" onclick="openVideo('cleaning1.mp4','Disc Preparation','Optical discs were cut and cleaned to expose the polymer grating substrate.')">
-          <img class="method-media" src="method1.jpg" alt="Disc preparation diagram">
-          <div class="method-step">Step 01</div>
-          <h3>Disc Preparation</h3>
-          <p>Cut, clean, and isolate the polymer grating substrate.</p>
-        </article>
-
-        <article class="method-card" onclick="openVideo('cleaning2.mp4','Metal Deposition','Silver or copper thin films were sputter-coated onto the grating surface.')">
-          <img class="method-media" src="method2.jpg" alt="Metal deposition diagram">
-          <div class="method-step">Step 02</div>
-          <h3>Metal Deposition</h3>
-          <p>Apply Ag or Cu to form the plasmonic layer.</p>
-        </article>
-
-        <article class="method-card" onclick="openVideo('cleaning3.mp4','AFM Characterization','Surface period, depth, and morphology were measured before optical testing.')">
-          <img class="method-media" src="method3.jpg" alt="AFM characterization diagram">
-          <div class="method-step">Step 03</div>
-          <h3>Characterization</h3>
-          <p>Measure grating geometry and surface morphology with AFM.</p>
-        </article>
-
-        <article class="method-card" onclick="openVideo('cleaning4.mp4','Optical Testing','Reflectivity spectra were measured and compared with RCWA simulation.')">
-          <img class="method-media" src="method4.jpg" alt="Optical testing setup diagram">
-          <div class="method-step">Step 04</div>
-          <h3>Optical Testing</h3>
-          <p>Collect reflectivity spectra and compare with simulation.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="figures">
-    <div class="container">
-      <div class="section-head">
-        <h2>Figures</h2>
-        <p>
-          Use this section for your best schematics, AFM images, setup diagrams, and representative spectra.
-        </p>
-      </div>
-
-      <div class="grid-3">
-        <div class="figure-card figure-click" onclick="openImage('figure1.jpg','Sensor Concept')">
-          <img class="figure-media" src="sensorconcept.png" alt="GC-SPR sensor concept">
-          <h4>Sensor Concept</h4>
-          <p>Front-side and back-side plasmon excitation on metal-coated optical disc gratings.</p>
+        <div class="mosaic-item" onclick="openLb('sensingtest.jpg','Liquid analyte sensing test setup')">
+          <img src="sensingtest.jpg" alt="Sensing test"><span class="mosaic-label">Sensing test</span>
         </div>
-
-        <div class="figure-card figure-click" onclick="openImage('figure2.jpg','Experimental Setup')">
-          <img class="figure-media" src="experimentalsetup.png" alt="Experimental setup">
-          <h4>Experimental Setup</h4>
-          <p>Optical path, angle control, polarization handling, and reflectivity collection system.</p>
+        <div class="mosaic-item" onclick="openLb('sputter.jpg','Magnetron sputter coater for metal film deposition')">
+          <img src="sputter.jpg" alt="Sputter coater"><span class="mosaic-label">Sputter coater</span>
         </div>
-
-        <div class="figure-card figure-click" onclick="openImage('figure3.jpg','Morphology &amp; Spectra')">
-          <img class="figure-media" src="behaivorgraphs.png" alt="Morphology and spectra">
-          <h4>Morphology &amp; Spectra</h4>
-          <p>AFM-derived geometry and representative resonance behavior across substrates.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="results">
-    <div class="container">
-      <div class="section-head">
-        <h2>Results</h2>
-        <p>
-          The results section highlights the main findings in a simpler format with stronger visual balance.
-        </p>
-      </div>
-
-      <div class="results-layout">
-        <div class="results-copy">
-          <span class="tag">Highlights</span>
-          <div class="accent-line"></div>
-          <h3>What stood out most</h3>
-          <p>
-            BD-R produced the sharpest resonances. Front-side illumination was more reproducible. Silver outperformed copper. CD-R showed the highest wavelength sensitivity even though its resonance features were broader.
-          </p>
-
-          <div class="pill-row">
-            <div class="pill">Best resonance: BD-R</div>
-            <div class="pill">Best illumination: Front-side</div>
-            <div class="pill">Best metal: Ag</div>
-            <div class="pill">Highest sensitivity: CD-R</div>
-          </div>
-        </div>
-
-        <div class="results-photo">
-          <img src="results-photo.jpg" alt="Spectral plot or experimental results image">
-        </div>
-      </div>
-
-      <div class="comparison-wrap">
-        <h3 style="margin-bottom: 10px;">Sensitivity Summary</h3>
-        <div class="comparison-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Substrate</th>
-                <th>Sensitivity</th>
-                <th>Summary</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>CD-R</td>
-                <td>394 nm/RIU</td>
-                <td>Highest wavelength shift</td>
-              </tr>
-              <tr>
-                <td>BD-R</td>
-                <td>321 nm/RIU</td>
-                <td>Best balance of clarity and consistency</td>
-              </tr>
-              <tr>
-                <td>DVD-R</td>
-                <td>290 nm/RIU</td>
-                <td>Lowest sensitivity</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="impact">
-    <div class="container">
-      <div class="section-head">
-        <h2>Impact</h2>
-        <p>
-          This project shows how common commercial materials can be turned into practical sensing platforms at lower cost.
-        </p>
-      </div>
-
-      <div class="impact-grid">
-        <div class="impact-copy">
-          <span class="tag">Why it matters</span>
-          <div class="accent-line"></div>
-          <h3>More accessible plasmonic sensing</h3>
-          <p>
-            Commercial optical discs can become functional plasmonic sensing substrates, reducing fabrication barriers for research, teaching, and future diagnostic use.
-          </p>
-        </div>
-
-        <div class="impact-copy">
-          <span class="tag">Next steps</span>
-          <div class="accent-line"></div>
-          <h3>Portable and integrated testing</h3>
-          <p>
-            Future work can add microfluidics, protective coatings, and target-specific sensing chemistry for environmental or biomedical applications.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="container">
-      <p>
-        Based on the research article by Wisansaya Jaikeandee, Asad Ullah Hil Gulib, Taeyul Choi, and Richard Z. Zhang, published in <em>Materials</em> 2026.
-      </p>
-    </div>
-  </footer>
-
-  <div class="image-modal" id="imageModal">
-    <div class="image-modal-box">
-      <button class="close-btn" onclick="closeImage()">✕</button>
-      <img id="imageModalSrc" src="" alt="">
-      <div class="modal-info">
-        <h3 id="imageModalTitle">Figure</h3>
       </div>
     </div>
   </div>
 
-  <div class="modal" id="videoModal">
-    <div class="modal-box">
-      <button class="close-btn" onclick="closeVideo()">✕</button>
-      <video id="modalVideo" controls>
-        <source id="modalSource" src="" type="video/mp4">
-      </video>
-      <div class="modal-info">
-        <h3 id="modalTitle">Method Video</h3>
-        <p id="modalText">Description</p>
+  <div class="wave-layer" style="z-index:2">
+    <svg class="wv1" viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <path d="M0,60 C240,110 480,10 720,60 C960,110 1200,10 1440,60 L1440,120 L0,120 Z" fill="rgba(64,200,244,0.1)"/>
+    </svg>
+  </div>
+  <div class="wave-layer" style="z-index:3;bottom:8px">
+    <svg class="wv2" viewBox="0 0 1440 100" preserveAspectRatio="none">
+      <path d="M0,50 C360,90 720,10 1080,50 C1260,70 1380,30 1440,50 L1440,100 L0,100 Z" fill="rgba(64,200,244,0.07)"/>
+    </svg>
+  </div>
+  <div class="wave-layer" style="z-index:4;bottom:18px">
+    <svg class="wv3" viewBox="0 0 1440 80" preserveAspectRatio="none">
+      <path d="M0,40 C180,10 360,70 540,40 C720,10 900,70 1080,40 C1260,10 1380,60 1440,40 L1440,80 L0,80 Z" fill="rgba(28,111,168,0.13)"/>
+    </svg>
+  </div>
+  <div class="wave-layer" style="z-index:5;bottom:28px">
+    <svg class="wv4" viewBox="0 0 1440 60" preserveAspectRatio="none">
+      <path d="M0,30 C360,58 720,2 1080,30 C1260,44 1380,14 1440,30 L1440,60 L0,60 Z" fill="rgba(5,15,30,0.52)"/>
+    </svg>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Disc types tested<br>BD-R · DVD-R · CD-R</div></div>
+      <div class="stat-item"><div class="stat-num">394</div><div class="stat-label">nm/RIU peak sensitivity<br>CD-R + Ag front-side</div></div>
+      <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">Illumination modes<br>front-side &amp; back-side</div></div>
+      <div class="stat-item"><div class="stat-num">&lt;$5</div><div class="stat-label">Sensor cost estimate<br>vs. $1,000s traditional</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap"><div class="ticker-track" id="tickerTrack"></div></div>
+
+<!-- PROBLEM -->
+<section class="problem-sec section" id="problem">
+  <div class="container">
+    <div class="problem-grid reveal">
+      <div>
+        <div class="sec-label"><div class="bar" style="background:var(--gold)"></div><span style="color:var(--gold)">The Problem</span></div>
+        <h2 class="sec-title" style="color:#fff">Water toxins are invisible — and detection is expensive</h2>
+        <p class="blockquote">"1 in 3 people globally lack safe drinking water. State-of-the-art toxin sensors cost thousands of dollars — out of reach for the communities who need them most."</p>
+        <p class="sec-desc">Surface plasmon resonance sensors can detect trace toxins with extraordinary sensitivity. But traditional SPR platforms require nanofabrication labs and $50,000+ equipment. We asked: what if a $0.50 optical disc could do the same job?</p>
+      </div>
+      <div class="photo-stack">
+        <div class="ph-main"><img src="watertoxin.jpg" alt="Disc sensor in liquid analyte"></div>
+        <div class="ph-accent"><img src="watertoxinspr.jpg" alt="CD-R optical grating"></div>
       </div>
     </div>
   </div>
+</section>
 
-  <script>
-    function openVideo(src, title, text) {
-      const modal = document.getElementById("videoModal");
-      const video = document.getElementById("modalVideo");
-      const source = document.getElementById("modalSource");
+<!-- OVERVIEW -->
+<section class="ov-sec section" id="overview">
+  <div class="container">
+    <div class="ov-layout">
+      <div class="reveal">
+        <div class="sec-label"><div class="bar"></div><span>Our Approach</span></div>
+        <h2 class="sec-title">Turning everyday discs into precision sensors</h2>
+        <p class="sec-desc">Optical discs have nanoscale grating tracks built right in — the same structure needed for plasmonic coupling. We coat them with silver thin films and detect refractive index shifts from water toxins.</p>
+        <div class="ov-cards">
+          <div class="ov-card"><div class="ov-icon">💿</div><div><h4>Nanoscale grating built-in</h4><p>BD-R (320 nm), DVD-R (740 nm), and CD-R (1600 nm) track pitches act as diffraction gratings for SPR coupling — no fabrication needed.</p></div></div>
+          <div class="ov-card"><div class="ov-icon">⚗️</div><div><h4>Silver thin-film coating</h4><p>Ag and Cu films are sputter-deposited onto the grating to form the plasmonic sensing layer. Silver outperformed copper in all tests.</p></div></div>
+          <div class="ov-card"><div class="ov-icon">🔬</div><div><h4>Two illumination modes</h4><p>Front-side vs. back-side illumination compared. Front-side gave cleaner, more reproducible resonances across all substrates.</p></div></div>
+          <div class="ov-card"><div class="ov-icon">📊</div><div><h4>RCWA simulation matched</h4><p>Rigorous coupled-wave analysis confirmed our experimental spectra and guided metal thickness optimization.</p></div></div>
+        </div>
+      </div>
+      <div class="ov-photos reveal" style="transition-delay:.15s">
+        <div class="ph" onclick="openLb('IMG_0692.HEIC','Disc preparation on green cutting mat')"><img src="IMG_0692.HEIC" alt="Disc prep"></div>
+        <div class="ph" onclick="openLb('IMG_5887.HEIC','Coated disc showing plasmonic color response')"><img src="IMG_5887.HEIC" alt="Coated disc"></div>
+        <div class="ph" onclick="openLb('IMG_5895.HEIC','Silver-coated grating substrate')"><img src="IMG_5895.HEIC" alt="Silver disc"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-      source.src = src;
-      video.load();
-      document.getElementById("modalTitle").textContent = title;
-      document.getElementById("modalText").textContent = text;
-      modal.classList.add("active");
-    }
+<!-- METHOD -->
+<section class="method-sec section" id="method">
+  <div class="container">
+    <div class="method-head reveal">
+      <div>
+        <div class="sec-label"><div class="bar"></div><span>Methodology</span></div>
+        <h2 class="sec-title">Four steps from disc to sensor</h2>
+      </div>
+      <p class="sec-desc">Each step was fully documented with photos and video. Click any step card to watch the process.</p>
+    </div>
+    <div class="method-steps reveal">
+      <div class="ms" onclick="openVid('cleaning1.mp4','Step 01 — Disc Preparation','Commercial optical discs were cut and delaminated to expose the nanoscale polymer grating substrate.')">
+        <img src="IMG_0692.HEIC" alt="Disc preparation">
+        <div class="ms-inner"><div class="ms-num">01</div><div class="ms-title">Disc Preparation</div><div class="ms-desc">Cut, delaminate, and isolate the polymer grating</div><div class="ms-play">▶ Watch video</div></div>
+      </div>
+      <div class="ms" onclick="openVid('cleaning2.mp4','Step 02 — Cleaning','The grating surface was cleaned to remove contamination before metal deposition.')">
+        <img src="IMG_5963.HEIC" alt="Cleaning">
+        <div class="ms-inner"><div class="ms-num">02</div><div class="ms-title">Cleaning</div><div class="ms-desc">Remove contaminants for optimal metal adhesion</div><div class="ms-play">▶ Watch video</div></div>
+      </div>
+      <div class="ms" onclick="openVid('cleaning3.mp4','Step 03 — Metal Deposition','Ag and Cu thin films were sputter-deposited onto the grating using a magnetron sputtering system.')">
+        <img src="IMG_5979.HEIC" alt="Sputter coater">
+        <div class="ms-inner"><div class="ms-num">03</div><div class="ms-title">Metal Deposition</div><div class="ms-desc">Sputter-coat Ag or Cu plasmonic layer</div><div class="ms-play">▶ Watch video</div></div>
+      </div>
+      <div class="ms" onclick="openVid('cleaning4.mp4','Step 04 — Optical Testing','Reflectivity spectra were recorded across angles and refractive indices, validated against RCWA predictions.')">
+        <img src="IMG_5958.HEIC" alt="Optical testing">
+        <div class="ms-inner"><div class="ms-num">04</div><div class="ms-title">Optical Testing</div><div class="ms-desc">Collect spectra and compare with RCWA simulation</div><div class="ms-play">▶ Watch video</div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    function closeVideo() {
-      const modal = document.getElementById("videoModal");
-      const video = document.getElementById("modalVideo");
-      video.pause();
-      modal.classList.remove("active");
-    }
+<!-- ── INTERACTIVE SPR DEMO (UPDATED) ── -->
+<section class="demo-sec section" id="demo">
+  <div class="container">
+    <div class="reveal">
+      <div class="sec-label"><div class="bar" style="background:var(--glow)"></div><span style="color:var(--glow)">Interactive Demo</span></div>
+      <h2 class="sec-title">Explore SPR sensing live</h2>
+      <p class="sec-desc">Adjust the refractive index of the liquid medium and watch the plasmon resonance dip shift — just like in our real experiments.</p>
+    </div>
+    <div class="demo-layout reveal" style="transition-delay:.1s">
+      <div class="demo-ctrl-panel">
+        <div>
+          <p class="ctrl-name" style="margin-bottom:8px">Disc substrate</p>
+          <div class="disc-tabs-row">
+            <button class="dtab active" data-disc="cdr">CD-R<br><span style="font-weight:400;font-size:.65rem;opacity:.7">1600 nm</span></button>
+            <button class="dtab" data-disc="dvdr">DVD-R<br><span style="font-weight:400;font-size:.65rem;opacity:.7">740 nm</span></button>
+            <button class="dtab" data-disc="bdr">BD-R<br><span style="font-weight:400;font-size:.65rem;opacity:.7">320 nm</span></button>
+          </div>
+        </div>
+        <div>
+          <p class="ctrl-name" style="margin-bottom:8px">Illumination mode</p>
+          <div class="illum-row">
+            <button class="itab active" data-illum="0">Front-side</button>
+            <button class="itab" data-illum="1">Back-side</button>
+          </div>
+        </div>
+        <div class="ctrl-block">
+          <div class="ctrl-top">
+            <span class="ctrl-name">Refractive index (n)</span>
+            <span class="ctrl-val-disp" id="riVal">1.333</span>
+          </div>
+          <input type="range" id="riSlider" min="1333" max="1500" value="1333" step="1">
+          <div class="ctrl-range-labels"><span>1.333 (water)</span><span>1.500</span></div>
+        </div>
+        <div class="ctrl-block">
+          <div class="ctrl-top">
+            <span class="ctrl-name">Ag film thickness</span>
+            <span class="ctrl-val-disp" id="thkVal">50 nm</span>
+          </div>
+          <input type="range" id="thkSlider" min="30" max="100" value="50" step="1">
+          <div class="ctrl-range-labels"><span>30 nm</span><span>100 nm</span></div>
+        </div>
+        <div class="readout-grid">
+          <div class="readout-chip"><div class="rl">Resonance</div><div class="rv" id="resLambda">—</div></div>
+          <div class="readout-chip"><div class="rl">Sensitivity</div><div class="rv" id="resSens">—</div></div>
+        </div>
+        <div class="readout-grid">
+          <div class="readout-chip"><div class="rl">FWHM</div><div class="rv" id="resFwhm">—</div></div>
+          <div class="readout-chip"><div class="rl">FOM</div><div class="rv" id="resFom">—</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="chart-wrap"><canvas id="sprCanvas" height="380"></canvas></div>
+        <p class="chart-caption">Simulated reflectance spectrum — SPR resonance dip shifts with analyte refractive index</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    function openImage(src, title) {
-      document.getElementById("imageModalSrc").src = src;
-      document.getElementById("imageModalTitle").textContent = title;
-      document.getElementById("imageModal").classList.add("active");
-    }
+<!-- GALLERY -->
+<section class="gallery-sec section" id="gallery">
+  <div class="container">
+    <div class="gallery-head reveal">
+      <div>
+        <div class="sec-label"><div class="bar" style="background:var(--glow)"></div><span style="color:var(--glow)">Photo Gallery</span></div>
+        <h2 class="sec-title">The research in pictures</h2>
+      </div>
+      <p style="color:rgba(168,232,255,.42);font-size:.84rem;max-width:240px;text-align:right">Click any photo to enlarge. All images from our UNT lab.</p>
+    </div>
+    <div class="gallery-grid reveal">
+      <div class="gi" onclick="openLb('IMG_5884.HEIC','Ag-coated BD-R disc — vivid plasmonic color response')"><img src="IMG_5884.HEIC" alt="Coated disc"><div class="gi-cap">Ag-coated BD-R — plasmonic colors</div></div>
+      <div class="gi" onclick="openLb('IMG_5928.HEIC','DiscSPR sensor immersed in liquid analyte during testing')"><img src="IMG_5928.HEIC" alt="Disc in liquid"><div class="gi-cap">Sensor in liquid analyte</div></div>
+      <div class="gi" onclick="openLb('IMG_5972.HEIC','Full optical characterization setup at UNT')"><img src="IMG_5972.HEIC" alt="Optical setup"><div class="gi-cap">Full optical testing setup</div></div>
+      <div class="gi" onclick="openLb('IMG_1474.JPG','CD-R disc showing natural diffraction grating colors')"><img src="IMG_1474.JPG" alt="CD-R"><div class="gi-cap">CD-R grating diffraction</div></div>
+      <div class="gi" onclick="openLb('IMG_5888.HEIC','Orange DVD-R disc as plasmonic substrate')"><img src="IMG_5888.HEIC" alt="DVD-R"><div class="gi-cap">DVD-R substrate</div></div>
+      <div class="gi" onclick="openLb('IMG_5974.HEIC','AFM surface morphology characterization')"><img src="IMG_5974.HEIC" alt="AFM"><div class="gi-cap">Surface morphology (AFM)</div></div>
+    </div>
+    <div class="gallery-row2 reveal" style="transition-delay:.1s">
+      <div class="gi" onclick="openLb('IMG_0190.HEIC','Lab equipment and materials')"><img src="IMG_0190.HEIC" alt="Lab materials"><div class="gi-cap">Lab materials</div></div>
+      <div class="gi" onclick="openLb('IMG_5891.HEIC','Preparing disc surface for coating')"><img src="IMG_5891.HEIC" alt="Surface prep"><div class="gi-cap">Surface preparation</div></div>
+      <div class="gi" onclick="openLb('IMG_5896.HEIC','Coated disc segments on cutting mat')"><img src="IMG_5896.HEIC" alt="Coated segments"><div class="gi-cap">Coated disc segments</div></div>
+      <div class="gi" onclick="openLb('IMG_5960.HEIC','Preparing liquid analyte solutions')"><img src="IMG_5960.HEIC" alt="Analyte prep"><div class="gi-cap">Analyte preparation</div></div>
+      <div class="gi" onclick="openLb('IMG_5980.HEIC','Magnetron sputter deposition system')"><img src="IMG_5980.HEIC" alt="Sputter system"><div class="gi-cap">Sputter deposition system</div></div>
+    </div>
+  </div>
+</section>
 
-    function closeImage() {
-      document.getElementById("imageModal").classList.remove("active");
-    }
+<!-- RESULTS -->
+<section class="results-sec section" id="results">
+  <div class="container">
+    <div class="res-layout">
+      <div class="reveal">
+        <div class="sec-label"><div class="bar"></div><span>Key Findings</span></div>
+        <h2 class="sec-title">What we discovered</h2>
+        <p class="sec-desc">Silver outperformed copper across all disc types. Front-side illumination produced cleaner resonances. CD-R achieved the highest sensitivity despite broader spectral features.</p>
+        <div class="pills">
+          <span class="pill pill-gold">Best resonance: BD-R + Ag</span>
+          <span class="pill pill-blue">Best setup: Front-side</span>
+          <span class="pill pill-blue">Top metal: Silver</span>
+          <span class="pill pill-gold">Peak sensitivity: CD-R</span>
+        </div>
+        <table class="sens-table">
+          <thead><tr><th>Substrate</th><th>Sensitivity</th><th>Key strength</th></tr></thead>
+          <tbody>
+            <tr class="best">
+              <td>CD-R + Ag (best)</td>
+              <td><span class="snum">394</span> nm/RIU<div class="bar-w"><div class="bar-f" data-w="100%" style="width:0%"></div></div></td>
+              <td>Highest wavelength shift</td>
+            </tr>
+            <tr>
+              <td>BD-R + Ag</td>
+              <td><span class="snum">321</span> nm/RIU<div class="bar-w"><div class="bar-f" data-w="81%" style="width:0%"></div></div></td>
+              <td>Sharpest resonance features</td>
+            </tr>
+            <tr>
+              <td>DVD-R + Ag</td>
+              <td><span class="snum">290</span> nm/RIU<div class="bar-w"><div class="bar-f" data-w="74%" style="width:0%"></div></div></td>
+              <td>Consistent reproducible signal</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="res-photos reveal" style="transition-delay:.15s">
+        <div class="rp tall" onclick="openLb('behaivorgraphs.png','Spectral resonance behavior across disc types')"><img src="behaivorgraphs.png" alt="Spectra"></div>
+        <div class="rp" onclick="openLb('IMG_5973.HEIC','Optical measurement table')"><img src="IMG_5973.HEIC" alt="Measurement table"></div>
+        <div class="rp" onclick="openLb('IMG_5082.HEIC','Metal-coated disc comparison')"><img src="IMG_5082.HEIC" alt="Disc comparison"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    document.getElementById("videoModal").addEventListener("click", function(e) {
-      if (e.target === this) closeVideo();
-    });
+<!-- TEAM -->
+<section class="team-sec section" id="team">
+  <div class="container">
+    <div class="reveal">
+      <div class="sec-label"><div class="bar"></div><span>The Team</span></div>
+      <h2 class="sec-title">Meet the researchers</h2>
+      <p class="sec-desc">Based at the University of North Texas, our team combines expertise in photonics, materials science, and environmental sensing.</p>
+    </div>
+    <div class="team-grid reveal" style="transition-delay:.1s">
+      <div class="team-card">
+        <div class="tc-photo" style="background:linear-gradient(135deg,#0d2f55,#1c6fa8)"><div class="tc-initials">VL</div></div>
+        <div class="tc-body"><div class="tc-name">Vivian Liu</div><div class="tc-role">Lead Researcher · UNT</div><span class="tc-tag">Optical sensing</span></div>
+      </div>
+      <div class="team-card">
+        <div class="tc-photo" style="background:linear-gradient(135deg,#0f3260,#2196c4)"><div class="tc-initials">CW</div></div>
+        <div class="tc-body"><div class="tc-name">Claire Wang</div><div class="tc-role">Lead Researcher · UNT</div><span class="tc-tag">RCWA simulation</span></div>
+      </div>
+      <div>
+        
+      </div>
+      </DIV>
+      
+    </div>
+  </div>
+</section>
 
-    document.getElementById("imageModal").addEventListener("click", function(e) {
-      if (e.target === this) closeImage();
-    });
+<!-- TIMELINE -->
+<section class="timeline-sec section" id="timeline">
+  <div class="container">
+    <div class="reveal">
+      <div class="sec-label"><div class="bar" style="background:var(--glow)"></div><span style="color:var(--glow)">Project Timeline</span></div>
+      <h2 class="sec-title">Research milestones</h2>
+      <p class="sec-desc">From concept to publication — the journey of DiscSPR.</p>
+    </div>
+    <div class="timeline reveal" style="transition-delay:.1s">
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 1</div><div class="tl-title">Concept &amp; substrate selection</div><div class="tl-desc">Identified optical discs as low-cost SPR grating candidates. Selected BD-R, DVD-R, and CD-R for their distinct grating pitches spanning 320–1600 nm.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 2</div><div class="tl-title">Disc preparation &amp; delamination</div><div class="tl-desc">Developed a repeatable protocol to cut, delaminate, and clean disc substrates without damaging the nanostructured grating surface.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 3</div><div class="tl-title">Metal deposition optimization</div><div class="tl-desc">Tested Ag and Cu films at varied thicknesses (30–100 nm) using magnetron sputtering. Optimized for resonance quality and reproducibility.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 4</div><div class="tl-title">AFM characterization</div><div class="tl-desc">Measured grating period, depth, and metal morphology using atomic force microscopy to confirm structure integrity post-deposition.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 5</div><div class="tl-title">Optical testing &amp; RCWA comparison</div><div class="tl-desc">Collected reflectivity spectra across refractive indices and angles, validated against rigorous coupled-wave analysis simulations.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Publication</div><div class="tl-title">Published in Materials, 2026</div><div class="tl-desc">Research accepted in <em>Materials</em> journal — CD-R achieving 394 nm/RIU, the highest sensitivity of all tested configurations.</div></div>
+    </div>
+  </div>
+</section>
 
-    const backTop = document.getElementById("backTop");
-    const progressBar = document.getElementById("progressBar");
-    const sections = document.querySelectorAll("header[id], section[id]");
-    const navLinks = document.querySelectorAll(".nav-links a");
+<!-- ── IMPACT SECTION (UPDATED) ── -->
+<section class="impact-sec section" id="impact">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <p class="impact-eyebrow">Impact</p>
+      <p class="impact-headline">Making clean water safety <em>accessible</em> to every community on Earth</p>
+    </div>
+    <div class="impact-cards-grid reveal" style="transition-delay:.1s">
+      <div class="imp-card">
+        <span class="imp-num">01</span>
+        <div class="imp-divider"></div>
+        <h4 class="imp-card-title">Affordable water safety</h4>
+        <p class="imp-card-body">By using $0.50 optical discs instead of $1,000+ nanofabricated chips, DiscSPR can make water toxin detection viable for schools, clinics, and communities in resource-limited settings.</p>
+        <span class="imp-tag">Cost reduction &gt;99%</span>
+      </div>
+      <div class="imp-card">
+        <span class="imp-num">02</span>
+        <div class="imp-divider"></div>
+        <h4 class="imp-card-title">Adaptable sensing platform</h4>
+        <p class="imp-card-body">The disc substrate can be functionalized with target-specific antibodies to detect heavy metals, cyanotoxins, pesticides, and pharmaceutical contaminants in water supplies.</p>
+        <span class="imp-tag">Multi-analyte capable</span>
+      </div>
+      <div class="imp-card">
+        <span class="imp-num">03</span>
+        <div class="imp-divider"></div>
+        <h4 class="imp-card-title">Future: portable device</h4>
+        <p class="imp-card-body">Next steps include microfluidic integration, protective coatings for field use, and a handheld reader — moving DiscSPR from lab bench to real-world environmental monitoring.</p>
+        <span class="imp-tag">Field deployment</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-    window.addEventListener("scroll", () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      progressBar.style.width = progress + "%";
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="foot-logo">DiscSPR</div>
+        <p class="foot-sub">Research by Wisansaya Jaikeandee, Asad Ullah Hil Gulib, Taeyul Choi, and Richard Z. Zhang — University of North Texas. Published in <em>Materials</em>, 2026.</p>
+      </div>
+      <div class="foot-right">
+        <div class="prize-name">Stockholm Junior Water Prize 2026</div>
+        <p>Submitted to the U.S. SJWP competition,<br>sponsored by the Stockholm International<br>Water Institute (SIWI).</p>
+      </div>
+    </div>
+  </div>
+</footer>
 
-      if (scrollTop > 400) {
-        backTop.classList.add("show");
-      } else {
-        backTop.classList.remove("show");
+<!-- LIGHTBOX -->
+<div class="lb" id="lb" onclick="closeLb()">
+  <div class="lb-inner" onclick="event.stopPropagation()">
+    <button class="lb-close" onclick="closeLb()">✕</button>
+    <img id="lbImg" src="" alt=""><p class="lb-cap" id="lbCap"></p>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="vm" id="vm" onclick="closeVid()">
+  <div class="vm-inner" onclick="event.stopPropagation()">
+    <button class="vm-close" onclick="closeVid()">✕</button>
+    <video id="vmVid" controls><source id="vmSrc" src="" type="video/mp4"></video>
+    <div class="vm-info"><h3 id="vmTitle"></h3><p id="vmText"></p></div>
+  </div>
+</div>
+
+<script>
+// ── CURSOR ──
+const cur=document.getElementById('cursor'),curR=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function ac(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(ac)})();
+document.querySelectorAll('a,button,.ms,.gi,.ov-card,.team-card,.mosaic-item,.rp,.ph,.dtab,.itab').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='7px';cur.style.height='7px';curR.style.width='62px';curR.style.height='62px';curR.style.opacity='.65'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='14px';cur.style.height='14px';curR.style.width='40px';curR.style.height='40px';curR.style.opacity='1'});
+});
+
+// ── CLICK RIPPLE ──
+document.addEventListener('click',e=>{
+  const r=document.createElement('div');r.className='ripple-click';
+  r.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;width:10px;height:10px`;
+  document.body.appendChild(r);setTimeout(()=>r.remove(),820);
+});
+
+// ── PROGRESS + NAV ──
+const prog=document.getElementById('progress'),btt=document.getElementById('btt');
+const sects=document.querySelectorAll('section[id]'),navAs=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  prog.style.width=(window.scrollY/h*100)+'%';
+  btt.classList.toggle('show',window.scrollY>500);
+  let c='';sects.forEach(s=>{if(window.scrollY>=s.offsetTop-140)c=s.id});
+  navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+c));
+});
+btt.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+// ── TICKER ──
+const facts=['Water scarcity affects over 2 billion people','DiscSPR sensors cost less than $5 to produce','CD-R achieved 394 nm/RIU — top sensitivity','Traditional SPR sensors cost $10,000–$50,000','Silver coating outperformed copper in every test','Front-side illumination gave the most reproducible resonances','BD-R produced the sharpest spectral features','Optical disc grating pitches range 320–1600 nm','1 in 4 health facilities lack safe water access','DiscSPR can detect heavy metals, pesticides, and cyanotoxins'];
+const tt=document.getElementById('tickerTrack');
+tt.innerHTML=[...facts,...facts].map(f=>`<span class="ticker-item">${f}</span>`).join('');
+
+// ── FLOATING HERO DROPS ──
+const hd=document.getElementById('heroDrops');
+for(let i=0;i<24;i++){
+  const d=document.createElement('div');d.className='drop-float';
+  const s=Math.random()*8+3;
+  d.style.cssText=`left:${Math.random()*100}%;bottom:${Math.random()*10}%;width:${s}px;height:${s}px;border-radius:50%;background:radial-gradient(circle at 33% 33%,rgba(255,255,255,.72),rgba(64,200,244,.12));animation-duration:${Math.random()*13+9}s;animation-delay:${-Math.random()*18}s;opacity:0`;
+  hd.appendChild(d);
+}
+
+// ── WATER CANVAS ──
+(function(){
+  const c=document.getElementById('waterCanvas'),ctx=c.getContext('2d');
+  let W,H;function rs(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}rs();
+  window.addEventListener('resize',rs);
+  const wvs=[];
+  for(let i=0;i<8;i++)wvs.push({y:H*(0.08+i*0.12),amp:14+i*5,freq:0.007-i*0.0005,spd:0.009+i*0.003,off:Math.random()*Math.PI*2,al:0.038-i*0.004});
+  let t=0;
+  (function draw(){
+    ctx.clearRect(0,0,W,H);
+    wvs.forEach(w=>{
+      ctx.beginPath();ctx.moveTo(0,w.y);
+      for(let x=0;x<=W;x+=3){
+        const y=w.y+Math.sin(x*w.freq+t*w.spd+w.off)*w.amp+Math.sin(x*w.freq*1.8-t*w.spd*.55)*w.amp*.38;
+        ctx.lineTo(x,y);
       }
-
-      let current = "";
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop - 140;
-        if (scrollTop >= sectionTop) {
-          current = section.getAttribute("id");
-        }
-      });
-
-      navLinks.forEach(link => {
-        link.classList.remove("active");
-        if (link.getAttribute("href") === "#" + current) {
-          link.classList.add("active");
-        }
-      });
+      ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
+      ctx.fillStyle=`rgba(64,200,244,${w.al})`;ctx.fill();
     });
+    t++;requestAnimationFrame(draw);
+  })();
+})();
 
-    backTop.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+// ── PARTICLE CANVAS ──
+(function(){
+  const c=document.getElementById('particleCanvas'),ctx=c.getContext('2d');
+  let W,H;function rs(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}rs();
+  window.addEventListener('resize',rs);
+  const pts=[];
+  for(let i=0;i<80;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.28,vy:-Math.random()*.48-.08,r:Math.random()*2.2+.4,al:Math.random()*.32+.04,life:Math.random(),ls:Math.random()*.003+.001});
+  (function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life+=p.ls;
+      if(p.life>1){p.life=0;p.x=Math.random()*W;p.y=H+8}
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(64,200,244,${p.al*Math.sin(p.life*Math.PI)})`;ctx.fill();
     });
+    requestAnimationFrame(draw);
+  })();
+})();
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
-      });
-    }, { threshold: 0.12 });
+// ── REVEAL + BAR ANIMATIONS ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      e.target.querySelectorAll('.bar-f').forEach(b=>{setTimeout(()=>{b.style.width=b.dataset.w},220)});
+    }
+  });
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
 
-    document.querySelectorAll("section, .hero-copy, .hero-panel, .hero-stats, .overview-point, .method-card, .figure-card, .impact-copy, .results-copy, .results-photo")
-      .forEach(el => {
-        el.classList.add("reveal");
-        observer.observe(el);
-      });
-  </script>
+// ── LIGHTBOX ──
+function openLb(src,cap){document.getElementById('lbImg').src=src;document.getElementById('lbCap').textContent=cap||'';document.getElementById('lb').classList.add('open');document.body.style.overflow='hidden'}
+function closeLb(){document.getElementById('lb').classList.remove('open');document.body.style.overflow=''}
+
+// ── VIDEO ──
+function openVid(src,title,text){
+  document.getElementById('vmSrc').src=src;document.getElementById('vmVid').load();
+  document.getElementById('vmTitle').textContent=title;document.getElementById('vmText').textContent=text;
+  document.getElementById('vm').classList.add('open');document.body.style.overflow='hidden';
+}
+function closeVid(){document.getElementById('vmVid').pause();document.getElementById('vm').classList.remove('open');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLb();closeVid()}});
+
+// ── INTERACTIVE SPR DEMO (UPDATED — Lorentz oscillator model) ──
+(function(){
+  const canvas=document.getElementById('sprCanvas');
+  const ctx=canvas.getContext('2d');
+
+  const discs={
+    cdr: {label:'CD-R', baseLam:660, sens:394, gamma0:38, thkFactor:0.55, illumPenalty:22, color:'#f5c842'},
+    dvdr:{label:'DVD-R',baseLam:580, sens:290, gamma0:28, thkFactor:0.42, illumPenalty:16, color:'#40c8f4'},
+    bdr: {label:'BD-R', baseLam:502, sens:321, gamma0:22, thkFactor:0.35, illumPenalty:12, color:'#aa8cff'}
+  };
+
+  let disc='cdr', ri=1.333, thk=50, illum=0;
+
+  function lorentzDip(lam, lam0, gamma, depth){
+    const g2=gamma*gamma;
+    return depth*(g2/(((lam-lam0)*(lam-lam0))+g2));
+  }
+
+  function computeSpectrum(){
+    const d=discs[disc];
+    const lam0=d.baseLam+(ri-1.333)*d.sens+(thk-50)*d.thkFactor+(illum*d.illumPenalty);
+    const gamma=d.gamma0+(thk-50)*0.18+(illum*(d.gamma0*0.55));
+    const thkNorm=(thk-30)/70;
+    const depth=0.52+thkNorm*0.22-(illum*0.08);
+    const lambdas=[], refs=[];
+    for(let l=400;l<=900;l+=2){
+      lambdas.push(l);
+      const bg=0.88-0.00012*(l-650)*(l-650)*0.001+0.04*Math.sin((l-400)/500*Math.PI);
+      const dip=lorentzDip(l,lam0,gamma,depth);
+      refs.push(Math.max(0.02,Math.min(1,bg-dip)));
+    }
+    return{lambdas,refs,lam0:Math.round(lam0),gamma:Math.round(gamma),depth};
+  }
+
+  function resize(){
+    const dpr=window.devicePixelRatio||1;
+    const w=canvas.parentElement.offsetWidth||600;
+    canvas.width=w*dpr;
+    canvas.height=380*dpr;
+    canvas.style.width=w+'px';
+    canvas.style.height='380px';
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr,dpr);
+  }
+
+  function draw(){
+    const W=canvas.offsetWidth||600, H=380;
+    ctx.clearRect(0,0,W,H);
+
+    // background
+    ctx.fillStyle='rgba(5,15,30,0.88)';
+    ctx.fillRect(0,0,W,H);
+
+    const pad={l:54,r:20,t:30,b:46};
+    const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
+
+    // grid lines
+    ctx.strokeStyle='rgba(64,200,244,0.07)';ctx.lineWidth=0.8;
+    for(let i=0;i<=5;i++){
+      const y=pad.t+i*(cH/5);
+      ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+cW,y);ctx.stroke();
+    }
+    for(let i=0;i<=5;i++){
+      const x=pad.l+i*(cW/5);
+      ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,pad.t+cH);ctx.stroke();
+    }
+
+    // axes
+    ctx.strokeStyle='rgba(168,232,255,0.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+cH);ctx.lineTo(pad.l+cW,pad.t+cH);ctx.stroke();
+
+    // axis labels
+    const tc='rgba(168,232,255,0.45)';
+    ctx.fillStyle=tc;ctx.font='11px DM Sans,sans-serif';ctx.textAlign='center';
+    [400,500,600,700,800,900].forEach((l,i)=>{ctx.fillText(l,pad.l+i*(cW/5),pad.t+cH+16)});
+    ctx.textAlign='right';
+    [0,0.25,0.5,0.75,1.0].forEach((v,i)=>{ctx.fillText(v.toFixed(2),pad.l-7,pad.t+cH-i*(cH/4)+4)});
+
+    // y-axis title (rotated)
+    ctx.save();ctx.translate(13,pad.t+cH/2);ctx.rotate(-Math.PI/2);
+    ctx.textAlign='center';ctx.fillStyle=tc;ctx.font='11px DM Sans,sans-serif';
+    ctx.fillText('Reflectance',0,0);ctx.restore();
+
+    // x-axis title
+    ctx.textAlign='center';ctx.fillStyle=tc;ctx.font='11px DM Sans,sans-serif';
+    ctx.fillText('Wavelength (nm)',pad.l+cW/2,H-4);
+
+    const{lambdas,refs,lam0,gamma}=computeSpectrum();
+    const d=discs[disc];
+    const lamMin=400, lamMax=900;
+
+    const pts=lambdas.map((l,i)=>({
+      x:pad.l+(l-lamMin)/(lamMax-lamMin)*cW,
+      y:pad.t+cH-refs[i]*cH
+    }));
+
+    // fill under curve
+    ctx.beginPath();
+    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.lineTo(pts[pts.length-1].x,pad.t+cH);
+    ctx.lineTo(pts[0].x,pad.t+cH);
+    ctx.closePath();
+    const hexToRgba=(hex,a)=>{
+      const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+      return `rgba(${r},${g},${b},${a})`;
+    };
+    ctx.fillStyle=hexToRgba(d.color,0.08);ctx.fill();
+
+    // curve
+    ctx.beginPath();
+    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle=d.color;ctx.lineWidth=2;ctx.stroke();
+
+    // resonance dip marker
+    const dipX=pad.l+(lam0-lamMin)/(lamMax-lamMin)*cW;
+    const dipPt=pts.reduce((a,b)=>b.y>a.y?b:a);
+
+    ctx.setLineDash([4,4]);
+    ctx.strokeStyle='rgba(255,255,255,0.18)';ctx.lineWidth=0.9;
+    ctx.beginPath();ctx.moveTo(dipX,pad.t+6);ctx.lineTo(dipX,dipPt.y-3);ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle=d.color;ctx.font='bold 13px Bebas Neue,sans-serif';ctx.textAlign='center';
+    ctx.fillText(lam0+' nm',dipX,pad.t+18);
+
+    // FWHM bracket
+    const halfDepth=dipPt.y-(dipPt.y-pad.t)*0.5;
+    const fwhmNm=gamma*2;
+    const fwhmPx=fwhmNm/(lamMax-lamMin)*cW;
+    ctx.strokeStyle=hexToRgba(d.color,0.35);ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(dipX-fwhmPx/2,halfDepth);ctx.lineTo(dipX+fwhmPx/2,halfDepth);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(dipX-fwhmPx/2,halfDepth-4);ctx.lineTo(dipX-fwhmPx/2,halfDepth+4);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(dipX+fwhmPx/2,halfDepth-4);ctx.lineTo(dipX+fwhmPx/2,halfDepth+4);ctx.stroke();
+    ctx.fillStyle=hexToRgba(d.color,0.55);ctx.font='10px DM Sans,sans-serif';ctx.textAlign='center';
+    ctx.fillText('FWHM '+fwhmNm+' nm',dipX,halfDepth-8);
+
+    // update readouts
+    document.getElementById('resLambda').textContent=lam0+' nm';
+    document.getElementById('resSens').textContent=d.sens+' nm/RIU';
+    document.getElementById('resFwhm').textContent=fwhmNm+' nm';
+    document.getElementById('resFom').textContent=(d.sens/fwhmNm).toFixed(1);
+  }
+
+  function update(){
+    ri=parseInt(document.getElementById('riSlider').value)/1000;
+    thk=parseInt(document.getElementById('thkSlider').value);
+    document.getElementById('riVal').textContent=ri.toFixed(3);
+    document.getElementById('thkVal').textContent=thk+' nm';
+    resize();draw();
+  }
+
+  document.querySelectorAll('.dtab').forEach(b=>b.addEventListener('click',function(){
+    document.querySelectorAll('.dtab').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');disc=this.dataset.disc;update();
+  }));
+  document.querySelectorAll('.itab').forEach(b=>b.addEventListener('click',function(){
+    document.querySelectorAll('.itab').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');illum=parseInt(this.dataset.illum);update();
+  }));
+  document.getElementById('riSlider').addEventListener('input',update);
+  document.getElementById('thkSlider').addEventListener('input',update);
+  window.addEventListener('resize',update);
+  update();
+})();
+</script>
 </body>
 </html>
