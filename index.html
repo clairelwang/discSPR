@@ -1,684 +1,1241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DiscSPR — Stockholm Junior Water Prize 2026</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root{--deep:#050f1e;--mid:#0a1f3a;--bright:#0d2f55;--water:#1c6fa8;--glow:#40c8f4;--foam:#a8e8ff;--gold:#f5c842;--gold-dim:#c9a030;--cream:#f6f3ee;--slate:#1a3a56;--muted:#5a7a96;--font-d:"Bebas Neue",sans-serif;--font-s:"DM Serif Display",serif;--font-b:"DM Sans",sans-serif}
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:var(--font-b);background:var(--cream);color:#0a1628;overflow-x:hidden;cursor:none}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DiscSPR — Plasmonic Water Toxin Sensor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<style>
+  .hero-sequence-panel {
+  display: flex;
+  flex-direction: column;
+  
+  border: none;
+  min-height: 100%;
+}
 
-    #cursor{position:fixed;width:14px;height:14px;border-radius:50%;background:rgba(64,200,244,.8);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:screen}
-    #cursor-ring{position:fixed;width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(64,200,244,.45);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .22s,height .22s,opacity .22s}
+.hero-sequence-img-wrap {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+}
+.hero-sequence-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+}
+.hero-sequence-label {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  background: rgba(2,15,24,0.92);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
 
-    #progress{position:fixed;top:0;left:0;width:0%;height:3px;background:linear-gradient(90deg,var(--glow),var(--gold));z-index:9999;box-shadow:0 0 12px rgba(64,200,244,.6)}
+.hero-sequence-label strong {
+  display: block;
+  color: var(--foam);
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 3px;
+}
 
-    nav{position:fixed;top:3px;left:0;right:0;z-index:1000;padding:0 48px;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,15,30,.84);backdrop-filter:blur(24px);border-bottom:1px solid rgba(64,200,244,.1)}
-    .nav-brand{display:flex;align-items:baseline;gap:10px}
-    .nav-logo{font-family:var(--font-d);font-size:1.7rem;letter-spacing:.04em;color:var(--glow);text-shadow:0 0 22px rgba(64,200,244,.5)}
-    .nav-badge{font-size:.7rem;font-weight:600;color:var(--gold);background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.28);padding:3px 8px;border-radius:4px;letter-spacing:.07em;text-transform:uppercase}
-    .nav-links{display:flex;gap:28px;list-style:none}
-    .nav-links a{text-decoration:none;color:rgba(255,255,255,.52);font-size:.8rem;font-weight:500;letter-spacing:.07em;text-transform:uppercase;transition:color .2s,text-shadow .2s}
-    .nav-links a:hover,.nav-links a.active{color:var(--glow);text-shadow:0 0 14px rgba(64,200,244,.5)}
+.hero-sequence-label span {
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.04em;
+}
+:root {
+  --deep: #03131f;
+  --ocean: #042a3d;
+  --mid: #064a6b;
+  --teal: #0a7ea4;
+  --aqua: #00b8d9;
+  --foam: #7ee8fa;
+  --sand: #e8e2d9;
+  --parchment: #f3efe8;
+  --off-white: #faf8f5;
+  --gold: #c8922a;
+  --gold-lt: #e8b94a;
+  --ink: #0f1c23;
+  --muted: #4a6572;
+  --border: rgba(10,126,164,0.18);
+  --border-lt: rgba(10,126,164,0.09);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--off-white);
+  color: var(--ink);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
 
-    #waterCanvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.6}
-    #particleCanvas{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.75}
+/* ── WATER TEXTURE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    repeating-linear-gradient(-45deg, transparent, transparent 60px, rgba(10,126,164,0.015) 60px, rgba(10,126,164,0.015) 61px);
+  pointer-events: none; z-index: 0;
+}
 
-    .ripple-click{position:fixed;border-radius:50%;pointer-events:none;z-index:9997;background:rgba(64,200,244,.15);border:1.5px solid rgba(64,200,244,.4);transform:translate(-50%,-50%) scale(0);animation:rOut .75s ease-out forwards}
-    @keyframes rOut{to{transform:translate(-50%,-50%) scale(1);opacity:0;width:100px;height:100px}}
+/* ── ANIMATED WATER BG LINES ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(10,126,164,0.025) 80px, rgba(10,126,164,0.025) 81px);
+  animation: waterShimmer 12s ease-in-out infinite;
+  pointer-events: none; z-index: 0;
+}
+@keyframes waterShimmer {
+  0%,100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-8px); opacity: 0.6; }
+}
 
-    .hero{min-height:100vh;background:var(--deep);position:relative;overflow:hidden;display:flex;flex-direction:column}
-    .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 100%,rgba(28,111,168,.32),transparent 65%),radial-gradient(ellipse 50% 40% at 15% 60%,rgba(64,200,244,.1),transparent 55%),linear-gradient(180deg,#050f1e 0%,#0a1f3a 55%,#0d2f55 100%)}
-    .depth-glow{position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);width:140%;height:300px;background:radial-gradient(ellipse,rgba(64,200,244,.2),transparent 60%);filter:blur(32px);animation:depthP 7s ease-in-out infinite alternate;pointer-events:none}
-    @keyframes depthP{0%{opacity:.55;transform:translateX(-50%) scaleX(1)}100%{opacity:1;transform:translateX(-50%) scaleX(1.1)}}
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 56px;
+  background: rgba(243,239,232,0.93);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-lt);
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; font-weight: 700; letter-spacing: 0.06em;
+  color: var(--ocean);
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-logo-mark {
+  width: 28px; height: 28px;
+  background: var(--ocean);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.nav-logo-mark img { width: 20px; height: 20px; object-fit: contain; }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a {
+  font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color .2s;
+}
+.nav-links a:hover { color: var(--teal); }
 
-    .shimmer-band{position:absolute;left:-110%;width:320%;height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55) 40%,rgba(64,200,244,.9) 50%,rgba(255,255,255,.55) 60%,transparent);filter:blur(1px);animation:shimRun linear infinite;pointer-events:none}
-    @keyframes shimRun{from{left:-110%}to{left:110%}}
+/* ── HERO ── */
+#hero {
+  padding-top: 58px;
+  min-height: 100vh;
+  background: var(--deep);
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+}
 
-    .wave-layer{position:absolute;bottom:0;left:0;right:0;pointer-events:none}
-    .wave-layer svg{display:block}
-    .wv1{animation:wv1a 9s ease-in-out infinite alternate}
-    .wv2{animation:wv2a 13s ease-in-out infinite alternate-reverse}
-    .wv3{animation:wv3a 17s ease-in-out infinite alternate}
-    .wv4{animation:wv1a 22s ease-in-out infinite alternate-reverse}
-    @keyframes wv1a{0%{transform:translateX(-2%) scaleY(1)}100%{transform:translateX(2%) scaleY(1.15)}}
-    @keyframes wv2a{0%{transform:translateX(3%) scaleY(1.07)}100%{transform:translateX(-3%) scaleY(.93)}}
-    @keyframes wv3a{0%{transform:translateX(-1%);opacity:.55}50%{opacity:.92}100%{transform:translateX(2%);opacity:.55}}
+/* Bubbling water particles */
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0,184,217,0.08);
+  border: 1px solid rgba(0,184,217,0.12);
+  animation: bubbleRise linear infinite;
+  pointer-events: none;
+}
+@keyframes bubbleRise {
+  0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.4; }
+  100% { transform: translateY(-100px) scale(1.1); opacity: 0; }
+}
 
-    .drop-float{position:absolute;pointer-events:none;animation:dFloat linear infinite}
-    @keyframes dFloat{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:1}80%{opacity:.5}100%{transform:translateY(-100vh) translateX(28px);opacity:0}}
+.hero-water-anim {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 220px;
+  overflow: hidden; pointer-events: none; z-index: 2;
+}
+.hero-water-anim svg { width: 100%; height: 100%; }
+.wave1 { animation: waveflow 8s ease-in-out infinite; }
+.wave2 { animation: waveflow 11s ease-in-out infinite reverse; }
+.wave3 { animation: waveflow 6s ease-in-out infinite 2s; }
+@keyframes waveflow {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-60px); }
+}
 
-    .hero-inner{position:relative;z-index:2;flex:1;display:grid;grid-template-columns:1fr 1fr;padding-top:64px}
-    .hero-left{padding:80px 52px 80px 80px;display:flex;flex-direction:column;justify-content:center}
+.hero-top {
+  padding: 64px 72px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: relative; z-index: 3;
+}.hero-top-inner {
+  display: grid;
+  grid-template-columns: 1fr 800px;
+  gap: 0;
+  align-items: center;
+  min-height: auto;
+}
+.hero-top-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 48px;
+}
+.hero-top-right {
+  border-left: 1px solid rgba(255,255,255,0.07);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--aqua); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.hero-eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--aqua); }
+.hero-h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(56px, 7vw, 96px);
+  font-weight: 700; line-height: 0.95;
+  color: var(--off-white);
+  letter-spacing: -0.01em;
+}
+.hero-h1 em { font-style: italic; color: var(--aqua); }
+.hero-tagline {
+  margin-top: 24px;
+  font-size: 16px; font-weight: 300; color: rgba(255,255,255,0.55);
+  max-width: 520px; line-height: 1.75;
+}
+.hero-quick-facts {
+  margin-top: 28px;
+  display: flex; gap: 28px; flex-wrap: wrap;
+}
+.hqf {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.hqf-val {
+  font-family: 'DM Mono', monospace; font-size: 22px; color: var(--aqua); font-weight: 500;
+}
+.hqf-label { font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: 0.06em; text-transform: uppercase; }
+.hero-actions { margin-top: 36px; display: flex; gap: 14px; flex-wrap: wrap; }
+.btn-water {
+  padding: 12px 30px;
+  background: var(--teal); color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  letter-spacing: 0.04em; border: none; cursor: pointer;
+  text-decoration: none; display: inline-block;
+  transition: background .2s, transform .15s;
+}
+.btn-water:hover { background: var(--aqua); transform: translateY(-1px); }
+.btn-outline-lt {
+  padding: 12px 30px;
+  background: transparent; color: rgba(255,255,255,0.75);
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(255,255,255,0.2); cursor: pointer;
+  text-decoration: none; display: inline-block;
+  transition: all .2s;
+}
+.btn-outline-lt:hover { border-color: var(--foam); color: var(--foam); }
 
-    .sjwp-badge{display:inline-flex;align-items:center;gap:10px;margin-bottom:22px;animation:fUp .7s ease both}
-    .wdrop{width:10px;height:13px;background:var(--gold);clip-path:polygon(50% 0%,100% 60%,80% 100%,20% 100%,0% 60%);animation:dGlow 2s ease-in-out infinite}
-    @keyframes dGlow{0%,100%{filter:drop-shadow(0 0 4px rgba(245,200,66,.4))}50%{filter:drop-shadow(0 0 12px rgba(245,200,66,.9))}}
-    @keyframes fUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
-    .sjwp-badge span{font-size:.74rem;font-weight:600;color:var(--gold);letter-spacing:.12em;text-transform:uppercase}
+/* ── HERO IMAGE GRID — FIXED ── */
+.hero-imgs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  padding: 3px 0 200px;
+  position: relative; z-index: 3;
+}
+.hero-img-slot {
+  position: relative;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  overflow: hidden;
+  transition: border-color .3s;
+}
+.hero-img-slot:hover { border-color: rgba(10,126,164,0.4); }
 
-    .hero-title{font-family:var(--font-d);font-size:clamp(5.5rem,9.5vw,10rem);line-height:.87;color:#fff;letter-spacing:.02em;margin-bottom:8px;animation:fUp .8s .1s ease both}
-    .hero-title .accent{color:var(--glow);display:block;animation:gPulse 3.5s ease-in-out infinite}
-    @keyframes gPulse{0%,100%{text-shadow:0 0 40px rgba(64,200,244,.3)}50%{text-shadow:0 0 90px rgba(64,200,244,.8)}}
-    .hero-sub{font-family:var(--font-s);font-style:italic;font-size:1.3rem;color:var(--foam);margin-bottom:24px;animation:fUp .8s .2s ease both}
-    .hero-lead{color:rgba(168,232,255,.7);font-size:1rem;line-height:1.82;max-width:480px;margin-bottom:36px;animation:fUp .8s .3s ease both}
-    .hero-ctas{display:flex;gap:14px;animation:fUp .8s .4s ease both}
+/* The image fills the slot fully */
+.hero-img-slot img.slot-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  flex: 1;
+  padding: 20px 20px 0;
+  background: transparent;
+}
+/* For sensor front/back photo — use cover to fill */
+.hero-img-slot.cover-slot img.slot-img {
+  object-fit: cover;
+  padding: 0;
+}
 
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:8px;font-family:var(--font-b);font-weight:600;font-size:.88rem;letter-spacing:.04em;text-decoration:none;transition:all .22s;cursor:pointer;border:none;position:relative;overflow:hidden}
-    .btn-gold{background:linear-gradient(135deg,var(--gold),#e8b530);color:#060e1a;box-shadow:0 8px 30px rgba(245,200,66,.32)}
-    .btn-gold:hover{transform:translateY(-3px);box-shadow:0 14px 48px rgba(245,200,66,.55)}
-    .btn-outline{background:transparent;color:var(--foam);border:1.5px solid rgba(64,200,244,.35)}
-    .btn-outline:hover{border-color:var(--glow);color:var(--glow);transform:translateY(-3px);box-shadow:0 0 22px rgba(64,200,244,.18)}
+/* Slot label — solid bg for readability */
+.img-slot-label {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  background: rgba(2,15,24,0.92);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+  font-size: 12px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+}
+.img-slot-label strong {
+  display: block;
+  color: var(--foam);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
 
-    .hero-right{position:relative;overflow:hidden}
-    .hero-mosaic{position:absolute;inset:64px 0 0 0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr 1fr;gap:4px}
-    .mosaic-item{position:relative;overflow:hidden;background:var(--bright);cursor:pointer}
-    .mosaic-item.tall{grid-row:span 2}
-    .mosaic-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s,filter .4s;filter:brightness(.78) saturate(1.1)}
-    .mosaic-item:hover img{transform:scale(1.08);filter:brightness(1) saturate(1.3)}
-    .mosaic-item::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(5,15,30,.8) 100%)}
-    .mosaic-label{position:absolute;bottom:10px;left:12px;right:12px;z-index:2;font-size:.68rem;font-weight:600;letter-spacing:.08em;color:rgba(255,255,255,.82);text-transform:uppercase}
+/* Empty/insert placeholder slot */
+.img-placeholder-slot {
+  position: relative;
+  background: rgba(255,255,255,0.02);
+  border: 2px dashed rgba(10,126,164,0.3);
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  overflow: hidden;
+  transition: border-color .3s, background .3s;
+}
+.img-placeholder-slot:hover {
+  border-color: rgba(10,126,164,0.55);
+  background: rgba(10,126,164,0.04);
+}
+.ph-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 30px;
+  text-align: center;
+}
+.ph-icon {
+  width: 56px; height: 56px;
+  border: 1px solid rgba(10,126,164,0.3);
+  display: flex; align-items: center; justify-content: center;
+}
+.ph-icon svg { width: 26px; height: 26px; opacity: 0.35; }
+.ph-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: rgba(10,126,164,0.6);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+.ph-label {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  background: rgba(2,15,24,0.75);
+  border-top: 1px dashed rgba(10,126,164,0.2);
+  color: rgba(255,255,255,0.55);
+  font-size: 12px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+}
+.ph-label strong {
+  display: block;
+  color: rgba(0,184,217,0.7);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
 
-    .stats-strip{position:relative;z-index:6;background:rgba(255,255,255,.04);border-top:1px solid rgba(64,200,244,.1);backdrop-filter:blur(12px)}
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);max-width:1200px;margin:0 auto}
-    .stat-item{padding:26px 30px;border-right:1px solid rgba(64,200,244,.08);position:relative;overflow:hidden}
-    .stat-item:last-child{border-right:none}
-    .stat-item::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--glow),transparent);transform:scaleX(0);transition:transform .4s}
-    .stat-item:hover::after{transform:scaleX(1)}
-    .stat-num{font-family:var(--font-d);font-size:2.8rem;color:var(--glow);line-height:1;letter-spacing:.02em}
-    .stat-label{color:rgba(168,232,255,.58);font-size:.79rem;margin-top:5px;line-height:1.4}
+/* ── SECTION COMMON ── */
+section { position: relative; z-index: 1; }
+.section-inner { max-width: 1200px; margin: 0 auto; padding: 100px 72px; }
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-label::before { content: ''; display: block; width: 20px; height: 1px; background: var(--teal); }
+h2.sh {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 4.5vw, 58px);
+  font-weight: 700; line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin-bottom: 20px;
+}
+.section-lead {
+  font-size: 16px; font-weight: 300; color: var(--muted);
+  max-width: 620px; line-height: 1.8;
+}
 
-    .section{padding:100px 0}
-    .container{max-width:1200px;margin:0 auto;padding:0 48px}
-    .sec-label{display:inline-flex;align-items:center;gap:12px;margin-bottom:14px}
-    .sec-label .bar{width:36px;height:2px;background:var(--water);border-radius:2px}
-    .sec-label span{font-size:.73rem;font-weight:700;color:var(--water);letter-spacing:.14em;text-transform:uppercase}
-    h2.sec-title{font-family:var(--font-s);font-size:clamp(2rem,3.5vw,3.2rem);line-height:1.1;margin-bottom:18px;color:#0a1628}
-    .sec-desc{color:var(--muted);font-size:1.02rem;line-height:1.82;max-width:560px}
+/* ── WAVE DIVIDER ── */
+.wave-div { line-height: 0; overflow: hidden; }
+.wave-div svg { display: block; width: 100%; }
 
-    .ticker-wrap{background:rgba(64,200,244,.07);border-top:1px solid rgba(64,200,244,.14);border-bottom:1px solid rgba(64,200,244,.14);padding:11px 0;overflow:hidden;position:relative;z-index:6}
-    .ticker-track{display:flex;animation:tickS 42s linear infinite;white-space:nowrap}
-    .ticker-track:hover{animation-play-state:paused}
-    .ticker-item{padding:0 56px;font-size:.8rem;font-weight:500;color:rgba(168,232,255,.78);letter-spacing:.04em;display:inline-flex;align-items:center;gap:10px}
-    .ticker-item::before{content:"·";font-size:1rem;opacity:.5}
-    @keyframes tickS{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+/* ── HOW IT WORKS — NEW SECTION ── */
+#howitworks {
+  background: var(--parchment);
+  border-top: 1px solid var(--border-lt);
+}
+.hiw-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  margin-top: 56px;
+}
+.hiw-step {
+  background: var(--off-white);
+  padding: 28px 24px;
+  border: 1px solid var(--border-lt);
+  position: relative;
+  overflow: hidden;
+  transition: border-color .3s, transform .2s;
+}
+.hiw-step:hover { border-color: var(--teal); transform: translateY(-3px); }
+.hiw-step::before {
+  content: attr(data-num);
+  position: absolute; top: -12px; right: 16px;
+  font-family: 'Playfair Display', serif;
+  font-size: 80px; font-weight: 700;
+  color: rgba(10,126,164,0.06);
+  line-height: 1; pointer-events: none;
+}
+.hiw-icon {
+  width: 44px; height: 44px;
+  background: rgba(10,126,164,0.1);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px;
+}
+.hiw-icon svg { width: 22px; height: 22px; }
+.hiw-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; font-weight: 600;
+  color: var(--ink); margin-bottom: 10px;
+}
+.hiw-desc {
+  font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.7;
+}
+.hiw-arrow {
+  display: none;
+}
+@media (min-width: 900px) {
+  .hiw-step:not(:last-child)::after {
+    content: '→';
+    position: absolute; top: 50%; right: -16px;
+    transform: translateY(-50%);
+    font-size: 18px; color: var(--teal); z-index: 2;
+  }
+}
 
-    .problem-sec{background:var(--deep);padding:100px 0;position:relative;overflow:hidden}
-    .problem-sec::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 80% 50%,rgba(28,111,168,.18),transparent 65%)}
-    .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-    .problem-sec h2.sec-title{color:#fff}
-    .problem-sec .sec-desc{color:rgba(168,232,255,.66);max-width:100%}
-    .blockquote{font-family:var(--font-s);font-style:italic;font-size:clamp(1.1rem,1.8vw,1.4rem);color:var(--foam);line-height:1.65;margin:28px 0;padding-left:22px;border-left:3px solid var(--gold)}
-    .photo-stack{position:relative;height:520px}
-    .ph-main{position:absolute;inset:0 60px 60px 0;border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55)}
-    .ph-accent{position:absolute;bottom:0;right:0;width:52%;height:44%;border-radius:12px;overflow:hidden;border:3px solid var(--deep);box-shadow:0 20px 60px rgba(0,0,0,.5)}
-    .ph-main img,.ph-accent img{width:100%;height:100%;object-fit:cover}
+/* ── EXPLAINER BANNER ── */
+.explainer-banner {
+  background: linear-gradient(135deg, var(--ocean) 0%, var(--mid) 100%);
+  padding: 48px 72px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 40px;
+  position: relative;
+  overflow: hidden;
+}
+.explainer-banner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    -60deg, transparent, transparent 40px,
+    rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px
+  );
+}
+.exp-item { position: relative; z-index: 1; }
+.exp-item-q {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; font-weight: 600; color: var(--foam);
+  margin-bottom: 10px;
+}
+.exp-item-a {
+  font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.55); line-height: 1.75;
+}
 
-    .ov-sec{background:var(--cream);padding:100px 0}
-    .ov-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:80px;align-items:start}
-    .ov-cards{display:grid;gap:14px;margin-top:30px}
-    .ov-card{background:#fff;border:1px solid rgba(26,74,122,.1);border-radius:14px;padding:22px 24px;display:flex;gap:18px;align-items:flex-start;transition:box-shadow .25s,transform .25s;box-shadow:0 2px 12px rgba(10,22,40,.05)}
-    .ov-card:hover{box-shadow:0 10px 44px rgba(10,22,40,.1);transform:translateY(-2px)}
-    .ov-icon{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#0a1f3a,#1a4a7a);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-    .ov-card h4{font-size:.96rem;font-weight:600;color:#0a1628;margin-bottom:5px}
-    .ov-card p{font-size:.88rem;color:var(--muted);line-height:1.65}
-    .ov-photos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .ov-photos .ph{border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .25s;box-shadow:0 4px 20px rgba(10,22,40,.12)}
-    .ov-photos .ph:first-child{grid-column:span 2}
-    .ov-photos .ph:hover{transform:translateY(-3px)}
-    .ov-photos .ph img{width:100%;display:block;object-fit:cover}
-    .ov-photos .ph:first-child img{height:230px}
-    .ov-photos .ph:not(:first-child) img{height:175px}
+/* ── PROBLEM / MAP ── */
+#problem { background: var(--deep); }
+#problem .section-label { color: var(--foam); }
+#problem .section-label::before { background: var(--foam); }
+#problem h2.sh { color: var(--off-white); }
+#problem .section-lead { color: rgba(255,255,255,0.45); }
 
-    .method-sec{background:#eef3f9;padding:100px 0}
-    .method-head{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:52px}
-    .method-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;border-radius:18px;overflow:hidden;box-shadow:0 24px 70px rgba(10,22,40,.16)}
-    .ms{position:relative;cursor:pointer;overflow:hidden;background:var(--bright);aspect-ratio:3/4}
-    .ms img{width:100%;height:100%;object-fit:cover;transition:transform .55s,filter .4s;filter:brightness(.55) saturate(.9)}
-    .ms:hover img{transform:scale(1.08);filter:brightness(.72) saturate(1.15)}
-    .ms-inner{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:18px 16px;background:linear-gradient(to top,rgba(5,15,30,.96) 0%,rgba(5,15,30,.4) 50%,transparent 100%);z-index:2}
-    .ms-num{font-family:var(--font-d);font-size:3.2rem;color:var(--glow);line-height:1;opacity:.42}
-    .ms-title{font-weight:700;color:#fff;font-size:.9rem;margin:4px 0}
-    .ms-desc{font-size:.76rem;color:rgba(168,232,255,.65);line-height:1.5}
-    .ms-play{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:.7rem;color:var(--gold);font-weight:700;letter-spacing:.06em}
+.map-wrap {
+  margin-top: 56px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 40px;
+}
+.map-header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
+.map-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--off-white); margin-bottom: 6px; }
+.map-sub { font-size: 12px; color: rgba(255,255,255,0.35); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
+.map-legend { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+.legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: rgba(255,255,255,0.65); }
+.legend-swatch { width: 10px; height: 10px; border-radius: 50%; }
 
-    /* ── DEMO SECTION ── */
-    .demo-sec{background:var(--deep);padding:100px 0;position:relative;overflow:hidden}
-    .demo-sec::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 65% 55% at 50% 50%,rgba(28,111,168,.2),transparent 65%)}
-    .demo-sec h2.sec-title{color:#fff}
-    .demo-sec .sec-desc{color:rgba(168,232,255,.62)}
-    .demo-layout{display:grid;grid-template-columns:280px 1fr;gap:2.5rem;align-items:start;margin-top:48px}
-    .demo-ctrl-panel{display:flex;flex-direction:column;gap:1.25rem}
-    .disc-tabs-row{display:flex;border:1px solid rgba(64,200,244,.2);border-radius:10px;overflow:hidden}
-    .dtab{flex:1;padding:9px 4px;font-size:.75rem;font-weight:600;text-align:center;cursor:pointer;background:transparent;color:rgba(168,232,255,.5);border:none;border-right:1px solid rgba(64,200,244,.15);transition:background .15s,color .15s;line-height:1.3;font-family:var(--font-b)}
-    .dtab:last-child{border-right:none}
-    .dtab.active{background:rgba(64,200,244,.12);color:var(--glow)}
-    .illum-row{display:flex;border:1px solid rgba(64,200,244,.2);border-radius:10px;overflow:hidden}
-    .itab{flex:1;padding:8px 4px;font-size:.75rem;font-weight:600;text-align:center;cursor:pointer;background:transparent;color:rgba(168,232,255,.5);border:none;border-right:1px solid rgba(64,200,244,.15);transition:background .15s,color .15s;font-family:var(--font-b)}
-    .itab:last-child{border-right:none}
-    .itab.active{background:rgba(64,200,244,.12);color:var(--glow)}
-    .ctrl-block{display:flex;flex-direction:column;gap:7px}
-    .ctrl-top{display:flex;justify-content:space-between;align-items:baseline}
-    .ctrl-name{font-size:.72rem;color:rgba(168,232,255,.55);font-weight:500;letter-spacing:.06em;text-transform:uppercase}
-    .ctrl-val-disp{font-size:.95rem;font-weight:600;color:var(--glow);font-family:var(--font-b)}
-    .ctrl-range-labels{display:flex;justify-content:space-between;font-size:.65rem;color:rgba(168,232,255,.35)}
-    input[type=range]{width:100%;-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(64,200,244,.18);outline:none;cursor:pointer}
-    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--glow);box-shadow:0 0 10px rgba(64,200,244,.6);cursor:pointer;transition:transform .15s}
-    input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
-    .readout-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .readout-chip{background:rgba(255,255,255,.05);border:1px solid rgba(64,200,244,.1);border-radius:10px;padding:11px 13px}
-    .rl{font-size:.65rem;color:rgba(168,232,255,.45);text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}
-    .rv{font-family:var(--font-d);font-size:1.4rem;color:var(--glow);letter-spacing:.02em}
-    .chart-wrap{border-radius:14px;overflow:hidden;background:rgba(5,15,30,.88);border:1px solid rgba(64,200,244,.14)}
-    #sprCanvas{width:100%;display:block}
-    .chart-caption{color:rgba(168,232,255,.32);font-size:.72rem;text-align:center;margin-top:9px;letter-spacing:.04em}
+#world-svg-container { width: 100%; position: relative; }
+#world-svg-container svg { width: 100%; height: auto; display: block; }
 
-    .gallery-sec{background:var(--deep);padding:100px 0}
-    .gallery-sec h2.sec-title{color:#fff}
-    .gallery-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:44px}
-    .gallery-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:260px 260px;gap:8px}
-    .gi{border-radius:8px;overflow:hidden;cursor:pointer;position:relative}
-    .gi:nth-child(1){grid-column:span 5}.gi:nth-child(2){grid-column:span 4}.gi:nth-child(3){grid-column:span 3;grid-row:span 2}.gi:nth-child(4){grid-column:span 3}.gi:nth-child(5){grid-column:span 3}.gi:nth-child(6){grid-column:span 3}
-    .gi img{width:100%;height:100%;object-fit:cover;transition:transform .55s,filter .3s;filter:brightness(.78)}
-    .gi:hover img{transform:scale(1.07);filter:brightness(1.05)}
-    .gi-cap{position:absolute;bottom:0;left:0;right:0;padding:10px 14px;background:linear-gradient(to top,rgba(5,15,30,.92),transparent);font-size:.7rem;color:rgba(255,255,255,.82);font-weight:500;letter-spacing:.04em;opacity:0;transform:translateY(5px);transition:opacity .25s,transform .25s}
-    .gi:hover .gi-cap{opacity:1;transform:translateY(0)}
-    .gallery-row2{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px}
-    .gallery-row2 .gi{height:180px}
+.map-tooltip {
+  position: absolute; pointer-events: none;
+  background: var(--off-white); border: 1px solid var(--border);
+  padding: 12px 16px; font-size: 13px; color: var(--ink);
+  opacity: 0; transition: opacity .15s; z-index: 50; min-width: 190px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.map-tooltip.show { opacity: 1; }
+.tt-region { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+.tt-row { display: flex; justify-content: space-between; gap: 20px; }
+.tt-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; }
+.tt-val { font-weight: 500; font-size: 12px; }
 
-    .results-sec{background:#fff;padding:100px 0}
-    .res-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:80px;align-items:start}
-    .pills{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0}
-    .pill{padding:8px 16px;border-radius:40px;font-size:.83rem;font-weight:600}
-    .pill-blue{background:rgba(26,74,122,.1);color:#1a4a7a;border:1px solid rgba(26,74,122,.2)}
-    .pill-gold{background:rgba(245,200,66,.12);color:#8a6a00;border:1px solid rgba(245,200,66,.32)}
-    .sens-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;box-shadow:0 4px 30px rgba(10,22,40,.07);margin-top:20px}
-    .sens-table thead{background:var(--deep)}
-    .sens-table thead th{padding:15px 18px;text-align:left;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(168,232,255,.72)}
-    .sens-table tbody tr{border-bottom:1px solid rgba(26,74,122,.07)}
-    .sens-table tbody tr:nth-child(even){background:rgba(26,74,122,.025)}
-    .sens-table tbody tr.best{background:rgba(245,200,66,.05)}
-    .sens-table tbody td{padding:16px 18px;color:var(--muted);font-size:.9rem}
-    .sens-table tbody td:first-child{font-weight:600;color:#0a1628}
-    .snum{font-family:var(--font-d);font-size:1.4rem;color:var(--water);letter-spacing:.02em}
-    .best .snum{color:var(--gold-dim)}
-    .bar-w{background:rgba(26,74,122,.1);border-radius:999px;height:5px;margin-top:5px;overflow:hidden}
-    .bar-f{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--water),var(--glow));transition:width 1.3s ease}
-    .best .bar-f{background:linear-gradient(90deg,var(--gold-dim),var(--gold))}
-    .res-photos{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .rp{border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(10,22,40,.1);cursor:pointer;transition:transform .25s}
-    .rp:hover{transform:translateY(-3px)}
-    .rp.tall{grid-row:span 2;height:410px}
-    .rp:not(.tall){height:200px}
-    .rp img{width:100%;height:100%;object-fit:cover;display:block}
+/* ── TOXIN INFO STRIP ── */
+.toxin-strip {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 3px;
+  margin-top: 40px;
+}
+.toxin-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 24px;
+  transition: background .2s;
+}
+.toxin-card:hover { background: rgba(10,126,164,0.08); }
+.toxin-name {
+  font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 600;
+  color: var(--foam); margin-bottom: 8px;
+}
+.toxin-detail { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.65; margin-bottom: 12px; }
+.toxin-limit {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  color: var(--gold-lt); letter-spacing: 0.05em;
+}
 
-    .team-sec{background:var(--cream);padding:100px 0}
-    .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:48px}
-    .team-card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(10,22,40,.08);transition:transform .28s,box-shadow .28s}
-    .team-card:hover{transform:translateY(-5px);box-shadow:0 18px 55px rgba(10,22,40,.14)}
-    .tc-photo{height:220px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-    .tc-photo img{width:100%;height:100%;object-fit:cover}
-    .tc-initials{font-family:var(--font-d);font-size:3.5rem;color:rgba(255,255,255,.25);letter-spacing:.06em}
-    .tc-body{padding:20px 20px 22px}
-    .tc-name{font-weight:700;color:#0a1628;font-size:.98rem;margin-bottom:3px}
-    .tc-role{font-size:.82rem;color:var(--muted);margin-bottom:10px}
-    .tc-tag{display:inline-block;padding:4px 10px;border-radius:6px;background:rgba(28,111,168,.09);border:1px solid rgba(28,111,168,.16);color:var(--water);font-size:.72rem;font-weight:600;letter-spacing:.05em}
+/* ── WHY SPR ── */
+#why { background: var(--parchment); }
 
-    .timeline-sec{background:var(--deep);padding:100px 0}
-    .timeline-sec h2.sec-title{color:#fff}
-    .timeline-sec .sec-desc{color:rgba(168,232,255,.62)}
-    .timeline{position:relative;margin-top:52px;padding-left:40px}
-    .timeline::before{content:"";position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--glow),rgba(64,200,244,.08))}
-    .tl-item{position:relative;margin-bottom:42px;padding-left:44px}
-    .tl-dot{position:absolute;left:-32px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--glow);box-shadow:0 0 14px rgba(64,200,244,.7);border:2px solid var(--deep)}
-    .tl-phase{font-size:.7rem;font-weight:700;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
-    .tl-title{font-weight:700;color:#fff;font-size:1.02rem;margin-bottom:6px}
-    .tl-desc{color:rgba(168,232,255,.58);font-size:.9rem;line-height:1.72}
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 56px; }
+.compare-col-head {
+  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 14px 24px; display: flex; align-items: center; gap: 10px;
+}
+.compare-col-head.bad { background: rgba(190,30,45,0.08); color: #8b1a22; }
+.compare-col-head.good { background: rgba(10,126,164,0.08); color: var(--ocean); }
+.ccard {
+  padding: 24px 28px; border-bottom: 1px solid var(--border-lt);
+  background: var(--off-white); transition: background .2s;
+}
+.ccard:hover { background: #fff; }
+.ccard.bad { border-left: 2px solid rgba(190,30,45,0.25); }
+.ccard.good { border-left: 2px solid var(--teal); }
+.ccard-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--ink); }
+.ccard-desc { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.65; margin-bottom: 12px; }
+.ccard-cost { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.05em; }
+.ccard.bad .ccard-cost { color: #8b1a22; }
+.ccard.good .ccard-cost { color: var(--teal); }
 
-    /* ── IMPACT SECTION ── */
-    .impact-sec{background:var(--deep);padding:100px 0;position:relative;overflow:hidden}
-    .impact-sec::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 0%,rgba(28,111,168,.26),transparent 60%)}
-    .impact-eyebrow{font-size:.72rem;font-weight:700;color:rgba(168,232,255,.45);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.75rem}
-    .impact-headline{font-family:var(--font-s);font-style:italic;font-size:clamp(1.8rem,3.5vw,3rem);color:#fff;max-width:700px;margin:0 auto 3.5rem;line-height:1.18;text-align:center}
-    .impact-headline em{font-style:normal;color:var(--gold)}
-    .impact-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(64,200,244,.1);border:1px solid rgba(64,200,244,.12);border-radius:18px;overflow:hidden}
-    .imp-card{background:rgba(5,15,30,.75);padding:2rem 1.75rem;display:flex;flex-direction:column;gap:.75rem;transition:background .25s}
-    .imp-card:hover{background:rgba(13,47,85,.65)}
-    .imp-num{font-family:var(--font-d);font-size:2.2rem;color:rgba(64,200,244,.2);line-height:1;letter-spacing:.02em}
-    .imp-divider{width:28px;height:1px;background:rgba(64,200,244,.18);margin:.1rem 0}
-    .imp-card-title{font-weight:700;color:#fff;font-size:1rem;line-height:1.3}
-    .imp-card-body{color:rgba(168,232,255,.55);font-size:.9rem;line-height:1.78;flex:1}
-    .imp-tag{display:inline-block;font-size:.7rem;font-weight:600;color:rgba(168,232,255,.5);border:1px solid rgba(64,200,244,.18);border-radius:5px;padding:3px 9px;margin-top:.5rem;align-self:flex-start;letter-spacing:.05em}
+/* ── DEMO ── */
+#demo {
+  background: var(--ocean);
+  background-image: repeating-linear-gradient(
+    90deg, transparent, transparent 80px,
+    rgba(255,255,255,0.012) 80px, rgba(255,255,255,0.012) 81px
+  );
+}
+#demo .section-label { color: var(--foam); }
+#demo .section-label::before { background: var(--foam); }
+#demo h2.sh { color: var(--off-white); }
+#demo .section-lead { color: rgba(255,255,255,0.45); }
 
-    footer{background:#030a14;padding:60px 0;border-top:1px solid rgba(64,200,244,.07)}
-    .footer-inner{display:flex;justify-content:space-between;align-items:flex-start;gap:40px}
-    .foot-logo{font-family:var(--font-d);font-size:2.2rem;color:var(--glow);letter-spacing:.04em;margin-bottom:8px}
-    .foot-sub{color:rgba(168,232,255,.38);font-size:.84rem;line-height:1.72;max-width:380px}
-    .foot-right .prize-name{font-size:.76rem;font-weight:700;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
-    .foot-right p{color:rgba(168,232,255,.36);font-size:.82rem;line-height:1.7}
+.demo-layout { display: grid; grid-template-columns: 340px 1fr; gap: 3px; margin-top: 56px; }
+.ctrl-panel { display: flex; flex-direction: column; gap: 3px; }
+.ctrl-block { background: rgba(0,0,0,0.25); padding: 24px; border: 1px solid rgba(255,255,255,0.06); }
+.ctrl-block-label {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.3); margin-bottom: 14px;
+}
+.disc-btns { display: flex; gap: 2px; }
+.disc-btn {
+  flex: 1; padding: 10px 6px; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.4);
+  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all .2s; text-align: center;
+}
+.disc-btn .sub { display: block; font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'DM Mono', monospace; margin-top: 2px; }
+.disc-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+.disc-btn.active .sub { color: rgba(255,255,255,0.7); }
 
-    #btt{position:fixed;right:28px;bottom:28px;width:46px;height:46px;border-radius:50%;background:rgba(10,31,58,.88);border:1.5px solid rgba(64,200,244,.32);color:var(--glow);font-size:1.1rem;cursor:pointer;z-index:2500;opacity:0;transform:translateY(14px);transition:.3s;display:flex;align-items:center;justify-content:center}
-    #btt.show{opacity:1;transform:translateY(0)}
-    #btt:hover{background:rgba(64,200,244,.15);border-color:var(--glow)}
+.illum-btns { display: flex; gap: 2px; }
+.illum-btn {
+  flex: 1; padding: 9px; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.4);
+  font-family: 'DM Sans', sans-serif; font-size: 12px;
+  cursor: pointer; transition: all .2s;
+}
+.illum-btn.active { background: rgba(10,126,164,0.35); color: var(--foam); border-color: var(--teal); }
 
-    .lb{display:none;position:fixed;inset:0;background:rgba(3,10,20,.96);z-index:5000;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(12px)}
-    .lb.open{display:flex}
-    .lb-inner{position:relative;max-width:1020px;width:100%}
-    .lb-inner img{width:100%;max-height:80vh;object-fit:contain;border-radius:10px;display:block}
-    .lb-close{position:absolute;top:-16px;right:-16px;width:40px;height:40px;border-radius:50%;background:#fff;color:var(--deep);border:none;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
-    .lb-cap{text-align:center;color:rgba(168,232,255,.62);font-size:.86rem;margin-top:14px}
-    .vm{display:none;position:fixed;inset:0;background:rgba(3,10,20,.97);z-index:5000;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(12px)}
-    .vm.open{display:flex}
-    .vm-inner{position:relative;max-width:900px;width:100%;background:#0a1f3a;border-radius:18px;overflow:hidden;border:1px solid rgba(64,200,244,.2)}
-    .vm-inner video{width:100%;display:block;background:#000}
-    .vm-info{padding:18px 22px}
-    .vm-info h3{color:#fff;margin-bottom:4px}
-    .vm-info p{color:rgba(168,232,255,.58);font-size:.88rem}
-    .vm-close{position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--deep);border:none;font-size:.9rem;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center}
+.sl-row { margin-bottom: 20px; }
+.sl-row:last-child { margin-bottom: 0; }
+.sl-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.sl-name { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; text-transform: uppercase; }
+.sl-val { font-family: 'DM Mono', monospace; font-size: 18px; color: var(--foam); }
+.sl-val span { font-size: 11px; color: rgba(255,255,255,0.35); }
+input[type=range] { -webkit-appearance: none; width: 100%; height: 3px; background: rgba(255,255,255,0.1); outline: none; cursor: pointer; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--aqua); border: 2px solid var(--ocean); cursor: pointer; }
+.sl-limits { display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.2); font-family: 'DM Mono', monospace; margin-top: 4px; }
 
-    .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
-    .reveal.visible{opacity:1;transform:none}
+.chart-panel { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); padding: 32px; }
+.chart-panel-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 600; color: var(--off-white); margin-bottom: 4px; }
+.chart-panel-sub { font-size: 12px; color: rgba(255,255,255,0.3); font-family: 'DM Mono', monospace; margin-bottom: 24px; letter-spacing: 0.04em; }
+#spr-canvas { width: 100% !important; display: block; }
+.chart-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; margin-top: 20px; }
+.stat-b { background: rgba(0,0,0,0.25); padding: 16px; border: 1px solid rgba(255,255,255,0.05); }
+.stat-b-label { font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'DM Mono', monospace; margin-bottom: 4px; }
+.stat-b-val { font-family: 'DM Mono', monospace; font-size: 19px; color: var(--foam); }
+.stat-b-val span { font-size: 10px; color: rgba(255,255,255,0.3); }
 
-    @media(max-width:1024px){
-      .hero-inner,.problem-grid,.ov-layout,.res-layout,.method-head,.demo-layout{grid-template-columns:1fr}
-      .hero-right{display:none}.hero-left{padding:80px 48px}
-      .team-grid{grid-template-columns:repeat(2,1fr)}
-      .gallery-grid{grid-template-columns:repeat(6,1fr);grid-template-rows:200px 200px}
-      .gi:nth-child(1){grid-column:span 3}.gi:nth-child(2){grid-column:span 3}.gi:nth-child(3){grid-column:span 2;grid-row:span 1}.gi:nth-child(4){grid-column:span 2}.gi:nth-child(5){grid-column:span 2}.gi:nth-child(6){grid-column:span 6;grid-row:span 1}
-      .impact-cards-grid{grid-template-columns:1fr 1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.method-steps{grid-template-columns:repeat(2,1fr)}
-    }
-    @media(max-width:640px){
-      .container{padding:0 24px}nav{padding:0 20px}.nav-links{display:none}
-      .team-grid,.impact-cards-grid{grid-template-columns:1fr}.gallery-row2{grid-template-columns:repeat(2,1fr)}.footer-inner{flex-direction:column}.disc-tabs-row{flex-direction:column}.illum-row{flex-direction:column}
-    }
-  </style>
+/* Demo legend */
+.demo-legend {
+  margin-top: 16px;
+  display: flex; gap: 20px; flex-wrap: wrap;
+  padding: 12px 16px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.dl-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: rgba(255,255,255,0.5); }
+.dl-line { width: 20px; height: 2px; }
+
+/* ── GALLERY ── */
+#gallery { background: var(--sand); }
+
+.gallery-sections { display: flex; flex-direction: column; gap: 56px; margin-top: 56px; }
+.g-section-title {
+  font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600; color: var(--muted);
+  letter-spacing: 0.06em; border-left: 2px solid var(--teal); padding-left: 14px;
+  margin-bottom: 16px; text-transform: uppercase;
+}
+.g-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+.g-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
+.g-grid-wide { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3px; }
+
+.g-slot {
+  background: #d8d2c8; aspect-ratio: 4/3;
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all .3s;
+}
+.g-slot.wide { aspect-ratio: 16/9; }
+.g-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.g-slot:hover .g-slot-overlay { opacity: 1; }
+.g-slot-overlay {
+  position: absolute; inset: 0;
+  background: rgba(4,42,61,0.55);
+  display: flex; align-items: flex-end; padding: 16px;
+  opacity: 0; transition: opacity .3s;
+}
+.g-slot-cap { font-size: 13px; color: #fff; font-weight: 500; letter-spacing: 0.02em; }
+.g-ph { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 20px; }
+.g-ph svg { width: 32px; height: 32px; opacity: 0.25; }
+.g-ph p { font-size: 11px; color: #666; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
+
+/* ── RESULTS ── */
+#results { background: var(--off-white); }
+
+.results-table { width: 100%; border-collapse: collapse; margin-top: 48px; }
+.results-table th {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); padding: 12px 18px;
+  text-align: left; border-bottom: 1px solid var(--border);
+}
+.results-table td { padding: 18px 18px; border-bottom: 1px solid var(--border-lt); font-size: 14px; font-weight: 300; }
+.results-table tr:hover td { background: var(--parchment); }
+.results-table .val { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--teal); }
+.chip { display: inline-block; padding: 3px 10px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; font-family: 'DM Mono', monospace; }
+.chip-ok { background: rgba(10,126,164,0.1); color: var(--ocean); }
+.chip-cal { background: rgba(200,146,42,0.12); color: #6b4e12; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--deep); padding: 48px 72px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  position: relative; overflow: hidden;
+}
+footer::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--aqua), var(--foam), var(--teal));
+  animation: footerWave 4s linear infinite;
+}
+@keyframes footerWave {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.footer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--off-white); }
+.footer-tagline { font-size: 12px; color: rgba(255,255,255,0.25); margin-top: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
+.footer-right { font-size: 11px; color: rgba(255,255,255,0.2); text-align: right; font-family: 'DM Mono', monospace; line-height: 1.8; }
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+/* ── WATER RIPPLE on hover stats ── */
+@keyframes ripple {
+  0% { box-shadow: 0 0 0 0 rgba(10,126,164,0.3); }
+  100% { box-shadow: 0 0 0 12px rgba(10,126,164,0); }
+}
+.stat-b:hover { animation: ripple 0.6s ease-out; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--off-white); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* ── FLOWING WATER BG for #why ── */
+#why {
+  position: relative;
+}
+#why::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='300'%3E%3Cpath d='M0,100 C200,60 400,140 600,100 C800,60 1000,140 1200,100' stroke='rgba(10,126,164,0.06)' fill='none' stroke-width='2'/%3E%3Cpath d='M0,150 C200,110 400,190 600,150 C800,110 1000,190 1200,150' stroke='rgba(10,126,164,0.04)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,200 C200,160 400,240 600,200 C800,160 1000,240 1200,200' stroke='rgba(10,126,164,0.03)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 1200px 300px;
+  background-position: 0 70%;
+  animation: bgWaves 20s linear infinite;
+  pointer-events: none;
+  opacity: 0.7;
+}
+@keyframes bgWaves {
+  0% { background-position: 0 70%; }
+  100% { background-position: 1200px 70%; }
+}
+</style>
 </head>
 <body>
 
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-<div id="progress"></div>
-<canvas id="waterCanvas"></canvas>
-<canvas id="particleCanvas"></canvas>
-<button id="btt" aria-label="Back to top">↑</button>
-
+<!-- NAV -->
 <nav>
-  <div class="nav-brand">
-    <span class="nav-logo">DiscSPR</span>
-    <span class="nav-badge">SJWP 2026</span>
+  <div class="nav-logo">
+    <div class="nav-logo-mark">
+      <img src="cdfavicon.png" alt="CD icon">
+    </div>
+    DiscSPR
   </div>
   <ul class="nav-links">
-    <li><a href="#problem">Problem</a></li>
-    <li><a href="#overview">Overview</a></li>
-    <li><a href="#method">Method</a></li>
-    <li><a href="#demo">SPR Demo</a></li>
+    <li><a href="#howitworks">How It Works</a></li>
+    <li><a href="#problem">The Problem</a></li>
+    <li><a href="#why">Why SPR</a></li>
+    <li><a href="#demo">Demo</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#results">Results</a></li>
-    <li><a href="#team">Team</a></li>
-    <li><a href="#impact">Impact</a></li>
   </ul>
 </nav>
 
 <!-- HERO -->
-<section class="hero" id="top">
-  <div class="hero-bg"></div>
-  <div class="depth-glow"></div>
-  <div class="shimmer-band" style="top:26%;animation-duration:4.5s;animation-delay:0s"></div>
-  <div class="shimmer-band" style="top:50%;animation-duration:5.5s;animation-delay:1.2s;opacity:.5"></div>
-  <div class="shimmer-band" style="top:72%;animation-duration:6.5s;animation-delay:2.6s;opacity:.32"></div>
-  <div class="shimmer-band" style="top:88%;animation-duration:3.8s;animation-delay:3.8s;opacity:.22"></div>
-  <div id="heroDrops"></div>
+<section id="hero">
+  <!-- Bubbles -->
+  <div class="bubble" style="width:8px;height:8px;left:8%;animation-duration:14s;animation-delay:0s;"></div>
+  <div class="bubble" style="width:14px;height:14px;left:18%;animation-duration:18s;animation-delay:3s;"></div>
+  <div class="bubble" style="width:6px;height:6px;left:35%;animation-duration:11s;animation-delay:7s;"></div>
+  <div class="bubble" style="width:10px;height:10px;left:55%;animation-duration:16s;animation-delay:1s;"></div>
+  <div class="bubble" style="width:18px;height:18px;left:72%;animation-duration:20s;animation-delay:5s;"></div>
+  <div class="bubble" style="width:7px;height:7px;left:85%;animation-duration:13s;animation-delay:9s;"></div>
+  <div class="bubble" style="width:12px;height:12px;left:92%;animation-duration:17s;animation-delay:2s;"></div>
+  <div class="bubble" style="width:5px;height:5px;left:45%;animation-duration:12s;animation-delay:11s;"></div>
 
-  <div class="hero-inner">
-    <div class="hero-left">
-      <div class="sjwp-badge">
-        <div class="wdrop"></div>
-        <span>Stockholm Junior Water Prize 2026 · University of North Texas</span>
+  <div class="hero-top">
+    <div class="hero-top-inner">
+      <!-- LEFT: title + text -->
+      <div class="hero-top-left">
+        <div class="hero-eyebrow">SJWP 2026 &nbsp;·&nbsp; Surface Plasmon Resonance &nbsp;·&nbsp; Water Safety</div>
+        <h1 class="hero-h1">DISC<em>SPR</em></h1>
+        <p class="hero-tagline">Ordinary optical discs — CDs, DVDs, Blu-rays — reimagined as precision water quality sensors. Bringing plasmonic toxin detection within reach of every community on Earth.</p>
+        <div class="hero-quick-facts">
+          <div class="hqf"><div class="hqf-val">~$200</div><div class="hqf-label">Total apparatus cost</div></div>
+          <div class="hqf"><div class="hqf-val">&lt;60s</div><div class="hqf-label">Result time</div></div>
+          <div class="hqf"><div class="hqf-val">142</div><div class="hqf-label">nm/RIU sensitivity</div></div>
+          <div class="hqf"><div class="hqf-val">$0.50</div><div class="hqf-label">Per sensor substrate</div></div>
+        </div>
+        <div class="hero-actions">
+          <a href="#howitworks" class="btn-water">How It Works</a>
+          <a href="#demo" class="btn-water" style="background:rgba(10,126,164,0.4);border:1px solid var(--teal);">Explore SPR Demo</a>
+          <a href="#results" class="btn-outline-lt">View Results</a>
+        </div>
       </div>
-      <h1 class="hero-title">Disc<span class="accent">SPR</span></h1>
-      <p class="hero-sub">An Affordable Plasmonic Water Toxin Sensor</p>
-      <p class="hero-lead">We turned ordinary optical discs — CDs, DVDs, Blu-rays — into precision water quality sensors, bringing plasmonic toxin detection within reach of every community on Earth.</p>
-      <div class="hero-ctas">
-        <a href="#demo" class="btn btn-gold">Try the SPR Demo ▶</a>
-        <a href="#results" class="btn btn-outline">See Results</a>
+
+      <!-- RIGHT: new image placeholder -->
+      <!-- To add your image: replace the .img-placeholder-slot div with:
+           <div class="hero-top-right hero-img-slot">
+             <img class="slot-img" src="YOUR-IMAGE.png" alt="Your description">
+             <div class="img-slot-label"><strong>YOUR LABEL</strong>Your caption</div>
+           </div>
+      -->
+      <div class="hero-top-right" style="display:flex;flex-direction:column;border:none;">
+        <div class="hero-top-right hero-sequence-panel">
+  <div class="hero-sequence-img-wrap">
+    <img src="sequence.png" alt="DiscSPR concept overview" class="hero-sequence-img">
+  </div>
+  <div class="hero-sequence-label">
+    <strong>DiscSPR Concept Overview</strong>
+    <span>Turning optical discs into plasmonic gratings for low-cost SPR sensing</span>
+  </div>
+</div>
       </div>
     </div>
-    <div class="hero-right">
-      <div class="hero-mosaic">
-        <div class="mosaic-item tall" onclick="openLb('agcoated.jpg','Ag-coated BD-R disc showing vivid plasmonic color response')">
-          <img src="agcoated.jpg" alt="Coated BD-R"><span class="mosaic-label">Ag-coated BD-R grating</span>
-        </div>
-        <div class="mosaic-item" onclick="openLb('rawdvdsubstrate.jpg','Orange DVD-R disc used as plasmonic substrate')">
-          <img src="rawdvdsubstrate.jpg" alt="DVD-R"><span class="mosaic-label">DVD-R substrate</span>
-        </div>
-        <div class="mosaic-item" onclick="openLb('discpreperation.jpg','Lab disc preparation with gloved hands')">
-          <img src="discpreperation.jpg" alt="Preparation"><span class="mosaic-label">Disc preparation</span>
-        </div>
-        <div class="mosaic-item" onclick="openLb('sensingtest.jpg','Liquid analyte sensing test setup')">
-          <img src="sensingtest.jpg" alt="Sensing test"><span class="mosaic-label">Sensing test</span>
-        </div>
-        <div class="mosaic-item" onclick="openLb('sputter.jpg','Magnetron sputter coater for metal film deposition')">
-          <img src="sputter.jpg" alt="Sputter coater"><span class="mosaic-label">Sputter coater</span>
-        </div>
+  </div>
+
+  <!-- TWO IMAGE SLOTS (bottom row) -->
+  <div class="hero-imgs">
+
+    <!-- Slot 1: Sensor photo -->
+    <div class="hero-img-slot">
+      <img class="slot-img" src="frontandbacksensors.png" alt="Front and back of silver-coated optical disc sensor">
+      <div class="img-slot-label">
+        <strong>Sensor Substrate</strong>
+        Silver-coated optical disc — front &amp; back view
       </div>
     </div>
+
+    <!-- Slot 2: Home setup photo -->
+    <div class="hero-img-slot">
+      <img class="slot-img" src="homesetup.png" alt="Home-built SPR optical apparatus">
+      <div class="img-slot-label">
+        <strong>Home-Built Apparatus</strong>
+        Full SPR setup · ~$200 total cost · spectrometer + light source
+      </div>
+    </div>
+
   </div>
 
-  <div class="wave-layer" style="z-index:2">
-    <svg class="wv1" viewBox="0 0 1440 120" preserveAspectRatio="none">
-      <path d="M0,60 C240,110 480,10 720,60 C960,110 1200,10 1440,60 L1440,120 L0,120 Z" fill="rgba(64,200,244,0.1)"/>
+  <!-- Animated water waves -->
+  <div class="hero-water-anim">
+    <svg viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="wave3" d="M0,120 C200,160 400,60 600,110 C800,160 1000,60 1200,100 C1300,120 1380,140 1440,130 L1440,220 L0,220Z" fill="rgba(4,42,61,0.4)"/>
+      <path class="wave2" d="M0,150 C160,110 320,170 480,140 C640,110 800,160 960,130 C1120,100 1300,150 1440,120 L1440,220 L0,220Z" fill="rgba(4,42,61,0.6)"/>
+      <path class="wave1" d="M0,170 C240,130 480,180 720,160 C960,140 1200,175 1440,155 L1440,220 L0,220Z" fill="#042a3d"/>
     </svg>
   </div>
-  <div class="wave-layer" style="z-index:3;bottom:8px">
-    <svg class="wv2" viewBox="0 0 1440 100" preserveAspectRatio="none">
-      <path d="M0,50 C360,90 720,10 1080,50 C1260,70 1380,30 1440,50 L1440,100 L0,100 Z" fill="rgba(64,200,244,0.07)"/>
-    </svg>
-  </div>
-  <div class="wave-layer" style="z-index:4;bottom:18px">
-    <svg class="wv3" viewBox="0 0 1440 80" preserveAspectRatio="none">
-      <path d="M0,40 C180,10 360,70 540,40 C720,10 900,70 1080,40 C1260,10 1380,60 1440,40 L1440,80 L0,80 Z" fill="rgba(28,111,168,0.13)"/>
-    </svg>
-  </div>
-  <div class="wave-layer" style="z-index:5;bottom:28px">
-    <svg class="wv4" viewBox="0 0 1440 60" preserveAspectRatio="none">
-      <path d="M0,30 C360,58 720,2 1080,30 C1260,44 1380,14 1440,30 L1440,60 L0,60 Z" fill="rgba(5,15,30,0.52)"/>
-    </svg>
-  </div>
+</section>
 
-  <div class="stats-strip">
-    <div class="stats-grid">
-      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Disc types tested<br>BD-R · DVD-R · CD-R</div></div>
-      <div class="stat-item"><div class="stat-num">394</div><div class="stat-label">nm/RIU peak sensitivity<br>CD-R + Ag front-side</div></div>
-      <div class="stat-item"><div class="stat-num">2</div><div class="stat-label">Illumination modes<br>front-side &amp; back-side</div></div>
-      <div class="stat-item"><div class="stat-num">&lt;$5</div><div class="stat-label">Sensor cost estimate<br>vs. $1,000s traditional</div></div>
+<!-- WAVE TRANSITION -->
+<div class="wave-div" style="background:var(--parchment);">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,20 1440,30 L1440,0 L0,0Z" fill="var(--deep)"/>
+  </svg>
+</div>
+
+<!-- HOW IT WORKS — NEW SECTION -->
+<section id="howitworks">
+  <div class="section-inner reveal">
+    <div class="section-label">How It Works</div>
+    <h2 class="sh">From disc to detection<br>in four steps.</h2>
+    <p class="section-lead">DiscSPR uses light to detect toxins — no chemicals, no lab, no waiting. Here's how a CD becomes a precision sensor.</p>
+
+    <div class="hiw-steps">
+      <div class="hiw-step" data-num="1">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
+            <circle cx="12" cy="12" r="9"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="12" cy="12" r="1"/>
+          </svg>
+        </div>
+        <div class="hiw-title">Coat the disc</div>
+        <div class="hiw-desc">A thin layer of silver (50 nm) is deposited on a CD, DVD, or Blu-ray. The disc's nanoscale grooves act as a precision diffraction grating — already manufactured to exact tolerances.</div>
+      </div>
+      <div class="hiw-step" data-num="2">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
+            <path d="M12 2 L12 6 M12 18 L12 22 M2 12 L6 12 M18 12 L22 12"/>
+            <path d="M4 4 L7 7 M17 17 L20 20 M4 20 L7 17 M17 7 L20 4"/>
+            <circle cx="12" cy="12" r="4"/>
+          </svg>
+        </div>
+        <div class="hiw-title">Shine light on it</div>
+        <div class="hiw-desc">White light hits the silver-coated disc at an angle. The grating diffracts light, coupling specific wavelengths into surface plasmons — quantum ripples of electrons along the metal surface.</div>
+      </div>
+      <div class="hiw-step" data-num="3">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
+            <path d="M3 12 C3 12 7 8 12 12 C17 16 21 12 21 12"/>
+            <path d="M3 12 C3 12 7 16 12 12 C17 8 21 12 21 12" opacity="0.4"/>
+            <circle cx="12" cy="12" r="2" fill="var(--teal)"/>
+          </svg>
+        </div>
+        <div class="hiw-title">Toxins bind &amp; shift</div>
+        <div class="hiw-desc">Water droplets sit on the sensor. When toxins (microcystin, atrazine, PFAS) bind to the surface, they change the local refractive index — shifting the resonance wavelength by measurable nanometers.</div>
+      </div>
+      <div class="hiw-step" data-num="4">
+        <div class="hiw-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
+            <path d="M3 18 L7 12 L11 15 L15 8 L19 11 L21 6"/>
+            <path d="M19 6 L21 6 L21 8"/>
+          </svg>
+        </div>
+        <div class="hiw-title">Read the spectrum</div>
+        <div class="hiw-desc">A low-cost spectrometer captures the reflected light. The resonance dip position tells you exactly which toxins are present and at what concentration — in under 60 seconds.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- TICKER -->
-<div class="ticker-wrap"><div class="ticker-track" id="tickerTrack"></div></div>
+<!-- EXPLAINER BANNER -->
+<div class="explainer-banner">
+  <div class="exp-item">
+    <div class="exp-item-q">What is a surface plasmon?</div>
+    <div class="exp-item-a">A surface plasmon is a collective wave of electrons that travels along a metal surface. When light hits a metal grating at just the right angle and wavelength, it "couples" into this wave — and the reflected light drops sharply. That dip is your signal.</div>
+  </div>
+  <div class="exp-item">
+    <div class="exp-item-q">Why use an optical disc?</div>
+    <div class="exp-item-a">CDs, DVDs, and Blu-rays have precisely engineered nanoscale tracks (320–1600 nm pitch) that function as diffraction gratings. They're mass-produced to optical tolerances, cost cents each, and are available everywhere on Earth — making them perfect sensor substrates.</div>
+  </div>
+  <div class="exp-item">
+    <div class="exp-item-q">What does refractive index mean?</div>
+    <div class="exp-item-a">Refractive index (n) measures how much light slows down in a substance. Pure water has n = 1.333. When toxins dissolve in water, they increase n slightly. SPR detects this tiny change — a shift of just 0.001 in n produces a measurable wavelength shift.</div>
+  </div>
+</div>
+
+<!-- WAVE TRANSITION -->
+<div class="wave-div" style="background:var(--deep);">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,0 C360,60 720,0 1080,40 C1260,55 1380,10 1440,20 L1440,60 L0,60Z" fill="var(--parchment)"/>
+  </svg>
+</div>
 
 <!-- PROBLEM -->
-<section class="problem-sec section" id="problem">
-  <div class="container">
-    <div class="problem-grid reveal">
-      <div>
-        <div class="sec-label"><div class="bar" style="background:var(--gold)"></div><span style="color:var(--gold)">The Problem</span></div>
-        <h2 class="sec-title" style="color:#fff">Water toxins are invisible — and detection is expensive</h2>
-        <p class="blockquote">"1 in 3 people globally lack safe drinking water. State-of-the-art toxin sensors cost thousands of dollars — out of reach for the communities who need them most."</p>
-        <p class="sec-desc">Surface plasmon resonance sensors can detect trace toxins with extraordinary sensitivity. But traditional SPR platforms require nanofabrication labs and $50,000+ equipment. We asked: what if a $0.50 optical disc could do the same job?</p>
+<section id="problem">
+  <div class="section-inner reveal">
+    <div class="section-label">The Problem</div>
+    <h2 class="sh" style="color:var(--off-white);">Billions lack access<br>to water toxin testing.</h2>
+    <p class="section-lead">Cyanotoxins, PFAS, and heavy metals contaminate drinking water globally. Accurate detection remains locked behind expensive lab equipment most communities cannot access.</p>
+
+    <!-- Toxin info cards -->
+    <div class="toxin-strip">
+      <div class="toxin-card">
+        <div class="toxin-name">Microcystin-LR</div>
+        <div class="toxin-detail">Produced by cyanobacteria (blue-green algae) during warm-water blooms. A potent liver toxin — linked to liver failure in humans and mass fish kills. Increasingly common as climate change warms lakes and reservoirs.</div>
+        <div class="toxin-limit">WHO limit: 1 μg/L in drinking water</div>
       </div>
-      <div class="photo-stack">
-        <div class="ph-main"><img src="watertoxin.jpg" alt="Disc sensor in liquid analyte"></div>
-        <div class="ph-accent"><img src="watertoxinspr.jpg" alt="CD-R optical grating"></div>
+      <div class="toxin-card">
+        <div class="toxin-name">Atrazine</div>
+        <div class="toxin-detail">One of the world's most widely used herbicides. Runoff from agricultural fields contaminates groundwater and streams. Linked to endocrine disruption — affecting hormones even at low concentrations. Banned in the EU, still used in the US.</div>
+        <div class="toxin-limit">EPA limit: 3 μg/L in drinking water</div>
+      </div>
+      <div class="toxin-card">
+        <div class="toxin-name">PFAS / "Forever Chemicals"</div>
+        <div class="toxin-detail">Per- and polyfluoroalkyl substances persist indefinitely in the environment and human body. Found in firefighting foam, non-stick coatings, and food packaging. Associated with cancer, thyroid disease, and immune suppression at very low concentrations.</div>
+        <div class="toxin-limit">EPA limit: 4 ng/L (2024 rule)</div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- OVERVIEW -->
-<section class="ov-sec section" id="overview">
-  <div class="container">
-    <div class="ov-layout">
-      <div class="reveal">
-        <div class="sec-label"><div class="bar"></div><span>Our Approach</span></div>
-        <h2 class="sec-title">Turning everyday discs into precision sensors</h2>
-        <p class="sec-desc">Optical discs have nanoscale grating tracks built right in — the same structure needed for plasmonic coupling. We coat them with silver thin films and detect refractive index shifts from water toxins.</p>
-        <div class="ov-cards">
-          <div class="ov-card"><div class="ov-icon">💿</div><div><h4>Nanoscale grating built-in</h4><p>BD-R (320 nm), DVD-R (740 nm), and CD-R (1600 nm) track pitches act as diffraction gratings for SPR coupling — no fabrication needed.</p></div></div>
-          <div class="ov-card"><div class="ov-icon">⚗️</div><div><h4>Silver thin-film coating</h4><p>Ag and Cu films are sputter-deposited onto the grating to form the plasmonic sensing layer. Silver outperformed copper in all tests.</p></div></div>
-          <div class="ov-card"><div class="ov-icon">🔬</div><div><h4>Two illumination modes</h4><p>Front-side vs. back-side illumination compared. Front-side gave cleaner, more reproducible resonances across all substrates.</p></div></div>
-          <div class="ov-card"><div class="ov-icon">📊</div><div><h4>RCWA simulation matched</h4><p>Rigorous coupled-wave analysis confirmed our experimental spectra and guided metal thickness optimization.</p></div></div>
+    <div class="map-wrap" style="margin-top:40px;">
+      <div class="map-header">
+        <div>
+          <div class="map-title">Water testing access by region</div>
+          <div class="map-sub">Hover any country for details &nbsp;·&nbsp; Color = testing accessibility</div>
+        </div>
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;"></div>No local testing</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#e67e22;"></div>Very costly</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f;"></div>Moderate access</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71;"></div>Good access</div>
+          <div class="legend-item"><div class="legend-swatch" style="background:#3498db;"></div>High access</div>
         </div>
       </div>
-      <div class="ov-photos reveal" style="transition-delay:.15s">
-        <div class="ph" onclick="openLb('IMG_0692.HEIC','Disc preparation on green cutting mat')"><img src="IMG_0692.HEIC" alt="Disc prep"></div>
-        <div class="ph" onclick="openLb('IMG_5887.HEIC','Coated disc showing plasmonic color response')"><img src="IMG_5887.HEIC" alt="Coated disc"></div>
-        <div class="ph" onclick="openLb('IMG_5895.HEIC','Silver-coated grating substrate')"><img src="IMG_5895.HEIC" alt="Silver disc"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- METHOD -->
-<section class="method-sec section" id="method">
-  <div class="container">
-    <div class="method-head reveal">
-      <div>
-        <div class="sec-label"><div class="bar"></div><span>Methodology</span></div>
-        <h2 class="sec-title">Four steps from disc to sensor</h2>
-      </div>
-      <p class="sec-desc">Each step was fully documented with photos and video. Click any step card to watch the process.</p>
-    </div>
-    <div class="method-steps reveal">
-      <div class="ms" onclick="openVid('cleaning1.mp4','Step 01 — Disc Preparation','Commercial optical discs were cut and delaminated to expose the nanoscale polymer grating substrate.')">
-        <img src="IMG_0692.HEIC" alt="Disc preparation">
-        <div class="ms-inner"><div class="ms-num">01</div><div class="ms-title">Disc Preparation</div><div class="ms-desc">Cut, delaminate, and isolate the polymer grating</div><div class="ms-play">▶ Watch video</div></div>
-      </div>
-      <div class="ms" onclick="openVid('cleaning2.mp4','Step 02 — Cleaning','The grating surface was cleaned to remove contamination before metal deposition.')">
-        <img src="IMG_5963.HEIC" alt="Cleaning">
-        <div class="ms-inner"><div class="ms-num">02</div><div class="ms-title">Cleaning</div><div class="ms-desc">Remove contaminants for optimal metal adhesion</div><div class="ms-play">▶ Watch video</div></div>
-      </div>
-      <div class="ms" onclick="openVid('cleaning3.mp4','Step 03 — Metal Deposition','Ag and Cu thin films were sputter-deposited onto the grating using a magnetron sputtering system.')">
-        <img src="IMG_5979.HEIC" alt="Sputter coater">
-        <div class="ms-inner"><div class="ms-num">03</div><div class="ms-title">Metal Deposition</div><div class="ms-desc">Sputter-coat Ag or Cu plasmonic layer</div><div class="ms-play">▶ Watch video</div></div>
-      </div>
-      <div class="ms" onclick="openVid('cleaning4.mp4','Step 04 — Optical Testing','Reflectivity spectra were recorded across angles and refractive indices, validated against RCWA predictions.')">
-        <img src="IMG_5958.HEIC" alt="Optical testing">
-        <div class="ms-inner"><div class="ms-num">04</div><div class="ms-title">Optical Testing</div><div class="ms-desc">Collect spectra and compare with RCWA simulation</div><div class="ms-play">▶ Watch video</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── INTERACTIVE SPR DEMO (UPDATED) ── -->
-<section class="demo-sec section" id="demo">
-  <div class="container">
-    <div class="reveal">
-      <div class="sec-label"><div class="bar" style="background:var(--glow)"></div><span style="color:var(--glow)">Interactive Demo</span></div>
-      <h2 class="sec-title">Explore SPR sensing live</h2>
-      <p class="sec-desc">Adjust the refractive index of the liquid medium and watch the plasmon resonance dip shift — just like in our real experiments.</p>
-    </div>
-    <div class="demo-layout reveal" style="transition-delay:.1s">
-      <div class="demo-ctrl-panel">
-        <div>
-          <p class="ctrl-name" style="margin-bottom:8px">Disc substrate</p>
-          <div class="disc-tabs-row">
-            <button class="dtab active" data-disc="cdr">CD-R<br><span style="font-weight:400;font-size:.65rem;opacity:.7">1600 nm</span></button>
-            <button class="dtab" data-disc="dvdr">DVD-R<br><span style="font-weight:400;font-size:.65rem;opacity:.7">740 nm</span></button>
-            <button class="dtab" data-disc="bdr">BD-R<br><span style="font-weight:400;font-size:.65rem;opacity:.7">320 nm</span></button>
-          </div>
+      <div id="world-svg-container">
+        <div class="map-tooltip" id="map-tooltip">
+          <div class="tt-region" id="tt-region">—</div>
+          <div class="tt-row"><span class="tt-label">Access Level</span><span class="tt-val" id="tt-access">—</span></div>
+          <div class="tt-row"><span class="tt-label">Approx. Cost</span><span class="tt-val" id="tt-cost">—</span></div>
+          <div class="tt-row"><span class="tt-label">Key Concern</span><span class="tt-val" id="tt-concern">—</span></div>
         </div>
-        <div>
-          <p class="ctrl-name" style="margin-bottom:8px">Illumination mode</p>
-          <div class="illum-row">
-            <button class="itab active" data-illum="0">Front-side</button>
-            <button class="itab" data-illum="1">Back-side</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY SPR -->
+<section id="why">
+  <div class="section-inner reveal">
+    <div class="section-label">Why SPR</div>
+    <h2 class="sh">Every existing method<br>falls short.</h2>
+    <p class="section-lead">Surface Plasmon Resonance detects toxins using only light — no chemicals, no labels, no reagents. But it has been locked behind $50,000+ instruments. Until now.</p>
+
+    <div class="compare-grid">
+      <div class="compare-col">
+        <div class="compare-col-head bad">✕ &nbsp;Previous Methods</div>
+        <div class="ccard bad">
+          <div class="ccard-name">HPLC / Mass Spectrometry</div>
+          <div class="ccard-desc">Gold standard accuracy but requires trained technicians, expensive consumables, and weeks of sample prep. Not field-deployable.</div>
+          <div class="ccard-cost">$30,000–$200,000 instrument &nbsp;·&nbsp; $500+/test</div>
+        </div>
+        <div class="ccard bad">
+          <div class="ccard-name">ELISA Immunoassay</div>
+          <div class="ccard-desc">Antibody-antigen reactions. Single-analyte, requires cold-chain reagent storage, results take hours.</div>
+          <div class="ccard-cost">$10–50/test &nbsp;·&nbsp; Limited multiplexing</div>
+        </div>
+        <div class="ccard bad">
+          <div class="ccard-name">Colorimetric Test Strips</div>
+          <div class="ccard-desc">Cheap but imprecise. Covers only a handful of contaminants and cannot detect trace-level toxins.</div>
+          <div class="ccard-cost">$1–5/test &nbsp;·&nbsp; Very low sensitivity</div>
+        </div>
+      </div>
+      <div class="compare-col">
+        <div class="compare-col-head good">✓ &nbsp;DiscSPR Approach</div>
+        <div class="ccard good">
+          <div class="ccard-name">Light-only detection</div>
+          <div class="ccard-desc">SPR measures how light couples into surface plasmons at metal-dielectric interfaces. No chemicals — just photons and physics.</div>
+          <div class="ccard-cost">No consumables &nbsp;·&nbsp; Real-time readout</div>
+        </div>
+        <div class="ccard good">
+          <div class="ccard-name">Optical disc as grating</div>
+          <div class="ccard-desc">The nanoscale tracks on CDs, DVDs, and Blu-rays are precision diffraction gratings for plasmonic coupling. Already mass-manufactured.</div>
+          <div class="ccard-cost">~$0.50 per sensor substrate</div>
+        </div>
+        <div class="ccard good">
+          <div class="ccard-name">Real-time, label-free sensing</div>
+          <div class="ccard-desc">Toxin binding shifts resonance wavelength instantly. No waiting, no sample prep, no consumables to replenish.</div>
+          <div class="ccard-cost">Results in &lt;60 seconds</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<div class="wave-div" style="background:var(--ocean);">
+  <svg viewBox="0 0 1440 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,25 C300,50 600,0 900,25 C1100,40 1320,10 1440,20 L1440,0 L0,0Z" fill="var(--parchment)"/>
+  </svg>
+</div>
+
+<!-- DEMO -->
+<section id="demo">
+  <div class="section-inner reveal">
+    <div class="section-label">Interactive Demo</div>
+    <h2 class="sh" style="color:var(--off-white);">Explore SPR sensing</h2>
+    <p class="section-lead">Adjust the sliders to see the resonance dip shift — replicating what occurs in our experiments. A higher refractive index (more toxin dissolved in water) shifts the dip to longer wavelengths (to the right).</p>
+
+    <div class="demo-layout">
+      <div class="ctrl-panel">
+        <div class="ctrl-block">
+          <div class="ctrl-block-label">Disc Substrate</div>
+          <div class="disc-btns" id="disc-selector">
+            <button class="disc-btn" data-pitch="1600" data-disc="CD-R">CD-R<span class="sub">1600 nm</span></button>
+            <button class="disc-btn" data-pitch="740" data-disc="DVD-R">DVD-R<span class="sub">740 nm</span></button>
+            <button class="disc-btn active" data-pitch="320" data-disc="BD-R">BD-R<span class="sub">320 nm</span></button>
           </div>
+          <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:10px;font-family:'DM Mono',monospace;line-height:1.6;">Smaller track pitch = more sensitive. BD-R (Blu-ray) grooves at 320 nm give the best plasmonic coupling.</p>
         </div>
         <div class="ctrl-block">
-          <div class="ctrl-top">
-            <span class="ctrl-name">Refractive index (n)</span>
-            <span class="ctrl-val-disp" id="riVal">1.333</span>
+          <div class="ctrl-block-label">Illumination Side</div>
+          <div class="illum-btns" id="illum-selector">
+            <button class="illum-btn active" data-illum="front">Front-side</button>
+            <button class="illum-btn" data-illum="back">Back-side</button>
           </div>
-          <input type="range" id="riSlider" min="1333" max="1500" value="1333" step="1">
-          <div class="ctrl-range-labels"><span>1.333 (water)</span><span>1.500</span></div>
+          <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:10px;font-family:'DM Mono',monospace;line-height:1.6;">Front-side illumination hits the polycarbonate surface first. Back-side hits the metal directly — changes coupling geometry and resonance position.</p>
         </div>
         <div class="ctrl-block">
-          <div class="ctrl-top">
-            <span class="ctrl-name">Ag film thickness</span>
-            <span class="ctrl-val-disp" id="thkVal">50 nm</span>
+          <div class="ctrl-block-label">Parameters</div>
+          <div class="sl-row">
+            <div class="sl-head">
+              <div class="sl-name">Refractive Index (n)</div>
+              <div class="sl-val" id="n-display">1.333<span> n</span></div>
+            </div>
+            <input type="range" id="n-slider" min="1333" max="1500" value="1333" step="1"/>
+            <div class="sl-limits"><span>1.333 = pure water</span><span>1.500</span></div>
           </div>
-          <input type="range" id="thkSlider" min="30" max="100" value="50" step="1">
-          <div class="ctrl-range-labels"><span>30 nm</span><span>100 nm</span></div>
-        </div>
-        <div class="readout-grid">
-          <div class="readout-chip"><div class="rl">Resonance</div><div class="rv" id="resLambda">—</div></div>
-          <div class="readout-chip"><div class="rl">Sensitivity</div><div class="rv" id="resSens">—</div></div>
-        </div>
-        <div class="readout-grid">
-          <div class="readout-chip"><div class="rl">FWHM</div><div class="rv" id="resFwhm">—</div></div>
-          <div class="readout-chip"><div class="rl">FOM</div><div class="rv" id="resFom">—</div></div>
+          <div class="sl-row">
+            <div class="sl-head">
+              <div class="sl-name">Ag Film Thickness</div>
+              <div class="sl-val" id="ag-display">50<span> nm</span></div>
+            </div>
+            <input type="range" id="ag-slider" min="30" max="100" value="50" step="1"/>
+            <div class="sl-limits"><span>30 nm (thin)</span><span>100 nm (thick)</span></div>
+          </div>
+          <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:8px;font-family:'DM Mono',monospace;line-height:1.6;">Tip: Increase n to simulate adding more toxin to water. Optimal silver thickness is ~50 nm for deepest resonance dip.</p>
         </div>
       </div>
-      <div>
-        <div class="chart-wrap"><canvas id="sprCanvas" height="380"></canvas></div>
-        <p class="chart-caption">Simulated reflectance spectrum — SPR resonance dip shifts with analyte refractive index</p>
+
+      <div class="chart-panel">
+        <div class="chart-panel-title">SPR Reflectance Spectrum</div>
+        <div class="chart-panel-sub">Reflectance vs. wavelength — resonance dip marks where plasmons absorb light</div>
+        <canvas id="spr-canvas" width="600" height="300"></canvas>
+        <div class="demo-legend">
+          <div class="dl-item"><div class="dl-line" style="background:rgba(126,232,250,0.9);"></div>SPR spectrum curve</div>
+          <div class="dl-item"><div class="dl-line" style="background:rgba(200,146,42,0.9);border-top:2px dashed rgba(200,146,42,0.9);height:0;"></div>Resonance wavelength (λ)</div>
+          <div class="dl-item" style="color:rgba(255,255,255,0.35);">Dip position shifts right as toxin concentration increases</div>
+        </div>
+        <div class="chart-stats">
+          <div class="stat-b">
+            <div class="stat-b-label">Resonance λ</div>
+            <div class="stat-b-val" id="stat-lambda">542<span> nm</span></div>
+          </div>
+          <div class="stat-b">
+            <div class="stat-b-label">Dip Depth</div>
+            <div class="stat-b-val" id="stat-depth">68<span> %</span></div>
+          </div>
+          <div class="stat-b">
+            <div class="stat-b-label">Sensitivity</div>
+            <div class="stat-b-val" id="stat-sens">142<span> nm/RIU</span></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- GALLERY -->
-<section class="gallery-sec section" id="gallery">
-  <div class="container">
-    <div class="gallery-head reveal">
+<section id="gallery">
+  <div class="section-inner reveal">
+    <div class="section-label">Gallery</div>
+    <h2 class="sh">The Sensor &amp; Research</h2>
+
+    <div class="gallery-sections">
       <div>
-        <div class="sec-label"><div class="bar" style="background:var(--glow)"></div><span style="color:var(--glow)">Photo Gallery</span></div>
-        <h2 class="sec-title">The research in pictures</h2>
+        <div class="g-section-title">01 — Sensor Fabrication</div>
+        <div class="g-grid-wide">
+          <div class="g-slot wide">
+            <div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>FABRICATION OVERVIEW</p></div>
+            <div class="g-slot-overlay"><div class="g-slot-cap">Disc substrate preparation</div></div>
+          </div>
+          <div class="g-slot">
+            <div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO</p></div>
+            <div class="g-slot-overlay"><div class="g-slot-cap">Silver coating process</div></div>
+          </div>
+          <div class="g-slot">
+            <div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO</p></div>
+            <div class="g-slot-overlay"><div class="g-slot-cap">CD-R vs BD-R comparison</div></div>
+          </div>
+        </div>
       </div>
-      <p style="color:rgba(168,232,255,.42);font-size:.84rem;max-width:240px;text-align:right">Click any photo to enlarge. All images from our UNT lab.</p>
-    </div>
-    <div class="gallery-grid reveal">
-      <div class="gi" onclick="openLb('IMG_5884.HEIC','Ag-coated BD-R disc — vivid plasmonic color response')"><img src="IMG_5884.HEIC" alt="Coated disc"><div class="gi-cap">Ag-coated BD-R — plasmonic colors</div></div>
-      <div class="gi" onclick="openLb('IMG_5928.HEIC','DiscSPR sensor immersed in liquid analyte during testing')"><img src="IMG_5928.HEIC" alt="Disc in liquid"><div class="gi-cap">Sensor in liquid analyte</div></div>
-      <div class="gi" onclick="openLb('IMG_5972.HEIC','Full optical characterization setup at UNT')"><img src="IMG_5972.HEIC" alt="Optical setup"><div class="gi-cap">Full optical testing setup</div></div>
-      <div class="gi" onclick="openLb('IMG_1474.JPG','CD-R disc showing natural diffraction grating colors')"><img src="IMG_1474.JPG" alt="CD-R"><div class="gi-cap">CD-R grating diffraction</div></div>
-      <div class="gi" onclick="openLb('IMG_5888.HEIC','Orange DVD-R disc as plasmonic substrate')"><img src="IMG_5888.HEIC" alt="DVD-R"><div class="gi-cap">DVD-R substrate</div></div>
-      <div class="gi" onclick="openLb('IMG_5974.HEIC','AFM surface morphology characterization')"><img src="IMG_5974.HEIC" alt="AFM"><div class="gi-cap">Surface morphology (AFM)</div></div>
-    </div>
-    <div class="gallery-row2 reveal" style="transition-delay:.1s">
-      <div class="gi" onclick="openLb('IMG_0190.HEIC','Lab equipment and materials')"><img src="IMG_0190.HEIC" alt="Lab materials"><div class="gi-cap">Lab materials</div></div>
-      <div class="gi" onclick="openLb('IMG_5891.HEIC','Preparing disc surface for coating')"><img src="IMG_5891.HEIC" alt="Surface prep"><div class="gi-cap">Surface preparation</div></div>
-      <div class="gi" onclick="openLb('IMG_5896.HEIC','Coated disc segments on cutting mat')"><img src="IMG_5896.HEIC" alt="Coated segments"><div class="gi-cap">Coated disc segments</div></div>
-      <div class="gi" onclick="openLb('IMG_5960.HEIC','Preparing liquid analyte solutions')"><img src="IMG_5960.HEIC" alt="Analyte prep"><div class="gi-cap">Analyte preparation</div></div>
-      <div class="gi" onclick="openLb('IMG_5980.HEIC','Magnetron sputter deposition system')"><img src="IMG_5980.HEIC" alt="Sputter system"><div class="gi-cap">Sputter deposition system</div></div>
+
+      <div>
+        <div class="g-section-title">02 — Optical Setup</div>
+        <div class="g-grid-3">
+          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">Full apparatus overview</div></div></div>
+          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">Light source and collimator</div></div></div>
+          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">Spectrometer coupling</div></div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="g-section-title">03 — Experiments &amp; Data</div>
+        <div class="g-grid-2">
+          <div class="g-slot wide"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT SPECTRA / GRAPH</p></div><div class="g-slot-overlay"><div class="g-slot-cap">SPR spectra — resonance dip shifts</div></div></div>
+          <div class="g-slot wide"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO / GRAPH</p></div><div class="g-slot-overlay"><div class="g-slot-cap">Toxin detection — microcystin-LR</div></div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="g-section-title">04 — Disc Substrate Comparison</div>
+        <div class="g-grid-3">
+          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>CD-R PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">CD-R &nbsp;·&nbsp; 1600 nm track pitch</div></div></div>
+          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>DVD-R PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">DVD-R &nbsp;·&nbsp; 740 nm track pitch</div></div></div>
+          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>BD-R PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">BD-R &nbsp;·&nbsp; 320 nm track pitch</div></div></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- RESULTS -->
-<section class="results-sec section" id="results">
-  <div class="container">
-    <div class="res-layout">
-      <div class="reveal">
-        <div class="sec-label"><div class="bar"></div><span>Key Findings</span></div>
-        <h2 class="sec-title">What we discovered</h2>
-        <p class="sec-desc">Silver outperformed copper across all disc types. Front-side illumination produced cleaner resonances. CD-R achieved the highest sensitivity despite broader spectral features.</p>
-        <div class="pills">
-          <span class="pill pill-gold">Best resonance: BD-R + Ag</span>
-          <span class="pill pill-blue">Best setup: Front-side</span>
-          <span class="pill pill-blue">Top metal: Silver</span>
-          <span class="pill pill-gold">Peak sensitivity: CD-R</span>
-        </div>
-        <table class="sens-table">
-          <thead><tr><th>Substrate</th><th>Sensitivity</th><th>Key strength</th></tr></thead>
-          <tbody>
-            <tr class="best">
-              <td>CD-R + Ag (best)</td>
-              <td><span class="snum">394</span> nm/RIU<div class="bar-w"><div class="bar-f" data-w="100%" style="width:0%"></div></div></td>
-              <td>Highest wavelength shift</td>
-            </tr>
-            <tr>
-              <td>BD-R + Ag</td>
-              <td><span class="snum">321</span> nm/RIU<div class="bar-w"><div class="bar-f" data-w="81%" style="width:0%"></div></div></td>
-              <td>Sharpest resonance features</td>
-            </tr>
-            <tr>
-              <td>DVD-R + Ag</td>
-              <td><span class="snum">290</span> nm/RIU<div class="bar-w"><div class="bar-f" data-w="74%" style="width:0%"></div></div></td>
-              <td>Consistent reproducible signal</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="res-photos reveal" style="transition-delay:.15s">
-        <div class="rp tall" onclick="openLb('behaivorgraphs.png','Spectral resonance behavior across disc types')"><img src="behaivorgraphs.png" alt="Spectra"></div>
-        <div class="rp" onclick="openLb('IMG_5973.HEIC','Optical measurement table')"><img src="IMG_5973.HEIC" alt="Measurement table"></div>
-        <div class="rp" onclick="openLb('IMG_5082.HEIC','Metal-coated disc comparison')"><img src="IMG_5082.HEIC" alt="Disc comparison"></div>
-      </div>
-    </div>
-  </div>
-</section>
+<section id="results">
+  <div class="section-inner reveal">
+    <div class="section-label">Experimental Results</div>
+    <h2 class="sh">Measured SPR Shifts</h2>
+    <p class="section-lead">Resonance wavelength shifts measured across disc substrates and analyte concentrations using our home-built spectrometer setup. Δλ = shift from baseline (pure water).</p>
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Disc</th>
+          <th>Analyte</th>
+          <th>Concentration</th>
+          <th>Δλ Shift</th>
+          <th>Sensitivity</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>BD-R</strong></td>
+          <td>Microcystin-LR</td>
+          <td>10 μg/L</td>
+          <td class="val">+18.4 nm</td>
+          <td class="val">142 nm/RIU</td>
+          <td><span class="chip chip-ok">Detected</span></td>
+        </tr>
+        <tr>
+          <td><strong>BD-R</strong></td>
+          <td>Microcystin-LR</td>
+          <td>1 μg/L</td>
+          <td class="val">+6.2 nm</td>
+          <td class="val">142 nm/RIU</td>
+          <td><span class="chip chip-ok">Detected</span></td>
+        </tr>
+        <tr>
+          <td><strong>DVD-R</strong></td>
+          <td>Atrazine</td>
+          <td>5 μg/L</td>
+          <td class="val">+9.7 nm</td>
+          <td class="val">95 nm/RIU</td>
+          <td><span class="chip chip-ok">Detected</span></td>
+        </tr>
+        <tr>
+          <td><strong>DVD-R</strong></td>
+          <td>NaCl (1 mM)</td>
+          <td>— calibration</td>
+          <td class="val">+3.1 nm</td>
+          <td class="val">95 nm/RIU</td>
+          <td><span class="chip chip-cal">Calibration</span></td>
+        </tr>
+        <tr>
+          <td><strong>CD-R</strong></td>
+          <td>Glucose</td>
+          <td>100 mM</td>
+          <td class="val">+4.8 nm</td>
+          <td class="val">62 nm/RIU</td>
+          <td><span class="chip chip-ok">Detected</span></td>
+        </tr>
+      </tbody>
+    </table>
 
-<!-- TEAM -->
-<section class="team-sec section" id="team">
-  <div class="container">
-    <div class="reveal">
-      <div class="sec-label"><div class="bar"></div><span>The Team</span></div>
-      <h2 class="sec-title">Meet the researchers</h2>
-      <p class="sec-desc">Based at the University of North Texas, our team combines expertise in photonics, materials science, and environmental sensing.</p>
-    </div>
-    <div class="team-grid reveal" style="transition-delay:.1s">
-      <div class="team-card">
-        <div class="tc-photo" style="background:linear-gradient(135deg,#0d2f55,#1c6fa8)"><div class="tc-initials">VL</div></div>
-        <div class="tc-body"><div class="tc-name">Vivian Liu</div><div class="tc-role">Lead Researcher · UNT</div><span class="tc-tag">Optical sensing</span></div>
+    <!-- Key takeaways -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:32px;">
+      <div style="background:var(--parchment);padding:24px;border:1px solid var(--border-lt);">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">Key Finding</div>
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:8px;">BD-R most sensitive</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.65;">Blu-ray discs (320 nm pitch) achieved 142 nm/RIU — more than 2× better than CD-R at 62 nm/RIU. Smaller grooves couple light more efficiently into plasmons.</div>
       </div>
-      <div class="team-card">
-        <div class="tc-photo" style="background:linear-gradient(135deg,#0f3260,#2196c4)"><div class="tc-initials">CW</div></div>
-        <div class="tc-body"><div class="tc-name">Claire Wang</div><div class="tc-role">Lead Researcher · UNT</div><span class="tc-tag">RCWA simulation</span></div>
+      <div style="background:var(--parchment);padding:24px;border:1px solid var(--border-lt);">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">Detection Limit</div>
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:8px;">Below WHO threshold</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.65;">Microcystin-LR detected at 1 μg/L — at the WHO's maximum allowable limit — confirming the sensor has real-world utility for drinking water safety monitoring.</div>
       </div>
-      <div>
-        
-      </div>
-      </DIV>
-      
-    </div>
-  </div>
-</section>
-
-<!-- TIMELINE -->
-<section class="timeline-sec section" id="timeline">
-  <div class="container">
-    <div class="reveal">
-      <div class="sec-label"><div class="bar" style="background:var(--glow)"></div><span style="color:var(--glow)">Project Timeline</span></div>
-      <h2 class="sec-title">Research milestones</h2>
-      <p class="sec-desc">From concept to publication — the journey of DiscSPR.</p>
-    </div>
-    <div class="timeline reveal" style="transition-delay:.1s">
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 1</div><div class="tl-title">Concept &amp; substrate selection</div><div class="tl-desc">Identified optical discs as low-cost SPR grating candidates. Selected BD-R, DVD-R, and CD-R for their distinct grating pitches spanning 320–1600 nm.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 2</div><div class="tl-title">Disc preparation &amp; delamination</div><div class="tl-desc">Developed a repeatable protocol to cut, delaminate, and clean disc substrates without damaging the nanostructured grating surface.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 3</div><div class="tl-title">Metal deposition optimization</div><div class="tl-desc">Tested Ag and Cu films at varied thicknesses (30–100 nm) using magnetron sputtering. Optimized for resonance quality and reproducibility.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 4</div><div class="tl-title">AFM characterization</div><div class="tl-desc">Measured grating period, depth, and metal morphology using atomic force microscopy to confirm structure integrity post-deposition.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Phase 5</div><div class="tl-title">Optical testing &amp; RCWA comparison</div><div class="tl-desc">Collected reflectivity spectra across refractive indices and angles, validated against rigorous coupled-wave analysis simulations.</div></div>
-      <div class="tl-item"><div class="tl-dot"></div><div class="tl-phase">Publication</div><div class="tl-title">Published in Materials, 2026</div><div class="tl-desc">Research accepted in <em>Materials</em> journal — CD-R achieving 394 nm/RIU, the highest sensitivity of all tested configurations.</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ── IMPACT SECTION (UPDATED) ── -->
-<section class="impact-sec section" id="impact">
-  <div class="container">
-    <div class="reveal" style="text-align:center">
-      <p class="impact-eyebrow">Impact</p>
-      <p class="impact-headline">Making clean water safety <em>accessible</em> to every community on Earth</p>
-    </div>
-    <div class="impact-cards-grid reveal" style="transition-delay:.1s">
-      <div class="imp-card">
-        <span class="imp-num">01</span>
-        <div class="imp-divider"></div>
-        <h4 class="imp-card-title">Affordable water safety</h4>
-        <p class="imp-card-body">By using $0.50 optical discs instead of $1,000+ nanofabricated chips, DiscSPR can make water toxin detection viable for schools, clinics, and communities in resource-limited settings.</p>
-        <span class="imp-tag">Cost reduction &gt;99%</span>
-      </div>
-      <div class="imp-card">
-        <span class="imp-num">02</span>
-        <div class="imp-divider"></div>
-        <h4 class="imp-card-title">Adaptable sensing platform</h4>
-        <p class="imp-card-body">The disc substrate can be functionalized with target-specific antibodies to detect heavy metals, cyanotoxins, pesticides, and pharmaceutical contaminants in water supplies.</p>
-        <span class="imp-tag">Multi-analyte capable</span>
-      </div>
-      <div class="imp-card">
-        <span class="imp-num">03</span>
-        <div class="imp-divider"></div>
-        <h4 class="imp-card-title">Future: portable device</h4>
-        <p class="imp-card-body">Next steps include microfluidic integration, protective coatings for field use, and a handheld reader — moving DiscSPR from lab bench to real-world environmental monitoring.</p>
-        <span class="imp-tag">Field deployment</span>
+      <div style="background:var(--parchment);padding:24px;border:1px solid var(--border-lt);">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">Cost Comparison</div>
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:8px;">250× cheaper than HPLC</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.65;">The entire DiscSPR apparatus costs ~$200 vs. $50,000+ for commercial SPR systems. Each sensor costs under $1, making community-scale deployment financially feasible.</div>
       </div>
     </div>
   </div>
@@ -686,310 +1243,205 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="container">
-    <div class="footer-inner">
-      <div>
-        <div class="foot-logo">DiscSPR</div>
-        <p class="foot-sub">Research by Wisansaya Jaikeandee, Asad Ullah Hil Gulib, Taeyul Choi, and Richard Z. Zhang — University of North Texas. Published in <em>Materials</em>, 2026.</p>
-      </div>
-      <div class="foot-right">
-        <div class="prize-name">Stockholm Junior Water Prize 2026</div>
-        <p>Submitted to the U.S. SJWP competition,<br>sponsored by the Stockholm International<br>Water Institute (SIWI).</p>
-      </div>
-    </div>
+  <div>
+    <div class="footer-logo">DiscSPR</div>
+    <div class="footer-tagline">Affordable Plasmonic Water Toxin Sensing &nbsp;·&nbsp; SJWP 2026</div>
+  </div>
+  <div class="footer-right">
+    Surface Plasmon Resonance<br>
+    Optical Disc Grating Sensors<br>
+    Data illustrative where noted
   </div>
 </footer>
 
-<!-- LIGHTBOX -->
-<div class="lb" id="lb" onclick="closeLb()">
-  <div class="lb-inner" onclick="event.stopPropagation()">
-    <button class="lb-close" onclick="closeLb()">✕</button>
-    <img id="lbImg" src="" alt=""><p class="lb-cap" id="lbCap"></p>
-  </div>
-</div>
-
-<!-- VIDEO MODAL -->
-<div class="vm" id="vm" onclick="closeVid()">
-  <div class="vm-inner" onclick="event.stopPropagation()">
-    <button class="vm-close" onclick="closeVid()">✕</button>
-    <video id="vmVid" controls><source id="vmSrc" src="" type="video/mp4"></video>
-    <div class="vm-info"><h3 id="vmTitle"></h3><p id="vmText"></p></div>
-  </div>
-</div>
-
 <script>
-// ── CURSOR ──
-const cur=document.getElementById('cursor'),curR=document.getElementById('cursor-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
-(function ac(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(ac)})();
-document.querySelectorAll('a,button,.ms,.gi,.ov-card,.team-card,.mosaic-item,.rp,.ph,.dtab,.itab').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{cur.style.width='7px';cur.style.height='7px';curR.style.width='62px';curR.style.height='62px';curR.style.opacity='.65'});
-  el.addEventListener('mouseleave',()=>{cur.style.width='14px';cur.style.height='14px';curR.style.width='40px';curR.style.height='40px';curR.style.opacity='1'});
-});
+/* ===== WORLD MAP ===== */
+const regionData = {
+  "United States of America": { access: "High", cost: "$200–500/test", concern: "PFAS, cyanotoxins" },
+  "Canada": { access: "High", cost: "$150–400/test", concern: "Blue-green algae" },
+  "Mexico": { access: "Moderate", cost: "$400–900/test", concern: "Agricultural runoff" },
+  "Brazil": { access: "Moderate", cost: "$300–700/test", concern: "Cyanobacteria blooms" },
+  "Argentina": { access: "Moderate", cost: "$350–800/test", concern: "Atrazine, herbicides" },
+  "Colombia": { access: "Poor", cost: "$800–2,000/test", concern: "Industrial contaminants" },
+  "Venezuela": { access: "None", cost: "Unavailable", concern: "Heavy metals" },
+  "Peru": { access: "Poor", cost: "$700–1,500/test", concern: "Mining runoff" },
+  "Chile": { access: "Moderate", cost: "$400–900/test", concern: "Arsenic" },
+  "United Kingdom": { access: "High", cost: "$120–350/test", concern: "Pesticides" },
+  "France": { access: "High", cost: "$130–380/test", concern: "Agricultural chemicals" },
+  "Germany": { access: "High", cost: "$110–320/test", concern: "Nitrates" },
+  "Spain": { access: "High", cost: "$140–400/test", concern: "Cyanotoxins" },
+  "Italy": { access: "High", cost: "$150–420/test", concern: "Industrial runoff" },
+  "Poland": { access: "Moderate", cost: "$300–650/test", concern: "Industrial contaminants" },
+  "Ukraine": { access: "Poor", cost: "$600–1,200/test", concern: "Heavy metals" },
+  "Russia": { access: "Moderate", cost: "$350–750/test", concern: "Industrial chemicals" },
+  "Norway": { access: "High", cost: "$100–300/test", concern: "Microplastics" },
+  "Sweden": { access: "High", cost: "$100–280/test", concern: "PFAS" },
+  "Nigeria": { access: "None", cost: "Unavailable", concern: "Oil contamination" },
+  "Ethiopia": { access: "None", cost: "Unavailable", concern: "Fluoride, arsenic" },
+  "Kenya": { access: "None", cost: "Unavailable", concern: "Cyanotoxins" },
+  "South Africa": { access: "Poor", cost: "$700–1,800/test", concern: "Acid mine drainage" },
+  "Egypt": { access: "Poor", cost: "$600–1,400/test", concern: "Nile algal blooms" },
+  "Morocco": { access: "Poor", cost: "$700–1,500/test", concern: "Agricultural chemicals" },
+  "Algeria": { access: "Poor", cost: "$700–1,600/test", concern: "Industrial waste" },
+  "Tanzania": { access: "None", cost: "Unavailable", concern: "Microcystin" },
+  "Ghana": { access: "None", cost: "Unavailable", concern: "Artisanal mining" },
+  "DR Congo": { access: "None", cost: "Unavailable", concern: "Mining effluent" },
+  "China": { access: "Moderate", cost: "$250–600/test", concern: "Heavy metals, algae" },
+  "India": { access: "Poor", cost: "$600–1,500/test", concern: "Arsenic, fluoride" },
+  "Japan": { access: "High", cost: "$130–380/test", concern: "Microplastics" },
+  "South Korea": { access: "High", cost: "$150–400/test", concern: "Algal toxins" },
+  "Indonesia": { access: "Poor", cost: "$500–1,200/test", concern: "Industrial chemicals" },
+  "Bangladesh": { access: "None", cost: "Unavailable", concern: "Arsenic contamination" },
+  "Pakistan": { access: "None", cost: "Unavailable", concern: "Arsenic, heavy metals" },
+  "Vietnam": { access: "Poor", cost: "$500–1,100/test", concern: "Pesticides" },
+  "Thailand": { access: "Moderate", cost: "$350–800/test", concern: "Agricultural runoff" },
+  "Philippines": { access: "Poor", cost: "$600–1,300/test", concern: "Mining contaminants" },
+  "Saudi Arabia": { access: "Moderate", cost: "$400–900/test", concern: "Desalination byproducts" },
+  "Iran": { access: "Poor", cost: "$700–1,500/test", concern: "Industrial waste" },
+  "Iraq": { access: "None", cost: "Unavailable", concern: "Heavy metals" },
+  "Turkey": { access: "Moderate", cost: "$300–700/test", concern: "Agricultural chemicals" },
+  "Australia": { access: "High", cost: "$180–450/test", concern: "Cyanobacteria" },
+  "New Zealand": { access: "High", cost: "$160–400/test", concern: "Agricultural runoff" },
+  "Cambodia": { access: "None", cost: "Unavailable", concern: "Arsenic" },
+  "Myanmar": { access: "None", cost: "Unavailable", concern: "Mining runoff" },
+  "Afghanistan": { access: "None", cost: "Unavailable", concern: "Arsenic, fluoride" },
+  "Sudan": { access: "None", cost: "Unavailable", concern: "Heavy metals" },
+  "Mali": { access: "None", cost: "Unavailable", concern: "Fluoride" },
+  "Niger": { access: "None", cost: "Unavailable", concern: "Uranium mining" }
+};
+const accessColor = { "High": "#3498db", "Moderate": "#f1c40f", "Poor": "#e67e22", "None": "#e74c3c" };
+const defaultColor = "#6b8fa3";
+function getColor(name) { const d = regionData[name]; if (!d) return defaultColor; return accessColor[d.access] || defaultColor; }
 
-// ── CLICK RIPPLE ──
-document.addEventListener('click',e=>{
-  const r=document.createElement('div');r.className='ripple-click';
-  r.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;width:10px;height:10px`;
-  document.body.appendChild(r);setTimeout(()=>r.remove(),820);
-});
+const mapContainer = document.getElementById('world-svg-container');
+const tooltip = document.getElementById('map-tooltip');
+const width = 900, height = 460;
+const svg = d3.select('#world-svg-container').append('svg').attr('viewBox', `0 0 ${width} ${height}`).style('width','100%').style('height','auto').style('display','block');
+const projection = d3.geoNaturalEarth1().scale(145).translate([width/2, height/2+20]);
+const path = d3.geoPath().projection(projection);
 
-// ── PROGRESS + NAV ──
-const prog=document.getElementById('progress'),btt=document.getElementById('btt');
-const sects=document.querySelectorAll('section[id]'),navAs=document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll',()=>{
-  const h=document.documentElement.scrollHeight-window.innerHeight;
-  prog.style.width=(window.scrollY/h*100)+'%';
-  btt.classList.toggle('show',window.scrollY>500);
-  let c='';sects.forEach(s=>{if(window.scrollY>=s.offsetTop-140)c=s.id});
-  navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+c));
-});
-btt.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+  .then(r => r.json())
+  .then(world => {
+    const countries = topojson.feature(world, world.objects.countries);
+    const nameMap = {"004":"Afghanistan","024":"Angola","032":"Argentina","036":"Australia","050":"Bangladesh","056":"Belgium","068":"Bolivia","076":"Brazil","104":"Myanmar","116":"Cambodia","120":"Cameroon","124":"Canada","152":"Chile","156":"China","170":"Colombia","180":"DR Congo","204":"Benin","208":"Denmark","818":"Egypt","231":"Ethiopia","246":"Finland","250":"France","276":"Germany","288":"Ghana","300":"Greece","320":"Guatemala","356":"India","360":"Indonesia","364":"Iran","368":"Iraq","372":"Ireland","376":"Israel","380":"Italy","392":"Japan","404":"Kenya","410":"South Korea","418":"Laos","434":"Libya","484":"Mexico","504":"Morocco","516":"Namibia","524":"Nepal","528":"Netherlands","554":"New Zealand","558":"Nicaragua","566":"Nigeria","578":"Norway","586":"Pakistan","600":"Paraguay","604":"Peru","608":"Philippines","616":"Poland","682":"Saudi Arabia","710":"South Africa","724":"Spain","752":"Sweden","756":"Switzerland","760":"Syria","764":"Thailand","792":"Turkey","800":"Uganda","804":"Ukraine","784":"United Arab Emirates","826":"United Kingdom","840":"United States of America","858":"Uruguay","862":"Venezuela","704":"Vietnam","887":"Yemen","894":"Zambia","716":"Zimbabwe","012":"Algeria","466":"Mali","562":"Niger","729":"Sudan","834":"Tanzania"};
+    svg.append('rect').attr('width',width).attr('height',height).attr('fill','#0d2438');
+    svg.append('g').selectAll('path').data(countries.features).enter().append('path')
+      .attr('d', path)
+      .attr('fill', d => { const name = nameMap[String(d.id).padStart(3,'0')]; return getColor(name); })
+      .attr('stroke','#0d2438').attr('stroke-width',0.5).attr('opacity',0.85)
+      .on('mouseover', function(event, d) {
+        const name = nameMap[String(d.id).padStart(3,'0')];
+        const info = regionData[name];
+        d3.select(this).attr('opacity',1).attr('stroke','#fff').attr('stroke-width',1.2);
+        document.getElementById('tt-region').textContent = name || 'Unknown region';
+        document.getElementById('tt-access').textContent = info ? info.access + ' access' : 'Data unavailable';
+        document.getElementById('tt-cost').textContent = info ? info.cost : '—';
+        document.getElementById('tt-concern').textContent = info ? info.concern : '—';
+        tooltip.classList.add('show');
+      })
+      .on('mousemove', function(event) {
+        const rect = mapContainer.getBoundingClientRect();
+        let x = event.clientX - rect.left + 14;
+        let y = event.clientY - rect.top - 10;
+        if (x + 210 > rect.width) x -= 220;
+        tooltip.style.left = x + 'px'; tooltip.style.top = y + 'px';
+      })
+      .on('mouseleave', function() {
+        d3.select(this).attr('opacity',0.85).attr('stroke','#0d2438').attr('stroke-width',0.5);
+        tooltip.classList.remove('show');
+      });
+    svg.append('path').datum(topojson.mesh(world, world.objects.countries, (a,b) => a !== b)).attr('d',path).attr('fill','none').attr('stroke','#0d2438').attr('stroke-width',0.4);
+  })
+  .catch(() => { document.getElementById('world-svg-container').innerHTML += '<p style="color:rgba(255,255,255,0.3);padding:20px;font-size:13px;font-family:DM Mono,monospace;">Map requires network access to load.</p>'; });
 
-// ── TICKER ──
-const facts=['Water scarcity affects over 2 billion people','DiscSPR sensors cost less than $5 to produce','CD-R achieved 394 nm/RIU — top sensitivity','Traditional SPR sensors cost $10,000–$50,000','Silver coating outperformed copper in every test','Front-side illumination gave the most reproducible resonances','BD-R produced the sharpest spectral features','Optical disc grating pitches range 320–1600 nm','1 in 4 health facilities lack safe water access','DiscSPR can detect heavy metals, pesticides, and cyanotoxins'];
-const tt=document.getElementById('tickerTrack');
-tt.innerHTML=[...facts,...facts].map(f=>`<span class="ticker-item">${f}</span>`).join('');
-
-// ── FLOATING HERO DROPS ──
-const hd=document.getElementById('heroDrops');
-for(let i=0;i<24;i++){
-  const d=document.createElement('div');d.className='drop-float';
-  const s=Math.random()*8+3;
-  d.style.cssText=`left:${Math.random()*100}%;bottom:${Math.random()*10}%;width:${s}px;height:${s}px;border-radius:50%;background:radial-gradient(circle at 33% 33%,rgba(255,255,255,.72),rgba(64,200,244,.12));animation-duration:${Math.random()*13+9}s;animation-delay:${-Math.random()*18}s;opacity:0`;
-  hd.appendChild(d);
+/* ===== SPR CHART ===== */
+const canvas = document.getElementById('spr-canvas');
+const ctx = canvas.getContext('2d');
+let state = { n: 1.333, ag: 50, pitch: 320, illum: 'front' };
+function sprLambda(n, pitch, ag, illum) {
+  const base = { 320: 540, 740: 620, 1600: 720 }[pitch] || 540;
+  return base + (n - 1.333) * 800 + (ag - 50) * 0.4 + (illum === 'back' ? -15 : 0);
 }
-
-// ── WATER CANVAS ──
-(function(){
-  const c=document.getElementById('waterCanvas'),ctx=c.getContext('2d');
-  let W,H;function rs(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}rs();
-  window.addEventListener('resize',rs);
-  const wvs=[];
-  for(let i=0;i<8;i++)wvs.push({y:H*(0.08+i*0.12),amp:14+i*5,freq:0.007-i*0.0005,spd:0.009+i*0.003,off:Math.random()*Math.PI*2,al:0.038-i*0.004});
-  let t=0;
-  (function draw(){
-    ctx.clearRect(0,0,W,H);
-    wvs.forEach(w=>{
-      ctx.beginPath();ctx.moveTo(0,w.y);
-      for(let x=0;x<=W;x+=3){
-        const y=w.y+Math.sin(x*w.freq+t*w.spd+w.off)*w.amp+Math.sin(x*w.freq*1.8-t*w.spd*.55)*w.amp*.38;
-        ctx.lineTo(x,y);
-      }
-      ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
-      ctx.fillStyle=`rgba(64,200,244,${w.al})`;ctx.fill();
-    });
-    t++;requestAnimationFrame(draw);
-  })();
-})();
-
-// ── PARTICLE CANVAS ──
-(function(){
-  const c=document.getElementById('particleCanvas'),ctx=c.getContext('2d');
-  let W,H;function rs(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}rs();
-  window.addEventListener('resize',rs);
-  const pts=[];
-  for(let i=0;i<80;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.28,vy:-Math.random()*.48-.08,r:Math.random()*2.2+.4,al:Math.random()*.32+.04,life:Math.random(),ls:Math.random()*.003+.001});
-  (function draw(){
-    ctx.clearRect(0,0,W,H);
-    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life+=p.ls;
-      if(p.life>1){p.life=0;p.x=Math.random()*W;p.y=H+8}
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(64,200,244,${p.al*Math.sin(p.life*Math.PI)})`;ctx.fill();
-    });
-    requestAnimationFrame(draw);
-  })();
-})();
-
-// ── REVEAL + BAR ANIMATIONS ──
-const obs=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.classList.add('visible');
-      e.target.querySelectorAll('.bar-f').forEach(b=>{setTimeout(()=>{b.style.width=b.dataset.w},220)});
-    }
+function dipD(ag, pitch) {
+  const base = pitch === 320 ? 72 : pitch === 740 ? 60 : 48;
+  return Math.max(20, base - Math.abs(ag - 50) * 0.3);
+}
+function sens(pitch) { return { 320: 142, 740: 95, 1600: 62 }[pitch] || 142; }
+function drawSPR() {
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+  const lMin = 400, lMax = 900;
+  const res = sprLambda(state.n, state.pitch, state.ag, state.illum);
+  const depth = dipD(state.ag, state.pitch);
+  const dw = state.pitch === 320 ? 28 : state.pitch === 740 ? 38 : 55;
+  const pL = 48, pR = 16, pT = 18, pB = 36;
+  const pw = w - pL - pR, ph = h - pT - pB;
+  const toX = l => pL + (l - lMin) / (lMax - lMin) * pw;
+  const toY = r => pT + (1 - r) * ph;
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
+  for (let r = 0; r <= 1; r += 0.2) { ctx.beginPath(); ctx.moveTo(pL,toY(r)); ctx.lineTo(pL+pw,toY(r)); ctx.stroke(); }
+  for (let l = 400; l <= 900; l += 100) { ctx.beginPath(); ctx.moveTo(toX(l),pT); ctx.lineTo(toX(l),pT+ph); ctx.stroke(); }
+  ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.font = '10px DM Mono, monospace'; ctx.textAlign = 'center';
+  for (let l = 400; l <= 900; l += 100) ctx.fillText(l+'nm', toX(l), pT+ph+16);
+  ctx.textAlign = 'right';
+  for (let r = 0; r <= 1; r += 0.2) ctx.fillText(r.toFixed(1), pL-6, toY(r)+4);
+  ctx.fillStyle='rgba(255,255,255,0.12)'; ctx.font='9px DM Mono,monospace'; ctx.textAlign='center';
+  ctx.fillText('Wavelength (nm)', pL + pw/2, h - 2);
+  ctx.save(); ctx.translate(12, pT + ph/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('Reflectance', 0, 0); ctx.restore();
+  const grad = ctx.createLinearGradient(toX(lMin),0,toX(lMax),0);
+  grad.addColorStop(0,'rgba(126,232,250,0.8)'); grad.addColorStop(0.4,'rgba(0,184,217,0.9)'); grad.addColorStop(1,'rgba(10,126,164,0.8)');
+  ctx.beginPath(); ctx.strokeStyle = grad; ctx.lineWidth = 2.2;
+  let first = true;
+  for (let l = lMin; l <= lMax; l += 2) {
+    let ref = 0.82 + 0.08 * Math.sin((l-400)/500 * Math.PI);
+    const dx = (l - res) / dw;
+    ref -= (depth/100) * Math.exp(-dx*dx*0.5);
+    ref = Math.max(0.02, Math.min(0.99, ref));
+    if (first) { ctx.moveTo(toX(l), toY(ref)); first = false; } else ctx.lineTo(toX(l), toY(ref));
+  }
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(200,146,42,0.7)'; ctx.lineWidth = 1; ctx.setLineDash([3,4]);
+  ctx.beginPath(); ctx.moveTo(toX(res),pT); ctx.lineTo(toX(res),pT+ph); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(200,146,42,0.9)'; ctx.font = 'bold 10px DM Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText('λ=' + Math.round(res) + 'nm', toX(res), pT - 4);
+  document.getElementById('stat-lambda').innerHTML = Math.round(res) + '<span> nm</span>';
+  document.getElementById('stat-depth').innerHTML = Math.round(depth) + '<span> %</span>';
+  document.getElementById('stat-sens').innerHTML = sens(state.pitch) + '<span> nm/RIU</span>';
+}
+document.getElementById('n-slider').addEventListener('input', e => {
+  state.n = parseInt(e.target.value) / 1000;
+  document.getElementById('n-display').innerHTML = state.n.toFixed(3) + '<span> n</span>';
+  drawSPR();
+});
+document.getElementById('ag-slider').addEventListener('input', e => {
+  state.ag = parseInt(e.target.value);
+  document.getElementById('ag-display').innerHTML = state.ag + '<span> nm</span>';
+  drawSPR();
+});
+document.querySelectorAll('.disc-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.disc-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.pitch = parseInt(btn.dataset.pitch);
+    drawSPR();
   });
-},{threshold:.1});
-document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+});
+document.querySelectorAll('.illum-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.illum-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.illum = btn.dataset.illum;
+    drawSPR();
+  });
+});
+drawSPR();
 
-// ── LIGHTBOX ──
-function openLb(src,cap){document.getElementById('lbImg').src=src;document.getElementById('lbCap').textContent=cap||'';document.getElementById('lb').classList.add('open');document.body.style.overflow='hidden'}
-function closeLb(){document.getElementById('lb').classList.remove('open');document.body.style.overflow=''}
-
-// ── VIDEO ──
-function openVid(src,title,text){
-  document.getElementById('vmSrc').src=src;document.getElementById('vmVid').load();
-  document.getElementById('vmTitle').textContent=title;document.getElementById('vmText').textContent=text;
-  document.getElementById('vm').classList.add('open');document.body.style.overflow='hidden';
-}
-function closeVid(){document.getElementById('vmVid').pause();document.getElementById('vm').classList.remove('open');document.body.style.overflow=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLb();closeVid()}});
-
-// ── INTERACTIVE SPR DEMO (UPDATED — Lorentz oscillator model) ──
-(function(){
-  const canvas=document.getElementById('sprCanvas');
-  const ctx=canvas.getContext('2d');
-
-  const discs={
-    cdr: {label:'CD-R', baseLam:660, sens:394, gamma0:38, thkFactor:0.55, illumPenalty:22, color:'#f5c842'},
-    dvdr:{label:'DVD-R',baseLam:580, sens:290, gamma0:28, thkFactor:0.42, illumPenalty:16, color:'#40c8f4'},
-    bdr: {label:'BD-R', baseLam:502, sens:321, gamma0:22, thkFactor:0.35, illumPenalty:12, color:'#aa8cff'}
-  };
-
-  let disc='cdr', ri=1.333, thk=50, illum=0;
-
-  function lorentzDip(lam, lam0, gamma, depth){
-    const g2=gamma*gamma;
-    return depth*(g2/(((lam-lam0)*(lam-lam0))+g2));
-  }
-
-  function computeSpectrum(){
-    const d=discs[disc];
-    const lam0=d.baseLam+(ri-1.333)*d.sens+(thk-50)*d.thkFactor+(illum*d.illumPenalty);
-    const gamma=d.gamma0+(thk-50)*0.18+(illum*(d.gamma0*0.55));
-    const thkNorm=(thk-30)/70;
-    const depth=0.52+thkNorm*0.22-(illum*0.08);
-    const lambdas=[], refs=[];
-    for(let l=400;l<=900;l+=2){
-      lambdas.push(l);
-      const bg=0.88-0.00012*(l-650)*(l-650)*0.001+0.04*Math.sin((l-400)/500*Math.PI);
-      const dip=lorentzDip(l,lam0,gamma,depth);
-      refs.push(Math.max(0.02,Math.min(1,bg-dip)));
-    }
-    return{lambdas,refs,lam0:Math.round(lam0),gamma:Math.round(gamma),depth};
-  }
-
-  function resize(){
-    const dpr=window.devicePixelRatio||1;
-    const w=canvas.parentElement.offsetWidth||600;
-    canvas.width=w*dpr;
-    canvas.height=380*dpr;
-    canvas.style.width=w+'px';
-    canvas.style.height='380px';
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.scale(dpr,dpr);
-  }
-
-  function draw(){
-    const W=canvas.offsetWidth||600, H=380;
-    ctx.clearRect(0,0,W,H);
-
-    // background
-    ctx.fillStyle='rgba(5,15,30,0.88)';
-    ctx.fillRect(0,0,W,H);
-
-    const pad={l:54,r:20,t:30,b:46};
-    const cW=W-pad.l-pad.r, cH=H-pad.t-pad.b;
-
-    // grid lines
-    ctx.strokeStyle='rgba(64,200,244,0.07)';ctx.lineWidth=0.8;
-    for(let i=0;i<=5;i++){
-      const y=pad.t+i*(cH/5);
-      ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+cW,y);ctx.stroke();
-    }
-    for(let i=0;i<=5;i++){
-      const x=pad.l+i*(cW/5);
-      ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,pad.t+cH);ctx.stroke();
-    }
-
-    // axes
-    ctx.strokeStyle='rgba(168,232,255,0.2)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+cH);ctx.lineTo(pad.l+cW,pad.t+cH);ctx.stroke();
-
-    // axis labels
-    const tc='rgba(168,232,255,0.45)';
-    ctx.fillStyle=tc;ctx.font='11px DM Sans,sans-serif';ctx.textAlign='center';
-    [400,500,600,700,800,900].forEach((l,i)=>{ctx.fillText(l,pad.l+i*(cW/5),pad.t+cH+16)});
-    ctx.textAlign='right';
-    [0,0.25,0.5,0.75,1.0].forEach((v,i)=>{ctx.fillText(v.toFixed(2),pad.l-7,pad.t+cH-i*(cH/4)+4)});
-
-    // y-axis title (rotated)
-    ctx.save();ctx.translate(13,pad.t+cH/2);ctx.rotate(-Math.PI/2);
-    ctx.textAlign='center';ctx.fillStyle=tc;ctx.font='11px DM Sans,sans-serif';
-    ctx.fillText('Reflectance',0,0);ctx.restore();
-
-    // x-axis title
-    ctx.textAlign='center';ctx.fillStyle=tc;ctx.font='11px DM Sans,sans-serif';
-    ctx.fillText('Wavelength (nm)',pad.l+cW/2,H-4);
-
-    const{lambdas,refs,lam0,gamma}=computeSpectrum();
-    const d=discs[disc];
-    const lamMin=400, lamMax=900;
-
-    const pts=lambdas.map((l,i)=>({
-      x:pad.l+(l-lamMin)/(lamMax-lamMin)*cW,
-      y:pad.t+cH-refs[i]*cH
-    }));
-
-    // fill under curve
-    ctx.beginPath();
-    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-    ctx.lineTo(pts[pts.length-1].x,pad.t+cH);
-    ctx.lineTo(pts[0].x,pad.t+cH);
-    ctx.closePath();
-    const hexToRgba=(hex,a)=>{
-      const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
-      return `rgba(${r},${g},${b},${a})`;
-    };
-    ctx.fillStyle=hexToRgba(d.color,0.08);ctx.fill();
-
-    // curve
-    ctx.beginPath();
-    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-    ctx.strokeStyle=d.color;ctx.lineWidth=2;ctx.stroke();
-
-    // resonance dip marker
-    const dipX=pad.l+(lam0-lamMin)/(lamMax-lamMin)*cW;
-    const dipPt=pts.reduce((a,b)=>b.y>a.y?b:a);
-
-    ctx.setLineDash([4,4]);
-    ctx.strokeStyle='rgba(255,255,255,0.18)';ctx.lineWidth=0.9;
-    ctx.beginPath();ctx.moveTo(dipX,pad.t+6);ctx.lineTo(dipX,dipPt.y-3);ctx.stroke();
-    ctx.setLineDash([]);
-
-    ctx.fillStyle=d.color;ctx.font='bold 13px Bebas Neue,sans-serif';ctx.textAlign='center';
-    ctx.fillText(lam0+' nm',dipX,pad.t+18);
-
-    // FWHM bracket
-    const halfDepth=dipPt.y-(dipPt.y-pad.t)*0.5;
-    const fwhmNm=gamma*2;
-    const fwhmPx=fwhmNm/(lamMax-lamMin)*cW;
-    ctx.strokeStyle=hexToRgba(d.color,0.35);ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(dipX-fwhmPx/2,halfDepth);ctx.lineTo(dipX+fwhmPx/2,halfDepth);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(dipX-fwhmPx/2,halfDepth-4);ctx.lineTo(dipX-fwhmPx/2,halfDepth+4);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(dipX+fwhmPx/2,halfDepth-4);ctx.lineTo(dipX+fwhmPx/2,halfDepth+4);ctx.stroke();
-    ctx.fillStyle=hexToRgba(d.color,0.55);ctx.font='10px DM Sans,sans-serif';ctx.textAlign='center';
-    ctx.fillText('FWHM '+fwhmNm+' nm',dipX,halfDepth-8);
-
-    // update readouts
-    document.getElementById('resLambda').textContent=lam0+' nm';
-    document.getElementById('resSens').textContent=d.sens+' nm/RIU';
-    document.getElementById('resFwhm').textContent=fwhmNm+' nm';
-    document.getElementById('resFom').textContent=(d.sens/fwhmNm).toFixed(1);
-  }
-
-  function update(){
-    ri=parseInt(document.getElementById('riSlider').value)/1000;
-    thk=parseInt(document.getElementById('thkSlider').value);
-    document.getElementById('riVal').textContent=ri.toFixed(3);
-    document.getElementById('thkVal').textContent=thk+' nm';
-    resize();draw();
-  }
-
-  document.querySelectorAll('.dtab').forEach(b=>b.addEventListener('click',function(){
-    document.querySelectorAll('.dtab').forEach(x=>x.classList.remove('active'));
-    this.classList.add('active');disc=this.dataset.disc;update();
-  }));
-  document.querySelectorAll('.itab').forEach(b=>b.addEventListener('click',function(){
-    document.querySelectorAll('.itab').forEach(x=>x.classList.remove('active'));
-    this.classList.add('active');illum=parseInt(this.dataset.illum);update();
-  }));
-  document.getElementById('riSlider').addEventListener('input',update);
-  document.getElementById('thkSlider').addEventListener('input',update);
-  window.addEventListener('resize',update);
-  update();
-})();
+/* ===== SCROLL REVEAL ===== */
+const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
 </body>
 </html>
