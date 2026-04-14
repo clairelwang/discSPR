@@ -3,731 +3,322 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DiscSPR — Plasmonic Water Toxin Sensor</title>
+<title>DiscSPR - Optical Disc Water Sensors</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <style>
-  .hero-sequence-panel {
-  display: flex;
-  flex-direction: column;
-  
-  border: none;
-  min-height: 100%;
-}
-
-.hero-sequence-img-wrap {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-}
-.hero-sequence-img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: contain;
-  object-position: center;
-}
-.hero-sequence-label {
-  flex-shrink: 0;
-  padding: 10px 16px;
-  background: rgba(2,15,24,0.92);
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-
-.hero-sequence-label strong {
-  display: block;
-  color: var(--foam);
-  font-size: 11px;
-  font-family: 'DM Mono', monospace;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 3px;
-}
-
-.hero-sequence-label span {
-  color: rgba(255,255,255,0.7);
-  font-size: 12px;
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.04em;
-}
 :root {
-  --deep: #03131f;
-  --ocean: #042a3d;
-  --mid: #064a6b;
-  --teal: #0a7ea4;
-  --aqua: #00b8d9;
-  --foam: #7ee8fa;
-  --sand: #e8e2d9;
-  --parchment: #f3efe8;
-  --off-white: #faf8f5;
-  --gold: #c8922a;
-  --gold-lt: #e8b94a;
-  --ink: #0f1c23;
-  --muted: #4a6572;
-  --border: rgba(10,126,164,0.18);
-  --border-lt: rgba(10,126,164,0.09);
+  --ink: #0d1b24;
+  --ink2: #2c3e50;
+  --mid: #567080;
+  --rule: #d0dbe2;
+  --rule-lt: #eaf0f4;
+  --bg: #f4f1ec;
+  --bg2: #ebe8e2;
+  --dark: #0d1b24;
+  --blue: #1a6b8a;
+  --teal: #5dc3d8;
+  --amber: #c07a20;
+  --white: #fdfcfa;
+  --green: #2a8a5a;
+  --red: #c0392b;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--off-white);
-  color: var(--ink);
-  line-height: 1.65;
-  overflow-x: hidden;
-}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;}
 
-/* ── WATER TEXTURE OVERLAY ── */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image:
-    repeating-linear-gradient(-45deg, transparent, transparent 60px, rgba(10,126,164,0.015) 60px, rgba(10,126,164,0.015) 61px);
-  pointer-events: none; z-index: 0;
-}
+/* ---- NAV ---- */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:rgba(244,241,236,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--rule);}
+.nav-brand{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-0.01em;}
+.nav-brand em{font-style:italic;color:var(--blue);}
+.nav-links{display:flex;gap:24px;list-style:none;}
+.nav-links a{font-size:11px;font-weight:500;letter-spacing:0.09em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .2s;}
+.nav-links a:hover{color:var(--blue);}
+.nav-pill{background:var(--blue);color:#fff;padding:6px 16px;font-size:11px;font-weight:500;letter-spacing:0.07em;text-decoration:none;transition:background .2s;}
+.nav-pill:hover{background:#1d7da0;}
 
-/* ── ANIMATED WATER BG LINES ── */
-body::after {
-  content: '';
-  position: fixed; inset: 0;
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(10,126,164,0.025) 80px, rgba(10,126,164,0.025) 81px);
-  animation: waterShimmer 12s ease-in-out infinite;
-  pointer-events: none; z-index: 0;
-}
-@keyframes waterShimmer {
-  0%,100% { transform: translateY(0); opacity: 1; }
-  50% { transform: translateY(-8px); opacity: 0.6; }
-}
+/* ---- HERO ---- */
+#hero{padding-top:56px;background:var(--dark);min-height:100vh;display:flex;flex-direction:column;}
+.hero-body{flex:1;display:grid;grid-template-columns:1fr 480px;gap:48px;align-items:center;max-width:1160px;margin:0 auto;padding:64px 40px 48px;}
+.hero-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--teal);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.hero-tag::before{content:'';width:20px;height:1px;background:var(--teal);}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(52px,7vw,88px);font-weight:900;line-height:0.95;color:#fff;letter-spacing:-0.02em;margin-bottom:8px;}
+.hero-h1 em{font-style:italic;color:var(--teal);}
+.hero-sub{font-size:16px;font-weight:300;color:rgba(255,255,255,0.45);line-height:1.7;max-width:460px;margin-bottom:28px;}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.06);margin-bottom:28px;}
+.hstat{padding:14px;background:rgba(0,0,0,0.2);}
+.hstat-val{font-family:'DM Mono',monospace;font-size:16px;color:var(--teal);font-weight:500;display:block;margin-bottom:2px;}
+.hstat-lbl{font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:0.07em;text-transform:uppercase;}
+.hero-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.btn{padding:11px 24px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:0.06em;cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;border:none;}
+.btn-solid{background:var(--blue);color:#fff;}
+.btn-solid:hover{background:#1d7da0;}
+.btn-outline{background:transparent;color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.15);}
+.btn-outline:hover{border-color:rgba(255,255,255,0.5);color:rgba(255,255,255,0.9);}
+.hero-right{display:flex;flex-direction:column;gap:2px;}
+.img-slot{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);overflow:hidden;}
+.img-slot img{width:100%;display:block;object-fit:cover;min-height:180px;background:rgba(255,255,255,0.03);}
+.img-cap{padding:8px 12px;background:rgba(0,0,0,0.4);}
+.img-cap strong{display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:2px;}
+.img-cap span{font-size:11px;color:rgba(255,255,255,0.35);font-family:'DM Mono',monospace;}
+.hero-strip{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.05);border-top:1px solid rgba(255,255,255,0.05);}
+.hero-strip-item{background:var(--dark);display:flex;flex-direction:column;}
+.hero-strip-item img{width:100%;min-height:200px;object-fit:contain;padding:20px 20px 8px;}
+.hero-strip-item.cover img{object-fit:cover;padding:0;}
 
-/* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  height: 58px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 56px;
-  background: rgba(243,239,232,0.93);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-lt);
-}
-.nav-logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 17px; font-weight: 700; letter-spacing: 0.06em;
-  color: var(--ocean);
-  display: flex; align-items: center; gap: 10px;
-}
-.nav-logo-mark {
-  width: 28px; height: 28px;
-  background: var(--ocean);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
-.nav-logo-mark img { width: 20px; height: 20px; object-fit: contain; }
-.nav-links { display: flex; gap: 36px; list-style: none; }
-.nav-links a {
-  font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--muted); text-decoration: none; transition: color .2s;
-}
-.nav-links a:hover { color: var(--teal); }
+/* ---- SECTIONS ---- */
+.sec{position:relative;}
+.sec-inner{max-width:1100px;margin:0 auto;padding:80px 40px;}
+.sec-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-tag::before{content:'';width:16px;height:1px;background:var(--blue);}
+h2{font-family:'Playfair Display',serif;font-size:clamp(26px,3.5vw,42px);font-weight:700;line-height:1.1;margin-bottom:12px;letter-spacing:-0.01em;}
+.sec-lead{font-size:15px;font-weight:300;color:var(--mid);line-height:1.75;max-width:600px;margin-bottom:0;}
 
-/* ── HERO ── */
-#hero {
-  padding-top: 58px;
-  min-height: 100vh;
-  background: var(--deep);
-  display: flex; flex-direction: column;
-  position: relative; overflow: hidden;
-}
+/* ---- PROBLEM ---- */
+#problem{background:var(--bg);}
+.problem-intro-text{font-size:16px;font-weight:300;color:var(--ink2);line-height:1.8;max-width:700px;margin-bottom:40px;}
+.problem-intro-text p+p{margin-top:12px;}
 
-/* Bubbling water particles */
-.bubble {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(0,184,217,0.08);
-  border: 1px solid rgba(0,184,217,0.12);
-  animation: bubbleRise linear infinite;
-  pointer-events: none;
-}
-@keyframes bubbleRise {
-  0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 0.4; }
-  100% { transform: translateY(-100px) scale(1.1); opacity: 0; }
-}
+/* Interactive analogy */
+.analogy-box{background:var(--white);border:1px solid var(--rule);padding:28px 32px;margin-bottom:40px;max-width:760px;}
+.analogy-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:16px;color:var(--ink);}
+.analogy-tabs{display:flex;gap:0;margin-bottom:16px;border:1px solid var(--rule);overflow:hidden;}
+.atab{padding:8px 18px;font-size:12px;font-weight:500;background:var(--bg);color:var(--mid);cursor:pointer;transition:all .2s;border:none;font-family:'DM Sans',sans-serif;}
+.atab.active{background:var(--blue);color:#fff;}
+.analogy-content{font-size:14px;font-weight:300;color:var(--mid);line-height:1.75;display:none;}
+.analogy-content.active{display:block;}
 
-.hero-water-anim {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 220px;
-  overflow: hidden; pointer-events: none; z-index: 2;
-}
-.hero-water-anim svg { width: 100%; height: 100%; }
-.wave1 { animation: waveflow 8s ease-in-out infinite; }
-.wave2 { animation: waveflow 11s ease-in-out infinite reverse; }
-.wave3 { animation: waveflow 6s ease-in-out infinite 2s; }
-@keyframes waveflow {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-60px); }
-}
+.contam-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:40px;}
+.cc{padding:24px;background:var(--white);border-bottom:3px solid transparent;transition:border-color .2s;cursor:default;}
+.cc:hover{border-bottom-color:var(--blue);}
+.cc-icon{font-size:28px;margin-bottom:10px;display:block;}
+.cc-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;margin-bottom:6px;}
+.cc-body{font-size:13px;font-weight:300;color:var(--mid);line-height:1.65;margin-bottom:10px;}
+.cc-limit{font-family:'DM Mono',monospace;font-size:10px;color:var(--amber);border-top:1px solid var(--rule-lt);padding-top:8px;}
 
-.hero-top {
-  padding: 64px 72px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  position: relative; z-index: 3;
-}.hero-top-inner {
-  display: grid;
-  grid-template-columns: 1fr 800px;
-  gap: 0;
-  align-items: center;
-  min-height: auto;
-}
-.hero-top-left {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-bottom: 48px;
-}
-.hero-top-right {
-  border-left: 1px solid rgba(255,255,255,0.07);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.hero-eyebrow {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--aqua); margin-bottom: 24px;
-  display: flex; align-items: center; gap: 14px;
-}
-.hero-eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--aqua); }
-.hero-h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(56px, 7vw, 96px);
-  font-weight: 700; line-height: 0.95;
-  color: var(--off-white);
-  letter-spacing: -0.01em;
-}
-.hero-h1 em { font-style: italic; color: var(--aqua); }
-.hero-tagline {
-  margin-top: 24px;
-  font-size: 16px; font-weight: 300; color: rgba(255,255,255,0.55);
-  max-width: 520px; line-height: 1.75;
-}
-.hero-quick-facts {
-  margin-top: 28px;
-  display: flex; gap: 28px; flex-wrap: wrap;
-}
-.hqf {
-  display: flex; flex-direction: column; gap: 4px;
-}
-.hqf-val {
-  font-family: 'DM Mono', monospace; font-size: 22px; color: var(--aqua); font-weight: 500;
-}
-.hqf-label { font-size: 11px; color: rgba(255,255,255,0.35); letter-spacing: 0.06em; text-transform: uppercase; }
-.hero-actions { margin-top: 36px; display: flex; gap: 14px; flex-wrap: wrap; }
-.btn-water {
-  padding: 12px 30px;
-  background: var(--teal); color: #fff;
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
-  letter-spacing: 0.04em; border: none; cursor: pointer;
-  text-decoration: none; display: inline-block;
-  transition: background .2s, transform .15s;
-}
-.btn-water:hover { background: var(--aqua); transform: translateY(-1px); }
-.btn-outline-lt {
-  padding: 12px 30px;
-  background: transparent; color: rgba(255,255,255,0.75);
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
-  letter-spacing: 0.04em;
-  border: 1px solid rgba(255,255,255,0.2); cursor: pointer;
-  text-decoration: none; display: inline-block;
-  transition: all .2s;
-}
-.btn-outline-lt:hover { border-color: var(--foam); color: var(--foam); }
+/* Cost comparison bars */
+.cost-compare{background:var(--white);border:1px solid var(--rule);padding:28px 32px;margin-bottom:40px;}
+.cost-compare-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+.cost-compare-sub{font-size:12px;color:var(--mid);font-family:'DM Mono',monospace;margin-bottom:24px;}
+.cost-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.cost-label{font-size:12px;font-weight:500;min-width:120px;color:var(--ink);}
+.cost-bar-track{flex:1;height:30px;background:var(--bg2);position:relative;overflow:hidden;}
+.cost-bar-fill{height:100%;display:flex;align-items:center;padding-left:10px;font-family:'DM Mono',monospace;font-size:11px;color:#fff;font-weight:500;transition:width 1.2s ease;}
+.cost-bar-fill.lab{background:var(--red);}
+.cost-bar-fill.hplc{background:var(--amber);}
+.cost-bar-fill.disc{background:var(--green);}
 
-/* ── HERO IMAGE GRID — FIXED ── */
-.hero-imgs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3px;
-  padding: 3px 0 200px;
-  position: relative; z-index: 3;
-}
-.hero-img-slot {
-  position: relative;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.09);
-  display: flex;
-  flex-direction: column;
-  min-height: 320px;
-  overflow: hidden;
-  transition: border-color .3s;
-}
-.hero-img-slot:hover { border-color: rgba(10,126,164,0.4); }
+/* Map */
+.map-wrap{background:var(--white);border:1px solid var(--rule);padding:28px;}
+.map-hdr{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:18px;}
+.map-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.map-sub{font-size:11px;color:var(--mid);font-family:'DM Mono',monospace;}
+.map-legend{display:flex;gap:14px;flex-wrap:wrap;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink2);}
+.leg-dot{width:8px;height:8px;border-radius:50%;}
+#map-svg-wrap{position:relative;width:100%;}
+#map-svg-wrap svg{width:100%;height:auto;display:block;}
+.map-tt{position:absolute;pointer-events:none;background:var(--white);border:1px solid var(--rule);padding:12px 14px;font-size:12px;opacity:0;transition:opacity .15s;z-index:50;min-width:180px;box-shadow:0 4px 16px rgba(0,0,0,0.09);}
+.map-tt.show{opacity:1;}
+.tt-name{font-family:'Playfair Display',serif;font-weight:700;font-size:14px;margin-bottom:6px;}
+.tt-r{display:flex;justify-content:space-between;gap:14px;margin-bottom:2px;}
+.tt-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.07em;font-family:'DM Mono',monospace;color:var(--mid);}
+.tt-v{font-weight:500;font-size:11px;font-family:'DM Mono',monospace;}
 
-/* The image fills the slot fully */
-.hero-img-slot img.slot-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  display: block;
-  flex: 1;
-  padding: 20px 20px 0;
-  background: transparent;
-}
-/* For sensor front/back photo — use cover to fill */
-.hero-img-slot.cover-slot img.slot-img {
-  object-fit: cover;
-  padding: 0;
-}
+/* Photo gallery */
+.photo-gallery{margin-top:32px;}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--rule);border:1px solid var(--rule);}
+.gallery-grid.two{grid-template-columns:1fr 1fr;}
+.gallery-grid.four{grid-template-columns:1fr 1fr 1fr 1fr;}
+.gphoto{background:var(--bg2);overflow:hidden;position:relative;cursor:pointer;}
+.gphoto img{width:100%;height:220px;object-fit:cover;display:block;transition:transform .3s;}
+.gphoto:hover img{transform:scale(1.03);}
+.gphoto-cap{padding:10px 12px;background:var(--white);}
+.gphoto-cap strong{display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:2px;}
+.gphoto-cap span{font-size:11px;color:var(--mid);}
 
-/* Slot label — solid bg for readability */
-.img-slot-label {
-  flex-shrink: 0;
-  padding: 10px 16px;
-  background: rgba(2,15,24,0.92);
-  border-top: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.85);
-  font-size: 12px;
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.05em;
-  line-height: 1.4;
-}
-.img-slot-label strong {
-  display: block;
-  color: var(--foam);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 2px;
-}
+/* photo placeholder */
+.gphoto-placeholder{width:100%;height:220px;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed var(--rule);}
+.gphoto-placeholder svg{opacity:0.25;}
+.gphoto-placeholder span{font-size:11px;color:var(--mid);font-family:'DM Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;}
 
-/* Empty/insert placeholder slot */
-.img-placeholder-slot {
-  position: relative;
-  background: rgba(255,255,255,0.02);
-  border: 2px dashed rgba(10,126,164,0.3);
-  display: flex;
-  flex-direction: column;
-  min-height: 320px;
-  overflow: hidden;
-  transition: border-color .3s, background .3s;
-}
-.img-placeholder-slot:hover {
-  border-color: rgba(10,126,164,0.55);
-  background: rgba(10,126,164,0.04);
-}
-.ph-inner {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 30px;
-  text-align: center;
-}
-.ph-icon {
-  width: 56px; height: 56px;
-  border: 1px solid rgba(10,126,164,0.3);
-  display: flex; align-items: center; justify-content: center;
-}
-.ph-icon svg { width: 26px; height: 26px; opacity: 0.35; }
-.ph-text {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: rgba(10,126,164,0.6);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  line-height: 1.6;
-}
-.ph-label {
-  flex-shrink: 0;
-  padding: 10px 16px;
-  background: rgba(2,15,24,0.75);
-  border-top: 1px dashed rgba(10,126,164,0.2);
-  color: rgba(255,255,255,0.55);
-  font-size: 12px;
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.05em;
-  line-height: 1.4;
-}
-.ph-label strong {
-  display: block;
-  color: rgba(0,184,217,0.7);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 2px;
-}
+/* ---- GOAL ---- */
+#goal{background:var(--bg2);border-top:1px solid var(--rule);}
+.goal-statement{background:var(--white);border:1px solid var(--rule);border-left:3px solid var(--blue);padding:24px 28px;max-width:720px;margin-bottom:32px;}
+.goal-statement p{font-size:15px;font-weight:300;color:var(--ink2);line-height:1.8;}
+.goal-statement p+p{margin-top:10px;}
+.spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);}
+.spec{padding:20px 22px;background:var(--white);}
+.spec-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue);margin-bottom:6px;}
+.spec-val{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.spec-note{font-size:12px;color:var(--mid);font-weight:300;}
 
-/* ── SECTION COMMON ── */
-section { position: relative; z-index: 1; }
-.section-inner { max-width: 1200px; margin: 0 auto; padding: 100px 72px; }
-.section-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--teal); margin-bottom: 20px;
-  display: flex; align-items: center; gap: 12px;
-}
-.section-label::before { content: ''; display: block; width: 20px; height: 1px; background: var(--teal); }
-h2.sh {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(36px, 4.5vw, 58px);
-  font-weight: 700; line-height: 1.05;
-  letter-spacing: -0.01em;
-  margin-bottom: 20px;
-}
-.section-lead {
-  font-size: 16px; font-weight: 300; color: var(--muted);
-  max-width: 620px; line-height: 1.8;
-}
+/* ---- METHODOLOGY ---- */
+#methodology{background:var(--white);border-top:1px solid var(--rule);}
+.steps-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:48px;}
+.step{padding:22px;background:var(--white);position:relative;}
+.step::before{content:attr(data-n);position:absolute;top:18px;right:18px;font-family:'DM Mono',monospace;font-size:22px;color:var(--rule);font-weight:500;}
+.step-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;}
+.step-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:7px;}
+.step-body{font-size:13px;font-weight:300;color:var(--mid);line-height:1.65;}
 
-/* ── WAVE DIVIDER ── */
-.wave-div { line-height: 0; overflow: hidden; }
-.wave-div svg { display: block; width: 100%; }
+/* SPR interactive explainer */
+.spr-learn{background:var(--bg2);border:1px solid var(--rule);margin-bottom:48px;overflow:hidden;}
+.spr-learn-tabs{display:flex;background:var(--white);border-bottom:1px solid var(--rule);}
+.sl-tab{padding:12px 20px;font-size:12px;font-weight:500;cursor:pointer;color:var(--mid);border-bottom:2px solid transparent;transition:all .2s;border:none;background:none;font-family:'DM Sans',sans-serif;}
+.sl-tab.active{color:var(--blue);border-bottom:2px solid var(--blue);}
+.spr-learn-content{padding:28px 32px;display:none;}
+.spr-learn-content.active{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;}
+.slc-text h3{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:10px;}
+.slc-text p{font-size:14px;font-weight:300;color:var(--mid);line-height:1.75;}
+.slc-text p+p{margin-top:8px;}
+.slc-visual{background:var(--white);border:1px solid var(--rule);padding:20px;min-height:200px;display:flex;align-items:center;justify-content:center;}
+.slc-visual svg{width:100%;height:auto;}
 
-/* ── HOW IT WORKS — NEW SECTION ── */
-#howitworks {
-  background: var(--parchment);
-  border-top: 1px solid var(--border-lt);
-}
-.hiw-steps {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 3px;
-  margin-top: 56px;
-}
-.hiw-step {
-  background: var(--off-white);
-  padding: 28px 24px;
-  border: 1px solid var(--border-lt);
-  position: relative;
-  overflow: hidden;
-  transition: border-color .3s, transform .2s;
-}
-.hiw-step:hover { border-color: var(--teal); transform: translateY(-3px); }
-.hiw-step::before {
-  content: attr(data-num);
-  position: absolute; top: -12px; right: 16px;
-  font-family: 'Playfair Display', serif;
-  font-size: 80px; font-weight: 700;
-  color: rgba(10,126,164,0.06);
-  line-height: 1; pointer-events: none;
-}
-.hiw-icon {
-  width: 44px; height: 44px;
-  background: rgba(10,126,164,0.1);
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 18px;
-}
-.hiw-icon svg { width: 22px; height: 22px; }
-.hiw-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 16px; font-weight: 600;
-  color: var(--ink); margin-bottom: 10px;
-}
-.hiw-desc {
-  font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.7;
-}
-.hiw-arrow {
-  display: none;
-}
-@media (min-width: 900px) {
-  .hiw-step:not(:last-child)::after {
-    content: '→';
-    position: absolute; top: 50%; right: -16px;
-    transform: translateY(-50%);
-    font-size: 18px; color: var(--teal); z-index: 2;
-  }
-}
+/* SPR animation canvas */
+.spr-anim-wrap{text-align:center;}
 
-/* ── EXPLAINER BANNER ── */
-.explainer-banner {
-  background: linear-gradient(135deg, var(--ocean) 0%, var(--mid) 100%);
-  padding: 48px 72px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 40px;
-  position: relative;
-  overflow: hidden;
-}
-.explainer-banner::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image: repeating-linear-gradient(
-    -60deg, transparent, transparent 40px,
-    rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px
-  );
-}
-.exp-item { position: relative; z-index: 1; }
-.exp-item-q {
-  font-family: 'Playfair Display', serif;
-  font-size: 17px; font-weight: 600; color: var(--foam);
-  margin-bottom: 10px;
-}
-.exp-item-a {
-  font-size: 14px; font-weight: 300; color: rgba(255,255,255,0.55); line-height: 1.75;
-}
+/* Disc table */
+.dt{width:100%;border-collapse:collapse;margin-bottom:32px;}
+.dt th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);padding:9px 14px;text-align:left;border-bottom:2px solid var(--rule);}
+.dt td{padding:13px 14px;border-bottom:1px solid var(--rule-lt);font-size:13px;font-weight:300;}
+.dt tr:last-child td{border-bottom:none;}
+.dt .mono{font-family:'DM Mono',monospace;font-weight:500;color:var(--blue);}
+.dt .dn{font-family:'Playfair Display',serif;font-weight:700;font-size:14px;}
+.illum-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:32px;}
+.illum-pane{padding:22px 26px;background:var(--white);}
+.illum-head{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:6px;}
+.itag{display:inline-block;padding:2px 9px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:12px;}
+.tag-rec{background:rgba(26,107,138,0.1);color:var(--blue);}
+.tag-lim{background:rgba(192,122,32,0.1);color:var(--amber);}
+.illum-pts{list-style:none;}
+.illum-pts li{font-size:13px;font-weight:300;color:var(--mid);padding:5px 0;border-bottom:1px solid var(--rule-lt);}
+.illum-pts li:last-child{border-bottom:none;}
+.illum-pts li::before{content:'-- ';color:var(--blue);}
 
-/* ── PROBLEM / MAP ── */
-#problem { background: var(--deep); }
-#problem .section-label { color: var(--foam); }
-#problem .section-label::before { background: var(--foam); }
-#problem h2.sh { color: var(--off-white); }
-#problem .section-lead { color: rgba(255,255,255,0.45); }
+/* ---- DEMO ---- */
+#demo{background:var(--dark);border-top:1px solid rgba(255,255,255,0.05);}
+#demo .sec-tag{color:var(--teal);}
+#demo .sec-tag::before{background:var(--teal);}
+#demo h2{color:#fff;}
+#demo .sec-lead{color:rgba(255,255,255,0.4);}
+.demo-wrap{display:grid;grid-template-columns:280px 1fr;gap:2px;margin-top:36px;}
+.ctrl{display:flex;flex-direction:column;gap:2px;}
+.ctrl-blk{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);padding:18px;}
+.ctrl-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:10px;}
+.disc-btns,.illum-btns{display:flex;gap:2px;flex-wrap:wrap;}
+.disc-btn,.illum-btn{flex:1;padding:8px 6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.4);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;text-align:center;}
+.disc-btn .sub{display:block;font-size:10px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;margin-top:2px;}
+.disc-btn.active,.illum-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.disc-btn.active .sub{color:rgba(255,255,255,0.7);}
+.sl-row{margin-bottom:16px;}
+.sl-row:last-child{margin-bottom:0;}
+.sl-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.sl-name{font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:0.04em;text-transform:uppercase;font-family:'DM Mono',monospace;}
+.sl-val{font-family:'DM Mono',monospace;font-size:15px;color:var(--teal);}
+.sl-val span{font-size:10px;color:rgba(255,255,255,0.25);}
+input[type=range]{-webkit-appearance:none;width:100%;height:2px;background:rgba(255,255,255,0.1);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--teal);border:2px solid var(--dark);cursor:pointer;}
+.sl-limits{display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,0.18);font-family:'DM Mono',monospace;margin-top:2px;}
+.ctrl-note{font-size:10px;color:rgba(255,255,255,0.2);font-family:'DM Mono',monospace;line-height:1.55;margin-top:8px;}
+.chart-blk{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06);padding:24px;}
+.chart-hdr{margin-bottom:16px;}
+.chart-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:3px;}
+.chart-sub{font-size:11px;color:rgba(255,255,255,0.28);font-family:'DM Mono',monospace;}
+#spr-canvas{width:100%!important;display:block;}
+.chart-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:14px;}
+.cs{background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.05);padding:13px;}
+.cs-lbl{font-size:9px;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:0.1em;font-family:'DM Mono',monospace;margin-bottom:3px;}
+.cs-val{font-family:'DM Mono',monospace;font-size:16px;color:var(--teal);}
+.cs-val span{font-size:9px;color:rgba(255,255,255,0.25);}
+.demo-note{margin-top:10px;padding:10px 14px;background:rgba(26,107,138,0.15);border:1px solid rgba(26,107,138,0.25);font-size:11px;color:rgba(255,255,255,0.4);font-family:'DM Mono',monospace;line-height:1.55;}
 
-.map-wrap {
-  margin-top: 56px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.07);
-  padding: 40px;
-}
-.map-header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
-.map-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--off-white); margin-bottom: 6px; }
-.map-sub { font-size: 12px; color: rgba(255,255,255,0.35); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
-.map-legend { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
-.legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: rgba(255,255,255,0.65); }
-.legend-swatch { width: 10px; height: 10px; border-radius: 50%; }
+/* ---- RESULTS ---- */
+#results{background:var(--bg);border-top:1px solid var(--rule);}
+.sens-chart{background:var(--white);border:1px solid var(--rule);padding:26px 28px;margin-bottom:32px;}
+.sens-chart-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:3px;}
+.sens-chart-sub{font-size:11px;color:var(--mid);font-family:'DM Mono',monospace;margin-bottom:22px;}
+.sbar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.sbar-lbl{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;min-width:52px;color:var(--ink);}
+.sbar-track{flex:1;height:28px;background:var(--bg2);overflow:hidden;}
+.sbar-fill{height:100%;display:flex;align-items:center;padding-left:10px;font-family:'DM Mono',monospace;font-size:11px;color:#fff;font-weight:500;transition:width 1.2s ease;}
+.sbar-fill.cdr{background:var(--amber);}
+.sbar-fill.bdr{background:var(--blue);}
+.sbar-fill.dvdr{background:#6a90a0;}
+.sbar-note{font-size:11px;color:var(--mid);min-width:150px;font-family:'DM Mono',monospace;}
+.results-table{width:100%;border-collapse:collapse;margin-bottom:32px;}
+.results-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);padding:9px 14px;text-align:left;border-bottom:2px solid var(--rule);}
+.results-table td{padding:13px 14px;border-bottom:1px solid var(--rule-lt);font-size:13px;font-weight:300;}
+.results-table tr:hover td{background:var(--bg);}
+.val{font-family:'DM Mono',monospace;font-weight:500;color:var(--blue);}
+.disc-n{font-family:'Playfair Display',serif;font-weight:700;}
+.chip{display:inline-block;padding:2px 8px;font-size:9px;font-weight:500;letter-spacing:0.07em;font-family:'DM Mono',monospace;}
+.chip-b{background:rgba(192,122,32,0.1);color:var(--amber);}
+.chip-ok{background:rgba(26,107,138,0.1);color:var(--blue);}
+.findings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);}
+.finding{padding:22px;background:var(--white);}
+.finding-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue);margin-bottom:7px;}
+.finding-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:7px;}
+.finding-body{font-size:13px;font-weight:300;color:var(--mid);line-height:1.65;}
 
-#world-svg-container { width: 100%; position: relative; }
-#world-svg-container svg { width: 100%; height: auto; display: block; }
+/* ---- DISCUSSION ---- */
+#discussion{background:var(--bg2);border-top:1px solid var(--rule);}
+.disc-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+.di{}
+.di-head{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--rule);}
+.di-body{font-size:14px;font-weight:300;color:var(--mid);line-height:1.8;}
 
-.map-tooltip {
-  position: absolute; pointer-events: none;
-  background: var(--off-white); border: 1px solid var(--border);
-  padding: 12px 16px; font-size: 13px; color: var(--ink);
-  opacity: 0; transition: opacity .15s; z-index: 50; min-width: 190px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-}
-.map-tooltip.show { opacity: 1; }
-.tt-region { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 15px; margin-bottom: 6px; }
-.tt-row { display: flex; justify-content: space-between; gap: 20px; }
-.tt-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; }
-.tt-val { font-weight: 500; font-size: 12px; }
+/* ---- FUTURE WORK ---- */
+#future{background:var(--dark);border-top:1px solid rgba(255,255,255,0.05);}
+#future .sec-tag{color:var(--teal);}
+#future .sec-tag::before{background:var(--teal);}
+#future h2{color:#fff;}
+#future .sec-lead{color:rgba(255,255,255,0.4);}
+.future-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.07);margin-top:36px;}
+.fi{padding:22px;background:rgba(0,0,0,0.25);}
+.fi-num{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;}
+.fi-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:7px;}
+.fi-body{font-size:13px;font-weight:300;color:rgba(255,255,255,0.38);line-height:1.7;}
 
-/* ── TOXIN INFO STRIP ── */
-.toxin-strip {
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 3px;
-  margin-top: 40px;
-}
-.toxin-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
-  padding: 24px;
-  transition: background .2s;
-}
-.toxin-card:hover { background: rgba(10,126,164,0.08); }
-.toxin-name {
-  font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 600;
-  color: var(--foam); margin-bottom: 8px;
-}
-.toxin-detail { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.65; margin-bottom: 12px; }
-.toxin-limit {
-  font-family: 'DM Mono', monospace; font-size: 11px;
-  color: var(--gold-lt); letter-spacing: 0.05em;
-}
+/* ---- FOOTER ---- */
+footer{background:var(--dark);border-top:2px solid var(--blue);padding:32px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff;}
+.footer-logo em{font-style:italic;color:var(--teal);}
+.footer-sub{font-size:11px;color:rgba(255,255,255,0.22);margin-top:3px;font-family:'DM Mono',monospace;}
+.footer-right{font-size:10px;color:rgba(255,255,255,0.18);text-align:right;font-family:'DM Mono',monospace;line-height:1.9;}
 
-/* ── WHY SPR ── */
-#why { background: var(--parchment); }
+/* Reveal animation */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.reveal.in{opacity:1;transform:none;}
 
-.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 56px; }
-.compare-col-head {
-  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 14px 24px; display: flex; align-items: center; gap: 10px;
-}
-.compare-col-head.bad { background: rgba(190,30,45,0.08); color: #8b1a22; }
-.compare-col-head.good { background: rgba(10,126,164,0.08); color: var(--ocean); }
-.ccard {
-  padding: 24px 28px; border-bottom: 1px solid var(--border-lt);
-  background: var(--off-white); transition: background .2s;
-}
-.ccard:hover { background: #fff; }
-.ccard.bad { border-left: 2px solid rgba(190,30,45,0.25); }
-.ccard.good { border-left: 2px solid var(--teal); }
-.ccard-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--ink); }
-.ccard-desc { font-size: 13px; font-weight: 300; color: var(--muted); line-height: 1.65; margin-bottom: 12px; }
-.ccard-cost { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.05em; }
-.ccard.bad .ccard-cost { color: #8b1a22; }
-.ccard.good .ccard-cost { color: var(--teal); }
+/* Section divider */
+.sdiv{height:1px;background:var(--rule);}
 
-/* ── DEMO ── */
-#demo {
-  background: var(--ocean);
-  background-image: repeating-linear-gradient(
-    90deg, transparent, transparent 80px,
-    rgba(255,255,255,0.012) 80px, rgba(255,255,255,0.012) 81px
-  );
-}
-#demo .section-label { color: var(--foam); }
-#demo .section-label::before { background: var(--foam); }
-#demo h2.sh { color: var(--off-white); }
-#demo .section-lead { color: rgba(255,255,255,0.45); }
+/* Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+.lightbox.open{opacity:1;pointer-events:all;}
+.lb-img{max-width:90vw;max-height:85vh;object-fit:contain;border:1px solid rgba(255,255,255,0.1);}
+.lb-close{position:fixed;top:24px;right:28px;width:36px;height:36px;background:rgba(255,255,255,0.1);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;}
+.lb-cap{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,0.5);text-align:center;}
 
-.demo-layout { display: grid; grid-template-columns: 340px 1fr; gap: 3px; margin-top: 56px; }
-.ctrl-panel { display: flex; flex-direction: column; gap: 3px; }
-.ctrl-block { background: rgba(0,0,0,0.25); padding: 24px; border: 1px solid rgba(255,255,255,0.06); }
-.ctrl-block-label {
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: rgba(255,255,255,0.3); margin-bottom: 14px;
-}
-.disc-btns { display: flex; gap: 2px; }
-.disc-btn {
-  flex: 1; padding: 10px 6px; background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.4);
-  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
-  cursor: pointer; transition: all .2s; text-align: center;
-}
-.disc-btn .sub { display: block; font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'DM Mono', monospace; margin-top: 2px; }
-.disc-btn.active { background: var(--teal); color: #fff; border-color: var(--teal); }
-.disc-btn.active .sub { color: rgba(255,255,255,0.7); }
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--rule);}
 
-.illum-btns { display: flex; gap: 2px; }
-.illum-btn {
-  flex: 1; padding: 9px; background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.4);
-  font-family: 'DM Sans', sans-serif; font-size: 12px;
-  cursor: pointer; transition: all .2s;
-}
-.illum-btn.active { background: rgba(10,126,164,0.35); color: var(--foam); border-color: var(--teal); }
-
-.sl-row { margin-bottom: 20px; }
-.sl-row:last-child { margin-bottom: 0; }
-.sl-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
-.sl-name { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; text-transform: uppercase; }
-.sl-val { font-family: 'DM Mono', monospace; font-size: 18px; color: var(--foam); }
-.sl-val span { font-size: 11px; color: rgba(255,255,255,0.35); }
-input[type=range] { -webkit-appearance: none; width: 100%; height: 3px; background: rgba(255,255,255,0.1); outline: none; cursor: pointer; }
-input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--aqua); border: 2px solid var(--ocean); cursor: pointer; }
-.sl-limits { display: flex; justify-content: space-between; font-size: 10px; color: rgba(255,255,255,0.2); font-family: 'DM Mono', monospace; margin-top: 4px; }
-
-.chart-panel { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); padding: 32px; }
-.chart-panel-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 600; color: var(--off-white); margin-bottom: 4px; }
-.chart-panel-sub { font-size: 12px; color: rgba(255,255,255,0.3); font-family: 'DM Mono', monospace; margin-bottom: 24px; letter-spacing: 0.04em; }
-#spr-canvas { width: 100% !important; display: block; }
-.chart-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; margin-top: 20px; }
-.stat-b { background: rgba(0,0,0,0.25); padding: 16px; border: 1px solid rgba(255,255,255,0.05); }
-.stat-b-label { font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'DM Mono', monospace; margin-bottom: 4px; }
-.stat-b-val { font-family: 'DM Mono', monospace; font-size: 19px; color: var(--foam); }
-.stat-b-val span { font-size: 10px; color: rgba(255,255,255,0.3); }
-
-/* Demo legend */
-.demo-legend {
-  margin-top: 16px;
-  display: flex; gap: 20px; flex-wrap: wrap;
-  padding: 12px 16px;
-  background: rgba(0,0,0,0.2);
-  border: 1px solid rgba(255,255,255,0.05);
-}
-.dl-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: rgba(255,255,255,0.5); }
-.dl-line { width: 20px; height: 2px; }
-
-/* ── GALLERY ── */
-#gallery { background: var(--sand); }
-
-.gallery-sections { display: flex; flex-direction: column; gap: 56px; margin-top: 56px; }
-.g-section-title {
-  font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600; color: var(--muted);
-  letter-spacing: 0.06em; border-left: 2px solid var(--teal); padding-left: 14px;
-  margin-bottom: 16px; text-transform: uppercase;
-}
-.g-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
-.g-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; }
-.g-grid-wide { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3px; }
-
-.g-slot {
-  background: #d8d2c8; aspect-ratio: 4/3;
-  position: relative; overflow: hidden;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all .3s;
-}
-.g-slot.wide { aspect-ratio: 16/9; }
-.g-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
-.g-slot:hover .g-slot-overlay { opacity: 1; }
-.g-slot-overlay {
-  position: absolute; inset: 0;
-  background: rgba(4,42,61,0.55);
-  display: flex; align-items: flex-end; padding: 16px;
-  opacity: 0; transition: opacity .3s;
-}
-.g-slot-cap { font-size: 13px; color: #fff; font-weight: 500; letter-spacing: 0.02em; }
-.g-ph { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 20px; }
-.g-ph svg { width: 32px; height: 32px; opacity: 0.25; }
-.g-ph p { font-size: 11px; color: #666; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
-
-/* ── RESULTS ── */
-#results { background: var(--off-white); }
-
-.results-table { width: 100%; border-collapse: collapse; margin-top: 48px; }
-.results-table th {
-  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--muted); padding: 12px 18px;
-  text-align: left; border-bottom: 1px solid var(--border);
-}
-.results-table td { padding: 18px 18px; border-bottom: 1px solid var(--border-lt); font-size: 14px; font-weight: 300; }
-.results-table tr:hover td { background: var(--parchment); }
-.results-table .val { font-family: 'DM Mono', monospace; font-weight: 500; color: var(--teal); }
-.chip { display: inline-block; padding: 3px 10px; font-size: 10px; font-weight: 500; letter-spacing: 0.07em; font-family: 'DM Mono', monospace; }
-.chip-ok { background: rgba(10,126,164,0.1); color: var(--ocean); }
-.chip-cal { background: rgba(200,146,42,0.12); color: #6b4e12; }
-
-/* ── FOOTER ── */
-footer {
-  background: var(--deep); padding: 48px 72px;
-  display: flex; justify-content: space-between; align-items: flex-end;
-  position: relative; overflow: hidden;
-}
-footer::before {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--teal), var(--aqua), var(--foam), var(--teal));
-  animation: footerWave 4s linear infinite;
-}
-@keyframes footerWave {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-.footer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--off-white); }
-.footer-tagline { font-size: 12px; color: rgba(255,255,255,0.25); margin-top: 6px; font-family: 'DM Mono', monospace; letter-spacing: 0.04em; }
-.footer-right { font-size: 11px; color: rgba(255,255,255,0.2); text-align: right; font-family: 'DM Mono', monospace; line-height: 1.8; }
-
-/* ── SCROLL REVEAL ── */
-.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
-.reveal.in { opacity: 1; transform: none; }
-
-/* ── WATER RIPPLE on hover stats ── */
-@keyframes ripple {
-  0% { box-shadow: 0 0 0 0 rgba(10,126,164,0.3); }
-  100% { box-shadow: 0 0 0 12px rgba(10,126,164,0); }
-}
-.stat-b:hover { animation: ripple 0.6s ease-out; }
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--off-white); }
-::-webkit-scrollbar-thumb { background: var(--border); }
-
-/* ── FLOWING WATER BG for #why ── */
-#why {
-  position: relative;
-}
-#why::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='300'%3E%3Cpath d='M0,100 C200,60 400,140 600,100 C800,60 1000,140 1200,100' stroke='rgba(10,126,164,0.06)' fill='none' stroke-width='2'/%3E%3Cpath d='M0,150 C200,110 400,190 600,150 C800,110 1000,190 1200,150' stroke='rgba(10,126,164,0.04)' fill='none' stroke-width='1.5'/%3E%3Cpath d='M0,200 C200,160 400,240 600,200 C800,160 1000,240 1200,200' stroke='rgba(10,126,164,0.03)' fill='none' stroke-width='1'/%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-  background-size: 1200px 300px;
-  background-position: 0 70%;
-  animation: bgWaves 20s linear infinite;
-  pointer-events: none;
-  opacity: 0.7;
-}
-@keyframes bgWaves {
-  0% { background-position: 0 70%; }
-  100% { background-position: 1200px 70%; }
+@media(max-width:900px){
+  .hero-body{grid-template-columns:1fr;}
+  .hero-right{display:none;}
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .sec-inner{padding:60px 20px;}
+  .steps-row,.contam-cards,.findings-grid,.future-grid{grid-template-columns:1fr 1fr;}
+  .disc-grid,.illum-grid,.spr-learn-content.active{grid-template-columns:1fr;}
+  .gallery-grid.four{grid-template-columns:1fr 1fr;}
+  .demo-wrap{grid-template-columns:1fr;}
+  .hero-stats{grid-template-columns:repeat(2,1fr);}
 }
 </style>
 </head>
@@ -735,424 +326,511 @@ footer::before {
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">
-    <div class="nav-logo-mark">
-      <img src="cdfavicon.png" alt="CD icon">
-    </div>
-    DiscSPR
-  </div>
+  <div class="nav-brand">Disc<em>SPR</em></div>
   <ul class="nav-links">
-    <li><a href="#howitworks">How It Works</a></li>
-    <li><a href="#problem">The Problem</a></li>
-    <li><a href="#why">Why SPR</a></li>
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#goal">Goal</a></li>
+    <li><a href="#methodology">Methods</a></li>
     <li><a href="#demo">Demo</a></li>
-    <li><a href="#gallery">Gallery</a></li>
     <li><a href="#results">Results</a></li>
+    <li><a href="#discussion">Discussion</a></li>
+    <li><a href="#future">Future Work</a></li>
   </ul>
+  <a href="#results" class="btn nav-pill">View Results</a>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
-  <!-- Bubbles -->
-  <div class="bubble" style="width:8px;height:8px;left:8%;animation-duration:14s;animation-delay:0s;"></div>
-  <div class="bubble" style="width:14px;height:14px;left:18%;animation-duration:18s;animation-delay:3s;"></div>
-  <div class="bubble" style="width:6px;height:6px;left:35%;animation-duration:11s;animation-delay:7s;"></div>
-  <div class="bubble" style="width:10px;height:10px;left:55%;animation-duration:16s;animation-delay:1s;"></div>
-  <div class="bubble" style="width:18px;height:18px;left:72%;animation-duration:20s;animation-delay:5s;"></div>
-  <div class="bubble" style="width:7px;height:7px;left:85%;animation-duration:13s;animation-delay:9s;"></div>
-  <div class="bubble" style="width:12px;height:12px;left:92%;animation-duration:17s;animation-delay:2s;"></div>
-  <div class="bubble" style="width:5px;height:5px;left:45%;animation-duration:12s;animation-delay:11s;"></div>
-
-  <div class="hero-top">
-    <div class="hero-top-inner">
-      <!-- LEFT: title + text -->
-      <div class="hero-top-left">
-        <div class="hero-eyebrow">SJWP 2026 &nbsp;·&nbsp; Surface Plasmon Resonance &nbsp;·&nbsp; Water Safety</div>
-        <h1 class="hero-h1">DISC<em>SPR</em></h1>
-        <p class="hero-tagline">Ordinary optical discs — CDs, DVDs, Blu-rays — reimagined as precision water quality sensors. Bringing plasmonic toxin detection within reach of every community on Earth.</p>
-        <div class="hero-quick-facts">
-          <div class="hqf"><div class="hqf-val">~$200</div><div class="hqf-label">Total apparatus cost</div></div>
-          <div class="hqf"><div class="hqf-val">&lt;60s</div><div class="hqf-label">Result time</div></div>
-          <div class="hqf"><div class="hqf-val">142</div><div class="hqf-label">nm/RIU sensitivity</div></div>
-          <div class="hqf"><div class="hqf-val">$0.50</div><div class="hqf-label">Per sensor substrate</div></div>
-        </div>
-        <div class="hero-actions">
-          <a href="#howitworks" class="btn-water">How It Works</a>
-          <a href="#demo" class="btn-water" style="background:rgba(10,126,164,0.4);border:1px solid var(--teal);">Explore SPR Demo</a>
-          <a href="#results" class="btn-outline-lt">View Results</a>
-        </div>
+  <div class="hero-body">
+    <div class="hero-left">
+      <div class="hero-tag">SJWP 2026 &nbsp;·&nbsp; Grating-Coupled SPR &nbsp;·&nbsp; Water Safety</div>
+      <h1 class="hero-h1">DISC<em>SPR</em></h1>
+      <p class="hero-sub">Optical discs (CDs, DVDs, Blu-rays) repurposed as nanoscale sensors for detecting water contaminants. Label-free, real-time detection for under $200.</p>
+      <div class="hero-stats">
+        <div class="hstat"><span class="hstat-val">~$200</span><span class="hstat-lbl">Apparatus cost</span></div>
+        <div class="hstat"><span class="hstat-val">394</span><span class="hstat-lbl">nm/RIU (CD-R)</span></div>
+        <div class="hstat"><span class="hstat-val">50 nm</span><span class="hstat-lbl">Ag film thickness</span></div>
+        <div class="hstat"><span class="hstat-val">3</span><span class="hstat-lbl">Disc types tested</span></div>
       </div>
-
-      <!-- RIGHT: new image placeholder -->
-      <!-- To add your image: replace the .img-placeholder-slot div with:
-           <div class="hero-top-right hero-img-slot">
-             <img class="slot-img" src="YOUR-IMAGE.png" alt="Your description">
-             <div class="img-slot-label"><strong>YOUR LABEL</strong>Your caption</div>
-           </div>
-      -->
-      <div class="hero-top-right" style="display:flex;flex-direction:column;border:none;">
-        <div class="hero-top-right hero-sequence-panel">
-  <div class="hero-sequence-img-wrap">
-    <img src="sequence.png" alt="DiscSPR concept overview" class="hero-sequence-img">
-  </div>
-  <div class="hero-sequence-label">
-    <strong>DiscSPR Concept Overview</strong>
-    <span>Turning optical discs into plasmonic gratings for low-cost SPR sensing</span>
-  </div>
-</div>
+      <div class="hero-actions">
+        <a href="#methodology" class="btn btn-solid">How It Works</a>
+        <a href="#demo" class="btn btn-outline">Interactive Demo</a>
+        <a href="#results" class="btn btn-outline">Results</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="img-slot">
+        <img src="sequence.png" alt="DiscSPR concept: optical disc used as a plasmonic grating sensor" onerror="this.style.minHeight='160px';this.style.background='rgba(255,255,255,0.05)';">
+        <div class="img-cap"><strong>Concept</strong><span>Optical disc as a plasmonic grating substrate</span></div>
+      </div>
+      <div class="img-slot">
+        <img src="frontandbacksensors.png" alt="Ag-coated BD-R, DVD-R, and CD-R disc sensors" onerror="this.style.minHeight='140px';this.style.background='rgba(255,255,255,0.05)';">
+        <div class="img-cap"><strong>Sensor Substrates</strong><span>Ag-coated BD-R, DVD-R, and CD-R discs</span></div>
       </div>
     </div>
   </div>
-
-  <!-- TWO IMAGE SLOTS (bottom row) -->
-  <div class="hero-imgs">
-
-    <!-- Slot 1: Sensor photo -->
-    <div class="hero-img-slot">
-      <img class="slot-img" src="frontandbacksensors.png" alt="Front and back of silver-coated optical disc sensor">
-      <div class="img-slot-label">
-        <strong>Sensor Substrate</strong>
-        Silver-coated optical disc — front &amp; back view
-      </div>
+  <div class="hero-strip">
+    <div class="hero-strip-item">
+      <img src="homesetup.png" alt="Home-built wavelength-modulated GC-SPR spectrometer" onerror="this.style.minHeight='200px';this.style.background='rgba(255,255,255,0.03)';">
+      <div class="img-cap"><strong>Home-Built Apparatus</strong><span>Wavelength-modulated GC-SPR spectrometer built for ~$200</span></div>
     </div>
-
-    <!-- Slot 2: Home setup photo -->
-    <div class="hero-img-slot">
-      <img class="slot-img" src="homesetup.png" alt="Home-built SPR optical apparatus">
-      <div class="img-slot-label">
-        <strong>Home-Built Apparatus</strong>
-        Full SPR setup · ~$200 total cost · spectrometer + light source
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Animated water waves -->
-  <div class="hero-water-anim">
-    <svg viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path class="wave3" d="M0,120 C200,160 400,60 600,110 C800,160 1000,60 1200,100 C1300,120 1380,140 1440,130 L1440,220 L0,220Z" fill="rgba(4,42,61,0.4)"/>
-      <path class="wave2" d="M0,150 C160,110 320,170 480,140 C640,110 800,160 960,130 C1120,100 1300,150 1440,120 L1440,220 L0,220Z" fill="rgba(4,42,61,0.6)"/>
-      <path class="wave1" d="M0,170 C240,130 480,180 720,160 C960,140 1200,175 1440,155 L1440,220 L0,220Z" fill="#042a3d"/>
-    </svg>
-  </div>
-</section>
-
-<!-- WAVE TRANSITION -->
-<div class="wave-div" style="background:var(--parchment);">
-  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,20 1440,30 L1440,0 L0,0Z" fill="var(--deep)"/>
-  </svg>
-</div>
-
-<!-- HOW IT WORKS — NEW SECTION -->
-<section id="howitworks">
-  <div class="section-inner reveal">
-    <div class="section-label">How It Works</div>
-    <h2 class="sh">From disc to detection<br>in four steps.</h2>
-    <p class="section-lead">DiscSPR uses light to detect toxins — no chemicals, no lab, no waiting. Here's how a CD becomes a precision sensor.</p>
-
-    <div class="hiw-steps">
-      <div class="hiw-step" data-num="1">
-        <div class="hiw-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
-            <circle cx="12" cy="12" r="9"/>
-            <circle cx="12" cy="12" r="4"/>
-            <circle cx="12" cy="12" r="1"/>
-          </svg>
-        </div>
-        <div class="hiw-title">Coat the disc</div>
-        <div class="hiw-desc">A thin layer of silver (50 nm) is deposited on a CD, DVD, or Blu-ray. The disc's nanoscale grooves act as a precision diffraction grating — already manufactured to exact tolerances.</div>
-      </div>
-      <div class="hiw-step" data-num="2">
-        <div class="hiw-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
-            <path d="M12 2 L12 6 M12 18 L12 22 M2 12 L6 12 M18 12 L22 12"/>
-            <path d="M4 4 L7 7 M17 17 L20 20 M4 20 L7 17 M17 7 L20 4"/>
-            <circle cx="12" cy="12" r="4"/>
-          </svg>
-        </div>
-        <div class="hiw-title">Shine light on it</div>
-        <div class="hiw-desc">White light hits the silver-coated disc at an angle. The grating diffracts light, coupling specific wavelengths into surface plasmons — quantum ripples of electrons along the metal surface.</div>
-      </div>
-      <div class="hiw-step" data-num="3">
-        <div class="hiw-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
-            <path d="M3 12 C3 12 7 8 12 12 C17 16 21 12 21 12"/>
-            <path d="M3 12 C3 12 7 16 12 12 C17 8 21 12 21 12" opacity="0.4"/>
-            <circle cx="12" cy="12" r="2" fill="var(--teal)"/>
-          </svg>
-        </div>
-        <div class="hiw-title">Toxins bind &amp; shift</div>
-        <div class="hiw-desc">Water droplets sit on the sensor. When toxins (microcystin, atrazine, PFAS) bind to the surface, they change the local refractive index — shifting the resonance wavelength by measurable nanometers.</div>
-      </div>
-      <div class="hiw-step" data-num="4">
-        <div class="hiw-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.8">
-            <path d="M3 18 L7 12 L11 15 L15 8 L19 11 L21 6"/>
-            <path d="M19 6 L21 6 L21 8"/>
-          </svg>
-        </div>
-        <div class="hiw-title">Read the spectrum</div>
-        <div class="hiw-desc">A low-cost spectrometer captures the reflected light. The resonance dip position tells you exactly which toxins are present and at what concentration — in under 60 seconds.</div>
-      </div>
+    <div class="hero-strip-item">
+      <img src="frontandbacksensors.png" alt="Front-side and back-side illumination of disc sensors" onerror="this.style.minHeight='200px';this.style.background='rgba(255,255,255,0.03)';">
+      <div class="img-cap"><strong>Illumination Geometries</strong><span>Both front-side and back-side configurations tested</span></div>
     </div>
   </div>
 </section>
-
-<!-- EXPLAINER BANNER -->
-<div class="explainer-banner">
-  <div class="exp-item">
-    <div class="exp-item-q">What is a surface plasmon?</div>
-    <div class="exp-item-a">A surface plasmon is a collective wave of electrons that travels along a metal surface. When light hits a metal grating at just the right angle and wavelength, it "couples" into this wave — and the reflected light drops sharply. That dip is your signal.</div>
-  </div>
-  <div class="exp-item">
-    <div class="exp-item-q">Why use an optical disc?</div>
-    <div class="exp-item-a">CDs, DVDs, and Blu-rays have precisely engineered nanoscale tracks (320–1600 nm pitch) that function as diffraction gratings. They're mass-produced to optical tolerances, cost cents each, and are available everywhere on Earth — making them perfect sensor substrates.</div>
-  </div>
-  <div class="exp-item">
-    <div class="exp-item-q">What does refractive index mean?</div>
-    <div class="exp-item-a">Refractive index (n) measures how much light slows down in a substance. Pure water has n = 1.333. When toxins dissolve in water, they increase n slightly. SPR detects this tiny change — a shift of just 0.001 in n produces a measurable wavelength shift.</div>
-  </div>
-</div>
-
-<!-- WAVE TRANSITION -->
-<div class="wave-div" style="background:var(--deep);">
-  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0,0 C360,60 720,0 1080,40 C1260,55 1380,10 1440,20 L1440,60 L0,60Z" fill="var(--parchment)"/>
-  </svg>
-</div>
 
 <!-- PROBLEM -->
-<section id="problem">
-  <div class="section-inner reveal">
-    <div class="section-label">The Problem</div>
-    <h2 class="sh" style="color:var(--off-white);">Billions lack access<br>to water toxin testing.</h2>
-    <p class="section-lead">Cyanotoxins, PFAS, and heavy metals contaminate drinking water globally. Accurate detection remains locked behind expensive lab equipment most communities cannot access.</p>
+<section id="problem" class="sec">
+  <div class="sec-inner reveal">
+    <div class="sec-tag">01 -- Problem</div>
+    <h2>Water contamination is widespread.<br>Detection tools are out of reach.</h2>
 
-    <!-- Toxin info cards -->
-    <div class="toxin-strip">
-      <div class="toxin-card">
-        <div class="toxin-name">Microcystin-LR</div>
-        <div class="toxin-detail">Produced by cyanobacteria (blue-green algae) during warm-water blooms. A potent liver toxin — linked to liver failure in humans and mass fish kills. Increasingly common as climate change warms lakes and reservoirs.</div>
-        <div class="toxin-limit">WHO limit: 1 μg/L in drinking water</div>
+    <div class="problem-intro-text">
+      <p>Toxic chemicals are found in drinking water worldwide -- from algal blooms in warming lakes, to herbicide runoff in farm country, to industrial chemicals that never break down. These contaminants cause liver damage, cancer, and hormone disruption, even at trace concentrations.</p>
+      <p>The problem is not just contamination. It is that most communities cannot afford to test for it. Current lab methods cost $30,000 to $200,000 in equipment alone and take days to return results. A fast, affordable field sensor simply does not exist yet.</p>
+    </div>
+
+    <!-- What's in the water -->
+    <div class="contam-cards reveal">
+      <div class="cc">
+        <span class="cc-icon">🌿</span>
+        <div class="cc-name">Microcystin-LR</div>
+        <div class="cc-body">Released by cyanobacteria ("blue-green algae") during harmful algal blooms. Potent liver toxin. Blooms are expanding as global temperatures rise, affecting lakes and reservoirs worldwide.</div>
+        <div class="cc-limit">WHO limit: 1 ug/L in drinking water</div>
       </div>
-      <div class="toxin-card">
-        <div class="toxin-name">Atrazine</div>
-        <div class="toxin-detail">One of the world's most widely used herbicides. Runoff from agricultural fields contaminates groundwater and streams. Linked to endocrine disruption — affecting hormones even at low concentrations. Banned in the EU, still used in the US.</div>
-        <div class="toxin-limit">EPA limit: 3 μg/L in drinking water</div>
+      <div class="cc">
+        <span class="cc-icon">🌾</span>
+        <div class="cc-name">Atrazine</div>
+        <div class="cc-body">A widely-used agricultural herbicide that runs off into groundwater and streams. Disrupts hormones at very low concentrations. Banned in the EU but still widely used in the United States.</div>
+        <div class="cc-limit">EPA limit: 3 ug/L in drinking water</div>
       </div>
-      <div class="toxin-card">
-        <div class="toxin-name">PFAS / "Forever Chemicals"</div>
-        <div class="toxin-detail">Per- and polyfluoroalkyl substances persist indefinitely in the environment and human body. Found in firefighting foam, non-stick coatings, and food packaging. Associated with cancer, thyroid disease, and immune suppression at very low concentrations.</div>
-        <div class="toxin-limit">EPA limit: 4 ng/L (2024 rule)</div>
+      <div class="cc">
+        <span class="cc-icon">🧪</span>
+        <div class="cc-name">PFAS ("Forever Chemicals")</div>
+        <div class="cc-body">Industrial chemicals found in firefighting foam, cookware, and packaging. They do not break down in the environment or in the body. Linked to cancer, immune suppression, and thyroid disease.</div>
+        <div class="cc-limit">EPA limit: 4 ng/L (2024 rule)</div>
       </div>
     </div>
 
-    <div class="map-wrap" style="margin-top:40px;">
-      <div class="map-header">
+    <!-- Cost comparison -->
+    <div class="cost-compare reveal">
+      <div class="cost-compare-title">Why existing methods fail communities</div>
+      <div class="cost-compare-sub">Approximate cost to set up water testing capability</div>
+      <div class="cost-row">
+        <div class="cost-label">Lab SPR instrument</div>
+        <div class="cost-bar-track"><div class="cost-bar-fill lab" id="bar-lab" style="width:0%">$50,000 -- $200,000</div></div>
+      </div>
+      <div class="cost-row">
+        <div class="cost-label">HPLC / ELISA</div>
+        <div class="cost-bar-track"><div class="cost-bar-fill hplc" id="bar-hplc" style="width:0%">$20,000 -- $80,000</div></div>
+      </div>
+      <div class="cost-row">
+        <div class="cost-label">DiscSPR (this work)</div>
+        <div class="cost-bar-track"><div class="cost-bar-fill disc" id="bar-disc" style="width:0%">~$200</div></div>
+      </div>
+    </div>
+
+    <!-- World map -->
+    <div class="map-wrap reveal">
+      <div class="map-hdr">
         <div>
           <div class="map-title">Water testing access by region</div>
-          <div class="map-sub">Hover any country for details &nbsp;·&nbsp; Color = testing accessibility</div>
+          <div class="map-sub">Hover any country for details</div>
         </div>
         <div class="map-legend">
-          <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;"></div>No local testing</div>
-          <div class="legend-item"><div class="legend-swatch" style="background:#e67e22;"></div>Very costly</div>
-          <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f;"></div>Moderate access</div>
-          <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71;"></div>Good access</div>
-          <div class="legend-item"><div class="legend-swatch" style="background:#3498db;"></div>High access</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#c0392b;"></div>No testing</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#e67e22;"></div>Very costly</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#c8a820;"></div>Moderate</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#27ae60;"></div>Good</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#2980b9;"></div>High</div>
         </div>
       </div>
-      <div id="world-svg-container">
-        <div class="map-tooltip" id="map-tooltip">
-          <div class="tt-region" id="tt-region">—</div>
-          <div class="tt-row"><span class="tt-label">Access Level</span><span class="tt-val" id="tt-access">—</span></div>
-          <div class="tt-row"><span class="tt-label">Approx. Cost</span><span class="tt-val" id="tt-cost">—</span></div>
-          <div class="tt-row"><span class="tt-label">Key Concern</span><span class="tt-val" id="tt-concern">—</span></div>
+      <div id="map-svg-wrap">
+        <div class="map-tt" id="map-tt">
+          <div class="tt-name" id="tt-name">-</div>
+          <div class="tt-r"><span class="tt-lbl">Access</span><span class="tt-v" id="tt-access">-</span></div>
+          <div class="tt-r"><span class="tt-lbl">Cost</span><span class="tt-v" id="tt-cost">-</span></div>
+          <div class="tt-r"><span class="tt-lbl">Key concern</span><span class="tt-v" id="tt-concern">-</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem photos -->
+    <div class="photo-gallery reveal" style="margin-top:40px;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:12px;">Problem context</h3>
+      <div class="gallery-grid two">
+        <div class="gphoto" onclick="openLb(this)">
+          <div class="gphoto-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo here</span></div>
+          <div class="gphoto-cap"><strong>Algal bloom</strong><span>Example of a cyanobacterial bloom in a lake or reservoir -- the source of microcystin toxins in drinking water</span></div>
+        </div>
+        <div class="gphoto" onclick="openLb(this)">
+          <div class="gphoto-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo here</span></div>
+          <div class="gphoto-cap"><strong>Agricultural runoff</strong><span>Atrazine and other herbicides enter waterways through field runoff, particularly after rain events</span></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- WHY SPR -->
-<section id="why">
-  <div class="section-inner reveal">
-    <div class="section-label">Why SPR</div>
-    <h2 class="sh">Every existing method<br>falls short.</h2>
-    <p class="section-lead">Surface Plasmon Resonance detects toxins using only light — no chemicals, no labels, no reagents. But it has been locked behind $50,000+ instruments. Until now.</p>
+<!-- GOAL -->
+<section id="goal" class="sec">
+  <div class="sec-inner reveal">
+    <div class="sec-tag">02 -- Engineering Goal</div>
+    <h2>Could a CD become a water sensor?</h2>
 
-    <div class="compare-grid">
-      <div class="compare-col">
-        <div class="compare-col-head bad">✕ &nbsp;Previous Methods</div>
-        <div class="ccard bad">
-          <div class="ccard-name">HPLC / Mass Spectrometry</div>
-          <div class="ccard-desc">Gold standard accuracy but requires trained technicians, expensive consumables, and weeks of sample prep. Not field-deployable.</div>
-          <div class="ccard-cost">$30,000–$200,000 instrument &nbsp;·&nbsp; $500+/test</div>
-        </div>
-        <div class="ccard bad">
-          <div class="ccard-name">ELISA Immunoassay</div>
-          <div class="ccard-desc">Antibody-antigen reactions. Single-analyte, requires cold-chain reagent storage, results take hours.</div>
-          <div class="ccard-cost">$10–50/test &nbsp;·&nbsp; Limited multiplexing</div>
-        </div>
-        <div class="ccard bad">
-          <div class="ccard-name">Colorimetric Test Strips</div>
-          <div class="ccard-desc">Cheap but imprecise. Covers only a handful of contaminants and cannot detect trace-level toxins.</div>
-          <div class="ccard-cost">$1–5/test &nbsp;·&nbsp; Very low sensitivity</div>
-        </div>
+    <div class="goal-statement">
+      <p>Commercial optical discs (CDs, DVDs, Blu-rays) are manufactured with precision nanoscale grooves -- the same structures used in diffraction gratings, which are expensive optical components used in laboratory instruments.</p>
+      <p>The goal of this project was to test whether those ubiquitous, cheap discs could replace custom-fabricated gratings in a surface plasmon resonance (SPR) sensor, with enough sensitivity to detect real water contaminants. Three disc formats were compared under identical conditions.</p>
+    </div>
+
+    <div class="spec-grid">
+      <div class="spec">
+        <div class="spec-lbl">Target apparatus cost</div>
+        <div class="spec-val">Under $200</div>
+        <div class="spec-note">vs. $50,000+ for commercial SPR systems</div>
       </div>
-      <div class="compare-col">
-        <div class="compare-col-head good">✓ &nbsp;DiscSPR Approach</div>
-        <div class="ccard good">
-          <div class="ccard-name">Light-only detection</div>
-          <div class="ccard-desc">SPR measures how light couples into surface plasmons at metal-dielectric interfaces. No chemicals — just photons and physics.</div>
-          <div class="ccard-cost">No consumables &nbsp;·&nbsp; Real-time readout</div>
-        </div>
-        <div class="ccard good">
-          <div class="ccard-name">Optical disc as grating</div>
-          <div class="ccard-desc">The nanoscale tracks on CDs, DVDs, and Blu-rays are precision diffraction gratings for plasmonic coupling. Already mass-manufactured.</div>
-          <div class="ccard-cost">~$0.50 per sensor substrate</div>
-        </div>
-        <div class="ccard good">
-          <div class="ccard-name">Real-time, label-free sensing</div>
-          <div class="ccard-desc">Toxin binding shifts resonance wavelength instantly. No waiting, no sample prep, no consumables to replenish.</div>
-          <div class="ccard-cost">Results in &lt;60 seconds</div>
-        </div>
+      <div class="spec">
+        <div class="spec-lbl">Target sensitivity</div>
+        <div class="spec-val">&gt;100 nm/RIU</div>
+        <div class="spec-note">Sufficient to detect trace-level contaminants</div>
+      </div>
+      <div class="spec">
+        <div class="spec-lbl">Sensor substrate cost</div>
+        <div class="spec-val">~$0.50</div>
+        <div class="spec-note">Per disc; mass-produced and globally available</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- WAVE DIVIDER -->
-<div class="wave-div" style="background:var(--ocean);">
-  <svg viewBox="0 0 1440 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0,25 C300,50 600,0 900,25 C1100,40 1320,10 1440,20 L1440,0 L0,0Z" fill="var(--parchment)"/>
-  </svg>
-</div>
+<!-- METHODOLOGY -->
+<section id="methodology" class="sec">
+  <div class="sec-inner reveal">
+    <div class="sec-tag">03 -- Methodology</div>
+    <h2>From optical disc to plasmonic sensor.</h2>
+    <p class="sec-lead">Each disc's grooves act as a diffraction grating. A thin metal film turns those grooves into an SPR sensor. Here is the full process.</p>
+
+    <div class="steps-row" style="margin-top:32px;">
+      <div class="step" data-n="1">
+        <div class="step-lbl">Step 01</div>
+        <div class="step-title">Strip and clean the disc</div>
+        <div class="step-body">BD-R, DVD-R, and CD-R discs are cut to 2.5 x 2.5 cm. The original metal and dye layers are dissolved using 70% nitric acid (HNO3), exposing the bare polymer grating underneath.</div>
+      </div>
+      <div class="step" data-n="2">
+        <div class="step-lbl">Step 02</div>
+        <div class="step-title">Deposit a metal film</div>
+        <div class="step-body">Silver (Ag) or copper (Cu) is deposited by magnetron sputtering at thicknesses of 40, 50, or 70 nm. The metal film coats the grating grooves, forming the plasmonic interface where sensing happens.</div>
+      </div>
+      <div class="step" data-n="3">
+        <div class="step-lbl">Step 03</div>
+        <div class="step-title">Illuminate and measure</div>
+        <div class="step-body">Broadband p-polarized light from a lamp is focused onto the sensor at incident angles from 30 to 70 degrees. A spectrometer records the reflectance ratio (Ip/Is) at each wavelength.</div>
+      </div>
+      <div class="step" data-n="4">
+        <div class="step-lbl">Step 04</div>
+        <div class="step-title">Track the resonance dip</div>
+        <div class="step-body">When light couples into surface plasmons, a sharp dip appears in the reflectance spectrum. Its wavelength shifts when refractive index at the surface changes -- that shift is the sensing signal.</div>
+      </div>
+    </div>
+
+    <!-- SPR learn tabs -->
+    <h3 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:14px;">Understanding the physics</h3>
+    <div class="spr-learn">
+      <div class="spr-learn-tabs">
+        <button class="sl-tab active" data-tab="spr">What is SPR?</button>
+        <button class="sl-tab" data-tab="grating">How does the grating work?</button>
+        <button class="sl-tab" data-tab="ri">Refractive index sensing</button>
+        <button class="sl-tab" data-tab="prism">Why not use a prism?</button>
+      </div>
+
+      <div class="spr-learn-content active" id="tab-spr">
+        <div class="slc-text">
+          <h3>Surface Plasmon Resonance</h3>
+          <p>A surface plasmon is a collective wave of electrons that travels along a metal-dielectric interface (for example, the boundary between silver and water). When incoming light hits the metal at just the right angle and wavelength, its energy couples into this electron wave -- and a sharp dip appears in the reflected light. That dip is the SPR signal.</p>
+          <p>The key insight: the dip position depends on what is touching the metal surface. If a molecule (like a toxin) is present, the local environment changes slightly, and the dip shifts. Measure the shift, and you measure the concentration.</p>
+        </div>
+        <div class="slc-visual">
+          <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+            <!-- Metal layer -->
+            <rect x="10" y="80" width="280" height="20" fill="#b8c8d0" rx="1"/>
+            <text x="155" y="93" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#567080">Silver film (50 nm)</text>
+            <!-- Dielectric (water) -->
+            <rect x="10" y="100" width="280" height="50" fill="rgba(93,195,216,0.12)" rx="1"/>
+            <text x="155" y="130" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#5dc3d8">Water / analyte (dielectric)</text>
+            <!-- Light arrow in -->
+            <line x1="40" y1="15" x2="90" y2="75" stroke="#1a6b8a" stroke-width="2" marker-end="url(#arr)"/>
+            <text x="25" y="12" font-family="DM Mono,monospace" font-size="9" fill="#1a6b8a">Incident</text>
+            <text x="25" y="22" font-family="DM Mono,monospace" font-size="9" fill="#1a6b8a">light</text>
+            <!-- Reflected arrow -->
+            <line x1="110" y1="75" x2="155" y2="15" stroke="#567080" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <text x="155" y="10" font-family="DM Mono,monospace" font-size="9" fill="#567080">Reflected</text>
+            <text x="155" y="20" font-family="DM Mono,monospace" font-size="9" fill="#567080">(with dip)</text>
+            <!-- SPP wave -->
+            <path d="M90 80 Q130 72 170 80 Q210 88 250 80" stroke="#c07a20" stroke-width="2" fill="none"/>
+            <text x="170" y="74" font-family="DM Mono,monospace" font-size="8" fill="#c07a20">Surface plasmon wave</text>
+            <!-- Analyte dots -->
+            <circle cx="130" cy="108" r="4" fill="#5dc3d8" opacity="0.7"/>
+            <circle cx="160" cy="112" r="3" fill="#5dc3d8" opacity="0.7"/>
+            <circle cx="200" cy="106" r="4" fill="#5dc3d8" opacity="0.7"/>
+            <text x="155" y="155" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#5dc3d8">Analyte molecules at surface</text>
+            <!-- Arrow defs -->
+            <defs><marker id="arr" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#1a6b8a"/></marker></defs>
+          </svg>
+        </div>
+      </div>
+
+      <div class="spr-learn-content" id="tab-grating">
+        <div class="slc-text">
+          <h3>How the grating couples light</h3>
+          <p>Normally, light in air cannot couple into surface plasmons because it carries too little in-plane momentum. A diffraction grating solves this by adding discrete "kicks" of momentum to the light. Each kick is a multiple of G = 2pi / Lambda, where Lambda is the grating period.</p>
+          <p>Optical disc grooves are precision diffraction gratings, manufactured to nanometer tolerances for millions of units per year. They provide exactly this momentum matching -- at zero extra cost. The period (Lambda) differs across CD, DVD, and Blu-ray, which is why each disc type supports SPR at different wavelengths.</p>
+        </div>
+        <div class="slc-visual">
+          <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grating surface -->
+            <rect x="10" y="110" width="280" height="10" fill="#b8c8d0"/>
+            <!-- Grooves -->
+            <rect x="40" y="100" width="12" height="10" fill="#a0b5c0"/>
+            <rect x="80" y="100" width="12" height="10" fill="#a0b5c0"/>
+            <rect x="120" y="100" width="12" height="10" fill="#a0b5c0"/>
+            <rect x="160" y="100" width="12" height="10" fill="#a0b5c0"/>
+            <rect x="200" y="100" width="12" height="10" fill="#a0b5c0"/>
+            <rect x="240" y="100" width="12" height="10" fill="#a0b5c0"/>
+            <!-- Period annotation -->
+            <line x1="40" y1="130" x2="80" y2="130" stroke="#c07a20" stroke-width="1"/>
+            <line x1="40" y1="126" x2="40" y2="134" stroke="#c07a20" stroke-width="1"/>
+            <line x1="80" y1="126" x2="80" y2="134" stroke="#c07a20" stroke-width="1"/>
+            <text x="60" y="142" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#c07a20">Lambda</text>
+            <!-- Incident light -->
+            <line x1="50" y1="20" x2="90" y2="95" stroke="#1a6b8a" stroke-width="2" marker-end="url(#arr2)"/>
+            <text x="20" y="18" font-family="DM Mono,monospace" font-size="9" fill="#1a6b8a">Light in</text>
+            <!-- Plasmon arrow -->
+            <line x1="100" y1="100" x2="240" y2="100" stroke="#c07a20" stroke-width="2" marker-end="url(#arr3)"/>
+            <text x="155" y="90" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#c07a20">Plasmon propagates</text>
+            <!-- disc labels -->
+            <text x="155" y="165" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#567080">CD-R: 1582 nm | DVD-R: 805 nm | BD-R: 322 nm</text>
+            <defs>
+              <marker id="arr2" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#1a6b8a"/></marker>
+              <marker id="arr3" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c07a20"/></marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
+
+      <div class="spr-learn-content" id="tab-ri">
+        <div class="slc-text">
+          <h3>Refractive index sensing</h3>
+          <p>The SPR resonance position depends on the refractive index (n) of the medium touching the metal surface. Pure water has n = 1.333. When a dissolved analyte (like a toxin or salt) is present, n increases slightly.</p>
+          <p>That small increase shifts the resonance dip to a longer wavelength. The sensitivity S = delta-lambda / delta-n (units: nm per RIU, where RIU = refractive index unit) tells you how many nanometers the dip moves per unit change in n. Higher S means better detection of dilute analytes.</p>
+        </div>
+        <div class="slc-visual">
+          <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+            <!-- Axes -->
+            <line x1="40" y1="20" x2="40" y2="150" stroke="#567080" stroke-width="1.5"/>
+            <line x1="40" y1="150" x2="280" y2="150" stroke="#567080" stroke-width="1.5"/>
+            <text x="8" y="90" font-family="DM Mono,monospace" font-size="8" fill="#567080" transform="rotate(-90,8,90)">Reflectance</text>
+            <text x="155" y="168" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#567080">Wavelength (nm)</text>
+            <!-- Curve 1 (pure water) -->
+            <path d="M50 55 Q90 53 120 55 Q135 55.5 140 70 Q145 100 150 120 Q155 100 160 70 Q165 55.5 180 55 Q220 53 270 58" stroke="#1a6b8a" stroke-width="2" fill="none"/>
+            <!-- Dip 1 label -->
+            <line x1="150" y1="30" x2="150" y2="118" stroke="#1a6b8a" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="150" y="25" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#1a6b8a">lambda1 (pure water)</text>
+            <!-- Curve 2 (analyte) shifted right -->
+            <path d="M50 55 Q90 53 130 55 Q145 55.5 150 70 Q155 100 162 122 Q170 100 175 70 Q182 55.5 200 55 Q240 53 270 58" stroke="#c07a20" stroke-width="2" fill="none" stroke-dasharray="6,3"/>
+            <!-- Dip 2 label -->
+            <line x1="162" y1="40" x2="162" y2="120" stroke="#c07a20" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="175" y="40" font-family="DM Mono,monospace" font-size="8" fill="#c07a20">lambda2 (+ analyte)</text>
+            <!-- Delta lambda arrow -->
+            <line x1="150" y1="140" x2="162" y2="140" stroke="#2a8a5a" stroke-width="1.5" marker-end="url(#arr4)"/>
+            <text x="156" y="154" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#2a8a5a">delta-lambda</text>
+            <defs><marker id="arr4" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a8a5a"/></marker></defs>
+          </svg>
+        </div>
+      </div>
+
+      <div class="spr-learn-content" id="tab-prism">
+        <div class="slc-text">
+          <h3>Why grating-coupled instead of prism-coupled?</h3>
+          <p>The classic lab SPR instrument uses a prism (the Kretschmann configuration) to couple light into plasmons. This requires precise angular control, bulky mechanical parts, and careful optical alignment. The instrument costs $50,000 or more.</p>
+          <p>A diffraction grating achieves the same coupling in a flat, compact geometry. No prism needed. No precision goniometer. The optical disc provides a free, mass-produced grating, making the entire apparatus buildable for ~$200.</p>
+        </div>
+        <div class="slc-visual">
+          <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left: prism -->
+            <text x="70" y="14" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#567080">Prism-coupled SPR</text>
+            <polygon points="35,130 105,130 70,60" fill="#d0dbe2" stroke="#567080" stroke-width="1"/>
+            <text x="70" y="110" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#2c3e50">Prism</text>
+            <rect x="35" y="128" width="70" height="8" fill="#b8c8d0"/>
+            <text x="70" y="145" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="#567080">Metal film</text>
+            <line x1="20" y1="50" x2="50" y2="90" stroke="#1a6b8a" stroke-width="2" marker-end="url(#a5)"/>
+            <text x="5" y="45" font-family="DM Mono,monospace" font-size="7" fill="#1a6b8a">$50k+</text>
+            <!-- Right: grating -->
+            <text x="220" y="14" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#2a8a5a">Grating-coupled SPR</text>
+            <rect x="165" y="100" width="110" height="8" fill="#b8c8d0"/>
+            <rect x="175" y="92" width="8" height="8" fill="#a0b5c0"/>
+            <rect x="195" y="92" width="8" height="8" fill="#a0b5c0"/>
+            <rect x="215" y="92" width="8" height="8" fill="#a0b5c0"/>
+            <rect x="235" y="92" width="8" height="8" fill="#a0b5c0"/>
+            <rect x="255" y="92" width="8" height="8" fill="#a0b5c0"/>
+            <text x="220" y="122" text-anchor="middle" font-family="DM Mono,monospace" font-size="7" fill="#567080">Optical disc grating</text>
+            <line x1="185" y1="40" x2="210" y2="86" stroke="#2a8a5a" stroke-width="2" marker-end="url(#a6)"/>
+            <text x="175" y="35" font-family="DM Mono,monospace" font-size="7" fill="#2a8a5a">~$200</text>
+            <defs>
+              <marker id="a5" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#1a6b8a"/></marker>
+              <marker id="a6" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2a8a5a"/></marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disc parameters table -->
+    <h3 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:12px;">Grating parameters measured by AFM</h3>
+    <table class="dt">
+      <thead>
+        <tr>
+          <th>Disc</th>
+          <th>Grating period (Lambda)</th>
+          <th>Groove depth (hg)</th>
+          <th>Groove profile</th>
+          <th>Metal film coverage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="dn">BD-R</span></td>
+          <td class="mono">322 +/- 5.2 nm</td>
+          <td class="mono">23.9 +/- 0.67 nm</td>
+          <td>Shallow, rounded</td>
+          <td>Continuous (metal bridges grooves)</td>
+        </tr>
+        <tr>
+          <td><span class="dn">DVD-R</span></td>
+          <td class="mono">805 +/- 7.5 nm</td>
+          <td class="mono">158.6 +/- 2.2 nm</td>
+          <td>Deep, rectangular</td>
+          <td>Less continuous</td>
+        </tr>
+        <tr>
+          <td><span class="dn">CD-R</span></td>
+          <td class="mono">1582 +/- 13 nm</td>
+          <td class="mono">151.7 +/- 2.9 nm</td>
+          <td>Deep, rectangular</td>
+          <td>Less continuous</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Illumination comparison -->
+    <h3 style="font-family:'Playfair Display',serif;font-size:17px;font-weight:700;margin-bottom:12px;">Front-side vs. back-side illumination</h3>
+    <div class="illum-grid">
+      <div class="illum-pane">
+        <div class="illum-head">Front-side illumination</div>
+        <span class="itag tag-rec">Recommended</span>
+        <ul class="illum-pts">
+          <li>Light enters from air through the analyte solution to the metal surface</li>
+          <li>Stronger, more reproducible SPR excitation across all disc types</li>
+          <li>Resonance dips are sharp and clearly identifiable</li>
+          <li>Good agreement with RCWA simulation results</li>
+        </ul>
+      </div>
+      <div class="illum-pane">
+        <div class="illum-head">Back-side illumination</div>
+        <span class="itag tag-lim">Limited performance</span>
+        <ul class="illum-pts">
+          <li>Light enters through the 1 mm polycarbonate substrate to the metal</li>
+          <li>Substrate causes interference, weakening the field at the interface</li>
+          <li>BD-R still usable; DVD-R and CD-R show poor resonance visibility</li>
+          <li>Could be useful for strongly absorbing solvents with further development</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Methodology photos -->
+    <div class="photo-gallery reveal">
+      <h3 style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:12px;">Methodology photos</h3>
+      <div class="gallery-grid four">
+        <div class="gphoto" onclick="openLb(this)">
+          <div class="gphoto-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo</span></div>
+          <div class="gphoto-cap"><strong>Disc stripping</strong><span>Nitric acid removal of original disc layers to expose bare polymer grating</span></div>
+        </div>
+        <div class="gphoto" onclick="openLb(this)">
+          <div class="gphoto-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo</span></div>
+          <div class="gphoto-cap"><strong>Sputtering deposition</strong><span>Magnetron sputter deposition of Ag or Cu film onto disc grating at 40, 50, or 70 nm thickness</span></div>
+        </div>
+        <div class="gphoto" onclick="openLb(this)">
+          <img src="homesetup.png" alt="Home-built GC-SPR apparatus" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" style="height:220px;object-fit:cover;">
+          <div class="gphoto-placeholder" style="display:none;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo</span></div>
+          <div class="gphoto-cap"><strong>Home-built SPR apparatus</strong><span>Full experimental setup: QTH lamp, polarizer, disc sensor, and fiber-coupled spectrometer, ~$200 total</span></div>
+        </div>
+        <div class="gphoto" onclick="openLb(this)">
+          <img src="frontandbacksensors.png" alt="Ag-coated disc sensors front and back" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" style="height:220px;object-fit:cover;">
+          <div class="gphoto-placeholder" style="display:none;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo</span></div>
+          <div class="gphoto-cap"><strong>Sensor substrates</strong><span>Ag-coated BD-R, DVD-R, and CD-R disc sensors (front and back views)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- DEMO -->
-<section id="demo">
-  <div class="section-inner reveal">
-    <div class="section-label">Interactive Demo</div>
-    <h2 class="sh" style="color:var(--off-white);">Explore SPR sensing</h2>
-    <p class="section-lead">Adjust the sliders to see the resonance dip shift — replicating what occurs in our experiments. A higher refractive index (more toxin dissolved in water) shifts the dip to longer wavelengths (to the right).</p>
-
-    <div class="demo-layout">
-      <div class="ctrl-panel">
-        <div class="ctrl-block">
-          <div class="ctrl-block-label">Disc Substrate</div>
-          <div class="disc-btns" id="disc-selector">
-            <button class="disc-btn" data-pitch="1600" data-disc="CD-R">CD-R<span class="sub">1600 nm</span></button>
-            <button class="disc-btn" data-pitch="740" data-disc="DVD-R">DVD-R<span class="sub">740 nm</span></button>
-            <button class="disc-btn active" data-pitch="320" data-disc="BD-R">BD-R<span class="sub">320 nm</span></button>
+<section id="demo" class="sec">
+  <div class="sec-inner reveal">
+    <div class="sec-tag">04 -- Interactive Demo</div>
+    <h2>Explore the SPR signal</h2>
+    <p class="sec-lead">Adjust disc type, metal thickness, and refractive index to see how the resonance dip shifts. A higher refractive index (more dissolved analyte) shifts the dip to longer wavelengths.</p>
+    <div class="demo-wrap">
+      <div class="ctrl">
+        <div class="ctrl-blk">
+          <div class="ctrl-lbl">Disc substrate</div>
+          <div class="disc-btns" id="disc-sel">
+            <button class="disc-btn active" data-pitch="1582" data-disc="CD-R" data-sens="394">CD-R<span class="sub">1582 nm</span></button>
+            <button class="disc-btn" data-pitch="805" data-disc="DVD-R" data-sens="290">DVD-R<span class="sub">805 nm</span></button>
+            <button class="disc-btn" data-pitch="322" data-disc="BD-R" data-sens="321">BD-R<span class="sub">322 nm</span></button>
           </div>
-          <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:10px;font-family:'DM Mono',monospace;line-height:1.6;">Smaller track pitch = more sensitive. BD-R (Blu-ray) grooves at 320 nm give the best plasmonic coupling.</p>
+          <div class="ctrl-note">Grating period (Lambda) controls coupling. Larger Lambda = higher sensitivity. Smaller Lambda = sharper resonance.</div>
         </div>
-        <div class="ctrl-block">
-          <div class="ctrl-block-label">Illumination Side</div>
-          <div class="illum-btns" id="illum-selector">
+        <div class="ctrl-blk">
+          <div class="ctrl-lbl">Illumination</div>
+          <div class="illum-btns" id="illum-sel">
             <button class="illum-btn active" data-illum="front">Front-side</button>
             <button class="illum-btn" data-illum="back">Back-side</button>
           </div>
-          <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:10px;font-family:'DM Mono',monospace;line-height:1.6;">Front-side illumination hits the polycarbonate surface first. Back-side hits the metal directly — changes coupling geometry and resonance position.</p>
+          <div class="ctrl-note">Front-side gives stronger, cleaner resonances. Back-side shows reduced contrast from substrate interference.</div>
         </div>
-        <div class="ctrl-block">
-          <div class="ctrl-block-label">Parameters</div>
+        <div class="ctrl-blk">
+          <div class="ctrl-lbl">Parameters</div>
           <div class="sl-row">
             <div class="sl-head">
               <div class="sl-name">Refractive Index (n)</div>
-              <div class="sl-val" id="n-display">1.333<span> n</span></div>
+              <div class="sl-val" id="n-disp">1.333<span> RIU</span></div>
             </div>
-            <input type="range" id="n-slider" min="1333" max="1500" value="1333" step="1"/>
+            <input type="range" id="n-sl" min="1333" max="1500" value="1333" step="1">
             <div class="sl-limits"><span>1.333 = pure water</span><span>1.500</span></div>
           </div>
           <div class="sl-row">
             <div class="sl-head">
               <div class="sl-name">Ag Film Thickness</div>
-              <div class="sl-val" id="ag-display">50<span> nm</span></div>
+              <div class="sl-val" id="ag-disp">50<span> nm</span></div>
             </div>
-            <input type="range" id="ag-slider" min="30" max="100" value="50" step="1"/>
-            <div class="sl-limits"><span>30 nm (thin)</span><span>100 nm (thick)</span></div>
+            <input type="range" id="ag-sl" min="30" max="100" value="50" step="1">
+            <div class="sl-limits"><span>30 nm</span><span>100 nm</span></div>
           </div>
-          <p style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:8px;font-family:'DM Mono',monospace;line-height:1.6;">Tip: Increase n to simulate adding more toxin to water. Optimal silver thickness is ~50 nm for deepest resonance dip.</p>
         </div>
       </div>
-
-      <div class="chart-panel">
-        <div class="chart-panel-title">SPR Reflectance Spectrum</div>
-        <div class="chart-panel-sub">Reflectance vs. wavelength — resonance dip marks where plasmons absorb light</div>
-        <canvas id="spr-canvas" width="600" height="300"></canvas>
-        <div class="demo-legend">
-          <div class="dl-item"><div class="dl-line" style="background:rgba(126,232,250,0.9);"></div>SPR spectrum curve</div>
-          <div class="dl-item"><div class="dl-line" style="background:rgba(200,146,42,0.9);border-top:2px dashed rgba(200,146,42,0.9);height:0;"></div>Resonance wavelength (λ)</div>
-          <div class="dl-item" style="color:rgba(255,255,255,0.35);">Dip position shifts right as toxin concentration increases</div>
+      <div class="chart-blk">
+        <div class="chart-hdr">
+          <div class="chart-title">SPR Reflectance Spectrum</div>
+          <div class="chart-sub">Reflectance (Ip/Is) vs. wavelength -- dip marks SPR absorption</div>
         </div>
+        <canvas id="spr-canvas" width="640" height="290"></canvas>
+        <div class="demo-note">The dip shifts right as refractive index increases (analyte concentration rises). Sensitivity S = delta-lambda / delta-n quantifies this response.</div>
         <div class="chart-stats">
-          <div class="stat-b">
-            <div class="stat-b-label">Resonance λ</div>
-            <div class="stat-b-val" id="stat-lambda">542<span> nm</span></div>
-          </div>
-          <div class="stat-b">
-            <div class="stat-b-label">Dip Depth</div>
-            <div class="stat-b-val" id="stat-depth">68<span> %</span></div>
-          </div>
-          <div class="stat-b">
-            <div class="stat-b-label">Sensitivity</div>
-            <div class="stat-b-val" id="stat-sens">142<span> nm/RIU</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- GALLERY -->
-<section id="gallery">
-  <div class="section-inner reveal">
-    <div class="section-label">Gallery</div>
-    <h2 class="sh">The Sensor &amp; Research</h2>
-
-    <div class="gallery-sections">
-      <div>
-        <div class="g-section-title">01 — Sensor Fabrication</div>
-        <div class="g-grid-wide">
-          <div class="g-slot wide">
-            <div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>FABRICATION OVERVIEW</p></div>
-            <div class="g-slot-overlay"><div class="g-slot-cap">Disc substrate preparation</div></div>
-          </div>
-          <div class="g-slot">
-            <div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO</p></div>
-            <div class="g-slot-overlay"><div class="g-slot-cap">Silver coating process</div></div>
-          </div>
-          <div class="g-slot">
-            <div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO</p></div>
-            <div class="g-slot-overlay"><div class="g-slot-cap">CD-R vs BD-R comparison</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div class="g-section-title">02 — Optical Setup</div>
-        <div class="g-grid-3">
-          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">Full apparatus overview</div></div></div>
-          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">Light source and collimator</div></div></div>
-          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">Spectrometer coupling</div></div></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="g-section-title">03 — Experiments &amp; Data</div>
-        <div class="g-grid-2">
-          <div class="g-slot wide"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT SPECTRA / GRAPH</p></div><div class="g-slot-overlay"><div class="g-slot-cap">SPR spectra — resonance dip shifts</div></div></div>
-          <div class="g-slot wide"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>INSERT PHOTO / GRAPH</p></div><div class="g-slot-overlay"><div class="g-slot-cap">Toxin detection — microcystin-LR</div></div></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="g-section-title">04 — Disc Substrate Comparison</div>
-        <div class="g-grid-3">
-          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>CD-R PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">CD-R &nbsp;·&nbsp; 1600 nm track pitch</div></div></div>
-          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>DVD-R PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">DVD-R &nbsp;·&nbsp; 740 nm track pitch</div></div></div>
-          <div class="g-slot"><div class="g-ph"><svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.3"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><p>BD-R PHOTO</p></div><div class="g-slot-overlay"><div class="g-slot-cap">BD-R &nbsp;·&nbsp; 320 nm track pitch</div></div></div>
+          <div class="cs"><div class="cs-lbl">Resonance wavelength</div><div class="cs-val" id="stat-lam">850<span> nm</span></div></div>
+          <div class="cs"><div class="cs-lbl">Dip depth</div><div class="cs-val" id="stat-dep">52<span> %</span></div></div>
+          <div class="cs"><div class="cs-lbl">Sensitivity (S)</div><div class="cs-val" id="stat-s">394<span> nm/RIU</span></div></div>
         </div>
       </div>
     </div>
@@ -1160,82 +838,184 @@ footer::before {
 </section>
 
 <!-- RESULTS -->
-<section id="results">
-  <div class="section-inner reveal">
-    <div class="section-label">Experimental Results</div>
-    <h2 class="sh">Measured SPR Shifts</h2>
-    <p class="section-lead">Resonance wavelength shifts measured across disc substrates and analyte concentrations using our home-built spectrometer setup. Δλ = shift from baseline (pure water).</p>
+<section id="results" class="sec">
+  <div class="sec-inner reveal">
+    <div class="sec-tag">05 -- Results</div>
+    <h2>Sensitivity, quality, and disc geometry.</h2>
+    <p class="sec-lead">Refractive index sensitivity measured using Ag-coated discs with ethylene glycol/water solutions (0 to 100% w/w). Each measurement repeated three times (n = 3).</p>
+
+    <div class="sens-chart reveal" style="margin-top:32px;">
+      <div class="sens-chart-title">Refractive index sensitivity by disc substrate</div>
+      <div class="sens-chart-sub">Ag-coated gratings, front-side illumination, incident angle = 50 degrees</div>
+      <div class="sbar-row">
+        <div class="sbar-lbl">CD-R</div>
+        <div class="sbar-track"><div class="sbar-fill cdr" id="sbar-cdr" style="width:0%">394 nm/RIU</div></div>
+        <div class="sbar-note">R2 = 0.990 &middot; highest sensitivity</div>
+      </div>
+      <div class="sbar-row">
+        <div class="sbar-lbl">BD-R</div>
+        <div class="sbar-track"><div class="sbar-fill bdr" id="sbar-bdr" style="width:0%">321 nm/RIU</div></div>
+        <div class="sbar-note">R2 = 0.933 &middot; sharpest resonance</div>
+      </div>
+      <div class="sbar-row">
+        <div class="sbar-lbl">DVD-R</div>
+        <div class="sbar-track"><div class="sbar-fill dvdr" id="sbar-dvdr" style="width:0%">290 nm/RIU</div></div>
+        <div class="sbar-note">R2 = 0.998 &middot; best linearity</div>
+      </div>
+    </div>
+
     <table class="results-table">
       <thead>
         <tr>
           <th>Disc</th>
-          <th>Analyte</th>
-          <th>Concentration</th>
-          <th>Δλ Shift</th>
-          <th>Sensitivity</th>
-          <th>Status</th>
+          <th>Sensitivity (S)</th>
+          <th>R2</th>
+          <th>Resonance quality</th>
+          <th>Metal continuity</th>
+          <th>Note</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td><strong>BD-R</strong></td>
-          <td>Microcystin-LR</td>
-          <td>10 μg/L</td>
-          <td class="val">+18.4 nm</td>
-          <td class="val">142 nm/RIU</td>
-          <td><span class="chip chip-ok">Detected</span></td>
+          <td><span class="disc-n">CD-R</span></td>
+          <td class="val">394 nm/RIU</td>
+          <td class="val">0.990</td>
+          <td>Broad, overlapping modes</td>
+          <td>Less continuous</td>
+          <td><span class="chip chip-b">Highest sensitivity</span></td>
         </tr>
         <tr>
-          <td><strong>BD-R</strong></td>
-          <td>Microcystin-LR</td>
-          <td>1 μg/L</td>
-          <td class="val">+6.2 nm</td>
-          <td class="val">142 nm/RIU</td>
-          <td><span class="chip chip-ok">Detected</span></td>
+          <td><span class="disc-n">BD-R</span></td>
+          <td class="val">321 nm/RIU</td>
+          <td class="val">0.933</td>
+          <td>Sharp, well-defined</td>
+          <td>Continuous (bridging)</td>
+          <td><span class="chip chip-ok">Best resonance quality</span></td>
         </tr>
         <tr>
-          <td><strong>DVD-R</strong></td>
-          <td>Atrazine</td>
-          <td>5 μg/L</td>
-          <td class="val">+9.7 nm</td>
-          <td class="val">95 nm/RIU</td>
-          <td><span class="chip chip-ok">Detected</span></td>
-        </tr>
-        <tr>
-          <td><strong>DVD-R</strong></td>
-          <td>NaCl (1 mM)</td>
-          <td>— calibration</td>
-          <td class="val">+3.1 nm</td>
-          <td class="val">95 nm/RIU</td>
-          <td><span class="chip chip-cal">Calibration</span></td>
-        </tr>
-        <tr>
-          <td><strong>CD-R</strong></td>
-          <td>Glucose</td>
-          <td>100 mM</td>
-          <td class="val">+4.8 nm</td>
-          <td class="val">62 nm/RIU</td>
-          <td><span class="chip chip-ok">Detected</span></td>
+          <td><span class="disc-n">DVD-R</span></td>
+          <td class="val">290 nm/RIU</td>
+          <td class="val">0.998</td>
+          <td>Moderate definition</td>
+          <td>Less continuous</td>
+          <td><span class="chip chip-ok">Best linearity</span></td>
         </tr>
       </tbody>
     </table>
 
-    <!-- Key takeaways -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:32px;">
-      <div style="background:var(--parchment);padding:24px;border:1px solid var(--border-lt);">
-        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">Key Finding</div>
-        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:8px;">BD-R most sensitive</div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.65;">Blu-ray discs (320 nm pitch) achieved 142 nm/RIU — more than 2× better than CD-R at 62 nm/RIU. Smaller grooves couple light more efficiently into plasmons.</div>
+    <div class="findings-grid reveal">
+      <div class="finding">
+        <div class="finding-lbl">Finding 01</div>
+        <div class="finding-title">CD-R gave the highest sensitivity</div>
+        <div class="finding-body">CD-R (Lambda = 1582 nm) achieved 394 nm/RIU. Its large period supports higher diffraction orders, producing broader resonance features with larger wavelength shifts per unit RI change.</div>
       </div>
-      <div style="background:var(--parchment);padding:24px;border:1px solid var(--border-lt);">
-        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">Detection Limit</div>
-        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:8px;">Below WHO threshold</div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.65;">Microcystin-LR detected at 1 μg/L — at the WHO's maximum allowable limit — confirming the sensor has real-world utility for drinking water safety monitoring.</div>
+      <div class="finding">
+        <div class="finding-lbl">Finding 02</div>
+        <div class="finding-title">BD-R gave the sharpest resonance</div>
+        <div class="finding-body">BD-R (Lambda = 322 nm) produced the sharpest, most clearly identifiable dips and best agreement with RCWA simulation. Its shallow grooves allow continuous metal bridging across ridges.</div>
       </div>
-      <div style="background:var(--parchment);padding:24px;border:1px solid var(--border-lt);">
-        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;">Cost Comparison</div>
-        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:8px;">250× cheaper than HPLC</div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.65;">The entire DiscSPR apparatus costs ~$200 vs. $50,000+ for commercial SPR systems. Each sensor costs under $1, making community-scale deployment financially feasible.</div>
+      <div class="finding">
+        <div class="finding-lbl">Finding 03</div>
+        <div class="finding-title">Ag outperforms Cu</div>
+        <div class="finding-body">Silver produced sharper, more identifiable resonances than copper across all disc types. Copper's larger optical loss broadens and weakens the SPR dip. Thicker Cu films (70 nm) partially compensate.</div>
+      </div>
+    </div>
+
+    <!-- Results photos -->
+    <div class="photo-gallery reveal" style="margin-top:40px;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:12px;">Results and data</h3>
+      <div class="gallery-grid">
+        <div class="gphoto" onclick="openLb(this)">
+          <div class="gphoto-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo</span></div>
+          <div class="gphoto-cap"><strong>CD-R reflectance spectrum</strong><span>SPR resonance dip in CD-R sensor across different ethylene glycol/water concentrations, showing the wavelength shift used to calculate sensitivity</span></div>
+        </div>
+        <div class="gphoto" onclick="openLb(this)">
+          <div class="gphoto-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo</span></div>
+          <div class="gphoto-cap"><strong>BD-R reflectance spectrum</strong><span>SPR resonance dip in BD-R sensor -- sharpest feature of the three disc types, enabling precise resonance position tracking</span></div>
+        </div>
+        <div class="gphoto" onclick="openLb(this)">
+          <div class="gphoto-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo</span></div>
+          <div class="gphoto-cap"><strong>Sensitivity calibration</strong><span>Resonance wavelength vs. refractive index for all three disc types; slopes give S values (nm/RIU); R2 values indicate linearity of the response</span></div>
+        </div>
+        <div class="gphoto" onclick="openLb(this)">
+          <div class="gphoto-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo</span></div>
+          <div class="gphoto-cap"><strong>Ag vs. Cu comparison</strong><span>Reflectance spectra for Ag and Cu films on the same disc substrate; Ag shows significantly sharper and deeper resonance dips</span></div>
+        </div>
+        <div class="gphoto" onclick="openLb(this)">
+          <div class="gphoto-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo</span></div>
+          <div class="gphoto-cap"><strong>AFM surface imaging</strong><span>Atomic force microscopy of Ag-coated BD-R, DVD-R, and CD-R surfaces, showing grating period, groove depth, and metal film morphology</span></div>
+        </div>
+        <div class="gphoto" onclick="openLb(this)">
+          <div class="gphoto-placeholder"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg><span>Add photo</span></div>
+          <div class="gphoto-cap"><strong>RCWA simulation vs. experiment</strong><span>Comparison of simulated and measured reflectance spectra for BD-R, showing close agreement that validates the optical model</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DISCUSSION -->
+<section id="discussion" class="sec">
+  <div class="sec-inner reveal">
+    <div class="sec-tag">06 -- Discussion</div>
+    <h2>What the results mean.</h2>
+    <div class="disc-grid" style="margin-top:28px;">
+      <div class="di">
+        <div class="di-head">Sensitivity vs. resonance sharpness</div>
+        <div class="di-body">The results reveal a fundamental tradeoff. CD-R achieves the highest sensitivity (394 nm/RIU) because its large grating period supports higher diffraction orders and less selective momentum matching. This broadens resonance features but amplifies the wavelength shift per unit RI change. BD-R achieves sharper resonances but lower sensitivity (321 nm/RIU). For practical sensing, sharper resonances allow more precise determination of the resonance position, which can partially offset the sensitivity advantage of CD-R.</div>
+      </div>
+      <div class="di">
+        <div class="di-head">Why front-side illumination is preferred</div>
+        <div class="di-body">Back-side illumination was tested as a potential approach for sensing in absorbing solvents. However, propagation through the 1 mm polycarbonate substrate introduces interference effects and weakens the electromagnetic field at the metal-dielectric interface. Only BD-R showed reasonable back-side performance, due to its small period and shallow grooves. Front-side illumination is recommended for all current disc-based GC-SPR applications.</div>
+      </div>
+      <div class="di">
+        <div class="di-head">Silver vs. copper</div>
+        <div class="di-body">Silver was the more effective plasmonic material due to its lower intrinsic optical loss. Copper oxidizes rapidly in air, forming Cu2O and CuO surface layers that broaden resonances and shift coupling conditions. Protective coatings such as graphene or MoS2 have been reported to stabilize copper films and could extend the useful lifetime of Cu-coated sensors in future work.</div>
+      </div>
+      <div class="di">
+        <div class="di-head">How this compares to existing methods</div>
+        <div class="di-body">The full apparatus cost of approximately $200 compares favorably against $50,000 to $200,000 for commercial SPR instruments and standard lab methods such as HPLC and ELISA. Disc substrates cost under $1 each, are mass-produced to consistent optical tolerances, and are available globally. This positions disc-based GC-SPR as a viable platform for community-level water monitoring in resource-limited settings where lab access is unavailable.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FUTURE WORK -->
+<section id="future" class="sec">
+  <div class="sec-inner reveal">
+    <div class="sec-tag">07 -- Future Work</div>
+    <h2>Next steps toward field deployment.</h2>
+    <p class="sec-lead">The current platform demonstrates proof-of-concept sensitivity. Several extensions are needed to move toward a deployable sensor for real water samples.</p>
+    <div class="future-grid">
+      <div class="fi">
+        <div class="fi-num">01</div>
+        <div class="fi-title">Selective surface functionalization</div>
+        <div class="fi-body">Current measurements detect bulk refractive index changes. Adding antibodies, aptamers, or molecularly imprinted polymers to the sensor surface would enable selective detection of specific toxins (microcystin, atrazine, PFAS) at environmentally relevant concentrations.</div>
+      </div>
+      <div class="fi">
+        <div class="fi-num">02</div>
+        <div class="fi-title">Copper film stabilization</div>
+        <div class="fi-body">Copper is more abundant and lower cost than silver. Applying graphene or MoS2 protective overlayers could prevent oxidation and extend sensor lifetime, making Cu-coated discs a practical alternative to Ag for field use.</div>
+      </div>
+      <div class="fi">
+        <div class="fi-num">03</div>
+        <div class="fi-title">Smartphone-coupled readout</div>
+        <div class="fi-body">Replacing the benchtop spectrometer with a smartphone-based spectral sensor would reduce apparatus cost below $50 and enable fully portable, field-deployable sensing. Compact grating-coupled SPR with smartphone readout has been demonstrated in prior literature.</div>
+      </div>
+      <div class="fi">
+        <div class="fi-num">04</div>
+        <div class="fi-title">Prism-grating hybrid</div>
+        <div class="fi-body">Incorporating a prism on the substrate side of the disc could enhance back-side coupling efficiency, potentially enabling sensing of strongly absorbing or colored water samples where front-side illumination is distorted by the analyte.</div>
+      </div>
+      <div class="fi">
+        <div class="fi-num">05</div>
+        <div class="fi-title">Real water sample validation</div>
+        <div class="fi-body">All current sensitivity measurements used controlled ethylene glycol/water solutions as refractive index standards. Testing in real lake, groundwater, and tap water samples with known contaminant additions is needed to establish practical detection limits and selectivity.</div>
+      </div>
+      <div class="fi">
+        <div class="fi-num">06</div>
+        <div class="fi-title">Multiplexed toxin detection</div>
+        <div class="fi-body">SPR imaging with different functionalized zones on a single disc substrate could enable simultaneous detection of multiple toxins in one measurement, reducing time and material per sample in field settings.</div>
       </div>
     </div>
   </div>
@@ -1244,204 +1024,294 @@ footer::before {
 <!-- FOOTER -->
 <footer>
   <div>
-    <div class="footer-logo">DiscSPR</div>
-    <div class="footer-tagline">Affordable Plasmonic Water Toxin Sensing &nbsp;·&nbsp; SJWP 2026</div>
+    <div class="footer-logo">Disc<em>SPR</em></div>
+    <div class="footer-sub">Grating-Coupled SPR Water Sensing &nbsp;·&nbsp; SJWP 2026 &nbsp;·&nbsp; University of North Texas</div>
   </div>
   <div class="footer-right">
-    Surface Plasmon Resonance<br>
-    Optical Disc Grating Sensors<br>
-    Data illustrative where noted
+    Jaikeandee et al., Materials 2026, 19, 603<br>
+    DOI: 10.3390/ma19030603<br>
+    Open access, CC BY license
   </div>
 </footer>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLb()">
+  <button class="lb-close" onclick="closeLb()">x</button>
+  <img class="lb-img" id="lb-img" src="" alt="">
+  <div class="lb-cap" id="lb-cap"></div>
+</div>
+
 <script>
 /* ===== WORLD MAP ===== */
-const regionData = {
-  "United States of America": { access: "High", cost: "$200–500/test", concern: "PFAS, cyanotoxins" },
-  "Canada": { access: "High", cost: "$150–400/test", concern: "Blue-green algae" },
-  "Mexico": { access: "Moderate", cost: "$400–900/test", concern: "Agricultural runoff" },
-  "Brazil": { access: "Moderate", cost: "$300–700/test", concern: "Cyanobacteria blooms" },
-  "Argentina": { access: "Moderate", cost: "$350–800/test", concern: "Atrazine, herbicides" },
-  "Colombia": { access: "Poor", cost: "$800–2,000/test", concern: "Industrial contaminants" },
-  "Venezuela": { access: "None", cost: "Unavailable", concern: "Heavy metals" },
-  "Peru": { access: "Poor", cost: "$700–1,500/test", concern: "Mining runoff" },
-  "Chile": { access: "Moderate", cost: "$400–900/test", concern: "Arsenic" },
-  "United Kingdom": { access: "High", cost: "$120–350/test", concern: "Pesticides" },
-  "France": { access: "High", cost: "$130–380/test", concern: "Agricultural chemicals" },
-  "Germany": { access: "High", cost: "$110–320/test", concern: "Nitrates" },
-  "Spain": { access: "High", cost: "$140–400/test", concern: "Cyanotoxins" },
-  "Italy": { access: "High", cost: "$150–420/test", concern: "Industrial runoff" },
-  "Poland": { access: "Moderate", cost: "$300–650/test", concern: "Industrial contaminants" },
-  "Ukraine": { access: "Poor", cost: "$600–1,200/test", concern: "Heavy metals" },
-  "Russia": { access: "Moderate", cost: "$350–750/test", concern: "Industrial chemicals" },
-  "Norway": { access: "High", cost: "$100–300/test", concern: "Microplastics" },
-  "Sweden": { access: "High", cost: "$100–280/test", concern: "PFAS" },
-  "Nigeria": { access: "None", cost: "Unavailable", concern: "Oil contamination" },
-  "Ethiopia": { access: "None", cost: "Unavailable", concern: "Fluoride, arsenic" },
-  "Kenya": { access: "None", cost: "Unavailable", concern: "Cyanotoxins" },
-  "South Africa": { access: "Poor", cost: "$700–1,800/test", concern: "Acid mine drainage" },
-  "Egypt": { access: "Poor", cost: "$600–1,400/test", concern: "Nile algal blooms" },
-  "Morocco": { access: "Poor", cost: "$700–1,500/test", concern: "Agricultural chemicals" },
-  "Algeria": { access: "Poor", cost: "$700–1,600/test", concern: "Industrial waste" },
-  "Tanzania": { access: "None", cost: "Unavailable", concern: "Microcystin" },
-  "Ghana": { access: "None", cost: "Unavailable", concern: "Artisanal mining" },
-  "DR Congo": { access: "None", cost: "Unavailable", concern: "Mining effluent" },
-  "China": { access: "Moderate", cost: "$250–600/test", concern: "Heavy metals, algae" },
-  "India": { access: "Poor", cost: "$600–1,500/test", concern: "Arsenic, fluoride" },
-  "Japan": { access: "High", cost: "$130–380/test", concern: "Microplastics" },
-  "South Korea": { access: "High", cost: "$150–400/test", concern: "Algal toxins" },
-  "Indonesia": { access: "Poor", cost: "$500–1,200/test", concern: "Industrial chemicals" },
-  "Bangladesh": { access: "None", cost: "Unavailable", concern: "Arsenic contamination" },
-  "Pakistan": { access: "None", cost: "Unavailable", concern: "Arsenic, heavy metals" },
-  "Vietnam": { access: "Poor", cost: "$500–1,100/test", concern: "Pesticides" },
-  "Thailand": { access: "Moderate", cost: "$350–800/test", concern: "Agricultural runoff" },
-  "Philippines": { access: "Poor", cost: "$600–1,300/test", concern: "Mining contaminants" },
-  "Saudi Arabia": { access: "Moderate", cost: "$400–900/test", concern: "Desalination byproducts" },
-  "Iran": { access: "Poor", cost: "$700–1,500/test", concern: "Industrial waste" },
-  "Iraq": { access: "None", cost: "Unavailable", concern: "Heavy metals" },
-  "Turkey": { access: "Moderate", cost: "$300–700/test", concern: "Agricultural chemicals" },
-  "Australia": { access: "High", cost: "$180–450/test", concern: "Cyanobacteria" },
-  "New Zealand": { access: "High", cost: "$160–400/test", concern: "Agricultural runoff" },
-  "Cambodia": { access: "None", cost: "Unavailable", concern: "Arsenic" },
-  "Myanmar": { access: "None", cost: "Unavailable", concern: "Mining runoff" },
-  "Afghanistan": { access: "None", cost: "Unavailable", concern: "Arsenic, fluoride" },
-  "Sudan": { access: "None", cost: "Unavailable", concern: "Heavy metals" },
-  "Mali": { access: "None", cost: "Unavailable", concern: "Fluoride" },
-  "Niger": { access: "None", cost: "Unavailable", concern: "Uranium mining" }
+const regionData={
+  "United States of America":{access:"High",cost:"$200-500/test",concern:"PFAS, cyanotoxins"},
+  "Canada":{access:"High",cost:"$150-400/test",concern:"Blue-green algae"},
+  "Mexico":{access:"Moderate",cost:"$400-900/test",concern:"Agricultural runoff"},
+  "Brazil":{access:"Moderate",cost:"$300-700/test",concern:"Cyanobacteria blooms"},
+  "Argentina":{access:"Moderate",cost:"$350-800/test",concern:"Atrazine, herbicides"},
+  "Colombia":{access:"Poor",cost:"$800-2,000/test",concern:"Industrial contaminants"},
+  "Venezuela":{access:"None",cost:"Unavailable",concern:"Heavy metals"},
+  "Peru":{access:"Poor",cost:"$700-1,500/test",concern:"Mining runoff"},
+  "Chile":{access:"Moderate",cost:"$400-900/test",concern:"Arsenic"},
+  "United Kingdom":{access:"High",cost:"$120-350/test",concern:"Pesticides"},
+  "France":{access:"High",cost:"$130-380/test",concern:"Agricultural chemicals"},
+  "Germany":{access:"High",cost:"$110-320/test",concern:"Nitrates"},
+  "Spain":{access:"High",cost:"$140-400/test",concern:"Cyanotoxins"},
+  "Italy":{access:"High",cost:"$150-420/test",concern:"Industrial runoff"},
+  "Poland":{access:"Moderate",cost:"$300-650/test",concern:"Industrial contaminants"},
+  "Ukraine":{access:"Poor",cost:"$600-1,200/test",concern:"Heavy metals"},
+  "Russia":{access:"Moderate",cost:"$350-750/test",concern:"Industrial chemicals"},
+  "Norway":{access:"High",cost:"$100-300/test",concern:"Microplastics"},
+  "Sweden":{access:"High",cost:"$100-280/test",concern:"PFAS"},
+  "Nigeria":{access:"None",cost:"Unavailable",concern:"Oil contamination"},
+  "Ethiopia":{access:"None",cost:"Unavailable",concern:"Fluoride, arsenic"},
+  "Kenya":{access:"None",cost:"Unavailable",concern:"Cyanotoxins"},
+  "South Africa":{access:"Poor",cost:"$700-1,800/test",concern:"Acid mine drainage"},
+  "Egypt":{access:"Poor",cost:"$600-1,400/test",concern:"Algal blooms"},
+  "Morocco":{access:"Poor",cost:"$700-1,500/test",concern:"Agricultural chemicals"},
+  "Algeria":{access:"Poor",cost:"$700-1,600/test",concern:"Industrial waste"},
+  "Tanzania":{access:"None",cost:"Unavailable",concern:"Microcystin"},
+  "Ghana":{access:"None",cost:"Unavailable",concern:"Artisanal mining"},
+  "DR Congo":{access:"None",cost:"Unavailable",concern:"Mining effluent"},
+  "China":{access:"Moderate",cost:"$250-600/test",concern:"Heavy metals, algae"},
+  "India":{access:"Poor",cost:"$600-1,500/test",concern:"Arsenic, fluoride"},
+  "Japan":{access:"High",cost:"$130-380/test",concern:"Microplastics"},
+  "South Korea":{access:"High",cost:"$150-400/test",concern:"Algal toxins"},
+  "Indonesia":{access:"Poor",cost:"$500-1,200/test",concern:"Industrial chemicals"},
+  "Bangladesh":{access:"None",cost:"Unavailable",concern:"Arsenic contamination"},
+  "Pakistan":{access:"None",cost:"Unavailable",concern:"Arsenic, heavy metals"},
+  "Vietnam":{access:"Poor",cost:"$500-1,100/test",concern:"Pesticides"},
+  "Thailand":{access:"Moderate",cost:"$350-800/test",concern:"Agricultural runoff"},
+  "Philippines":{access:"Poor",cost:"$600-1,300/test",concern:"Mining contaminants"},
+  "Saudi Arabia":{access:"Moderate",cost:"$400-900/test",concern:"Desalination byproducts"},
+  "Iran":{access:"Poor",cost:"$700-1,500/test",concern:"Industrial waste"},
+  "Iraq":{access:"None",cost:"Unavailable",concern:"Heavy metals"},
+  "Turkey":{access:"Moderate",cost:"$300-700/test",concern:"Agricultural chemicals"},
+  "Australia":{access:"High",cost:"$180-450/test",concern:"Cyanobacteria"},
+  "New Zealand":{access:"High",cost:"$160-400/test",concern:"Agricultural runoff"},
+  "Cambodia":{access:"None",cost:"Unavailable",concern:"Arsenic"},
+  "Myanmar":{access:"None",cost:"Unavailable",concern:"Mining runoff"},
+  "Afghanistan":{access:"None",cost:"Unavailable",concern:"Arsenic, fluoride"},
+  "Sudan":{access:"None",cost:"Unavailable",concern:"Heavy metals"},
+  "Mali":{access:"None",cost:"Unavailable",concern:"Fluoride"},
+  "Niger":{access:"None",cost:"Unavailable",concern:"Uranium mining"}
 };
-const accessColor = { "High": "#3498db", "Moderate": "#f1c40f", "Poor": "#e67e22", "None": "#e74c3c" };
-const defaultColor = "#6b8fa3";
-function getColor(name) { const d = regionData[name]; if (!d) return defaultColor; return accessColor[d.access] || defaultColor; }
+const accessColor={"High":"#2980b9","Moderate":"#c8a820","Poor":"#e67e22","None":"#c0392b"};
+const defColor="#8fa8b8";
+function getClr(name){const d=regionData[name];return d?(accessColor[d.access]||defColor):defColor;}
 
-const mapContainer = document.getElementById('world-svg-container');
-const tooltip = document.getElementById('map-tooltip');
-const width = 900, height = 460;
-const svg = d3.select('#world-svg-container').append('svg').attr('viewBox', `0 0 ${width} ${height}`).style('width','100%').style('height','auto').style('display','block');
-const projection = d3.geoNaturalEarth1().scale(145).translate([width/2, height/2+20]);
-const path = d3.geoPath().projection(projection);
+const mapWrap=document.getElementById('map-svg-wrap');
+const mtt=document.getElementById('map-tt');
+const W=900,H=440;
+const svg=d3.select('#map-svg-wrap').append('svg').attr('viewBox',`0 0 ${W} ${H}`).style('width','100%').style('height','auto').style('display','block');
+const proj=d3.geoNaturalEarth1().scale(143).translate([W/2,H/2+15]);
+const path=d3.geoPath().projection(proj);
+const nameMap={"004":"Afghanistan","024":"Angola","032":"Argentina","036":"Australia","050":"Bangladesh","068":"Bolivia","076":"Brazil","104":"Myanmar","116":"Cambodia","124":"Canada","152":"Chile","156":"China","170":"Colombia","180":"DR Congo","208":"Denmark","818":"Egypt","231":"Ethiopia","246":"Finland","250":"France","276":"Germany","288":"Ghana","356":"India","360":"Indonesia","364":"Iran","368":"Iraq","380":"Italy","392":"Japan","404":"Kenya","410":"South Korea","418":"Laos","434":"Libya","484":"Mexico","504":"Morocco","516":"Namibia","524":"Nepal","554":"New Zealand","566":"Nigeria","578":"Norway","586":"Pakistan","604":"Peru","608":"Philippines","616":"Poland","682":"Saudi Arabia","710":"South Africa","724":"Spain","752":"Sweden","760":"Syria","764":"Thailand","792":"Turkey","804":"Ukraine","826":"United Kingdom","840":"United States of America","862":"Venezuela","704":"Vietnam","887":"Yemen","894":"Zambia","716":"Zimbabwe","012":"Algeria","466":"Mali","562":"Niger","729":"Sudan","834":"Tanzania"};
 
 fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-  .then(r => r.json())
-  .then(world => {
-    const countries = topojson.feature(world, world.objects.countries);
-    const nameMap = {"004":"Afghanistan","024":"Angola","032":"Argentina","036":"Australia","050":"Bangladesh","056":"Belgium","068":"Bolivia","076":"Brazil","104":"Myanmar","116":"Cambodia","120":"Cameroon","124":"Canada","152":"Chile","156":"China","170":"Colombia","180":"DR Congo","204":"Benin","208":"Denmark","818":"Egypt","231":"Ethiopia","246":"Finland","250":"France","276":"Germany","288":"Ghana","300":"Greece","320":"Guatemala","356":"India","360":"Indonesia","364":"Iran","368":"Iraq","372":"Ireland","376":"Israel","380":"Italy","392":"Japan","404":"Kenya","410":"South Korea","418":"Laos","434":"Libya","484":"Mexico","504":"Morocco","516":"Namibia","524":"Nepal","528":"Netherlands","554":"New Zealand","558":"Nicaragua","566":"Nigeria","578":"Norway","586":"Pakistan","600":"Paraguay","604":"Peru","608":"Philippines","616":"Poland","682":"Saudi Arabia","710":"South Africa","724":"Spain","752":"Sweden","756":"Switzerland","760":"Syria","764":"Thailand","792":"Turkey","800":"Uganda","804":"Ukraine","784":"United Arab Emirates","826":"United Kingdom","840":"United States of America","858":"Uruguay","862":"Venezuela","704":"Vietnam","887":"Yemen","894":"Zambia","716":"Zimbabwe","012":"Algeria","466":"Mali","562":"Niger","729":"Sudan","834":"Tanzania"};
-    svg.append('rect').attr('width',width).attr('height',height).attr('fill','#0d2438');
+  .then(r=>r.json())
+  .then(world=>{
+    const countries=topojson.feature(world,world.objects.countries);
+    svg.append('rect').attr('width',W).attr('height',H).attr('fill','#d4dfe8');
     svg.append('g').selectAll('path').data(countries.features).enter().append('path')
-      .attr('d', path)
-      .attr('fill', d => { const name = nameMap[String(d.id).padStart(3,'0')]; return getColor(name); })
-      .attr('stroke','#0d2438').attr('stroke-width',0.5).attr('opacity',0.85)
-      .on('mouseover', function(event, d) {
-        const name = nameMap[String(d.id).padStart(3,'0')];
-        const info = regionData[name];
-        d3.select(this).attr('opacity',1).attr('stroke','#fff').attr('stroke-width',1.2);
-        document.getElementById('tt-region').textContent = name || 'Unknown region';
-        document.getElementById('tt-access').textContent = info ? info.access + ' access' : 'Data unavailable';
-        document.getElementById('tt-cost').textContent = info ? info.cost : '—';
-        document.getElementById('tt-concern').textContent = info ? info.concern : '—';
-        tooltip.classList.add('show');
+      .attr('d',path)
+      .attr('fill',d=>{const n=nameMap[String(d.id).padStart(3,'0')];return getClr(n);})
+      .attr('stroke','#fff').attr('stroke-width',0.4).attr('opacity',0.9)
+      .on('mouseover',function(event,d){
+        const name=nameMap[String(d.id).padStart(3,'0')];
+        const info=regionData[name];
+        d3.select(this).attr('opacity',1).attr('stroke','#0d1b24').attr('stroke-width',1);
+        document.getElementById('tt-name').textContent=name||'Unknown';
+        document.getElementById('tt-access').textContent=info?info.access+' access':'No data';
+        document.getElementById('tt-cost').textContent=info?info.cost:'-';
+        document.getElementById('tt-concern').textContent=info?info.concern:'-';
+        mtt.classList.add('show');
       })
-      .on('mousemove', function(event) {
-        const rect = mapContainer.getBoundingClientRect();
-        let x = event.clientX - rect.left + 14;
-        let y = event.clientY - rect.top - 10;
-        if (x + 210 > rect.width) x -= 220;
-        tooltip.style.left = x + 'px'; tooltip.style.top = y + 'px';
+      .on('mousemove',function(event){
+        const rect=mapWrap.getBoundingClientRect();
+        let x=event.clientX-rect.left+14,y=event.clientY-rect.top-10;
+        if(x+200>rect.width)x-=210;
+        mtt.style.left=x+'px';mtt.style.top=y+'px';
       })
-      .on('mouseleave', function() {
-        d3.select(this).attr('opacity',0.85).attr('stroke','#0d2438').attr('stroke-width',0.5);
-        tooltip.classList.remove('show');
+      .on('mouseleave',function(){
+        d3.select(this).attr('opacity',0.9).attr('stroke','#fff').attr('stroke-width',0.4);
+        mtt.classList.remove('show');
       });
-    svg.append('path').datum(topojson.mesh(world, world.objects.countries, (a,b) => a !== b)).attr('d',path).attr('fill','none').attr('stroke','#0d2438').attr('stroke-width',0.4);
+    svg.append('path').datum(topojson.mesh(world,world.objects.countries,(a,b)=>a!==b)).attr('d',path).attr('fill','none').attr('stroke','#fff').attr('stroke-width',0.3);
   })
-  .catch(() => { document.getElementById('world-svg-container').innerHTML += '<p style="color:rgba(255,255,255,0.3);padding:20px;font-size:13px;font-family:DM Mono,monospace;">Map requires network access to load.</p>'; });
+  .catch(()=>{mapWrap.innerHTML+='<p style="padding:20px;font-size:13px;color:var(--mid);">Map requires internet to load.</p>';});
 
 /* ===== SPR CHART ===== */
-const canvas = document.getElementById('spr-canvas');
-const ctx = canvas.getContext('2d');
-let state = { n: 1.333, ag: 50, pitch: 320, illum: 'front' };
-function sprLambda(n, pitch, ag, illum) {
-  const base = { 320: 540, 740: 620, 1600: 720 }[pitch] || 540;
-  return base + (n - 1.333) * 800 + (ag - 50) * 0.4 + (illum === 'back' ? -15 : 0);
+const canvas=document.getElementById('spr-canvas');
+const ctx=canvas.getContext('2d');
+let S={n:1.333,ag:50,pitch:1582,illum:'front',sens:394};
+
+function resLambda(){
+  const base={322:650,805:750,1582:850}[S.pitch]||850;
+  return base+(S.n-1.333)*S.sens+(S.ag-50)*0.3+(S.illum==='back'?-20:0);
 }
-function dipD(ag, pitch) {
-  const base = pitch === 320 ? 72 : pitch === 740 ? 60 : 48;
-  return Math.max(20, base - Math.abs(ag - 50) * 0.3);
+function dDepth(){
+  const base={322:70,805:58,1582:52}[S.pitch]||52;
+  return Math.max(15,base-Math.abs(S.ag-50)*0.3)*(S.illum==='back'?0.45:1);
 }
-function sens(pitch) { return { 320: 142, 740: 95, 1600: 62 }[pitch] || 142; }
-function drawSPR() {
-  const w = canvas.width, h = canvas.height;
+function dWidth(){return{322:22,805:38,1582:55}[S.pitch]||22;}
+
+function drawChart(){
+  const w=canvas.width,h=canvas.height;
   ctx.clearRect(0,0,w,h);
-  const lMin = 400, lMax = 900;
-  const res = sprLambda(state.n, state.pitch, state.ag, state.illum);
-  const depth = dipD(state.ag, state.pitch);
-  const dw = state.pitch === 320 ? 28 : state.pitch === 740 ? 38 : 55;
-  const pL = 48, pR = 16, pT = 18, pB = 36;
-  const pw = w - pL - pR, ph = h - pT - pB;
-  const toX = l => pL + (l - lMin) / (lMax - lMin) * pw;
-  const toY = r => pT + (1 - r) * ph;
-  ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1;
-  for (let r = 0; r <= 1; r += 0.2) { ctx.beginPath(); ctx.moveTo(pL,toY(r)); ctx.lineTo(pL+pw,toY(r)); ctx.stroke(); }
-  for (let l = 400; l <= 900; l += 100) { ctx.beginPath(); ctx.moveTo(toX(l),pT); ctx.lineTo(toX(l),pT+ph); ctx.stroke(); }
-  ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.font = '10px DM Mono, monospace'; ctx.textAlign = 'center';
-  for (let l = 400; l <= 900; l += 100) ctx.fillText(l+'nm', toX(l), pT+ph+16);
-  ctx.textAlign = 'right';
-  for (let r = 0; r <= 1; r += 0.2) ctx.fillText(r.toFixed(1), pL-6, toY(r)+4);
-  ctx.fillStyle='rgba(255,255,255,0.12)'; ctx.font='9px DM Mono,monospace'; ctx.textAlign='center';
-  ctx.fillText('Wavelength (nm)', pL + pw/2, h - 2);
-  ctx.save(); ctx.translate(12, pT + ph/2); ctx.rotate(-Math.PI/2);
-  ctx.fillText('Reflectance', 0, 0); ctx.restore();
-  const grad = ctx.createLinearGradient(toX(lMin),0,toX(lMax),0);
-  grad.addColorStop(0,'rgba(126,232,250,0.8)'); grad.addColorStop(0.4,'rgba(0,184,217,0.9)'); grad.addColorStop(1,'rgba(10,126,164,0.8)');
-  ctx.beginPath(); ctx.strokeStyle = grad; ctx.lineWidth = 2.2;
-  let first = true;
-  for (let l = lMin; l <= lMax; l += 2) {
-    let ref = 0.82 + 0.08 * Math.sin((l-400)/500 * Math.PI);
-    const dx = (l - res) / dw;
-    ref -= (depth/100) * Math.exp(-dx*dx*0.5);
-    ref = Math.max(0.02, Math.min(0.99, ref));
-    if (first) { ctx.moveTo(toX(l), toY(ref)); first = false; } else ctx.lineTo(toX(l), toY(ref));
+  ctx.fillStyle='rgba(0,0,0,0.15)';ctx.fillRect(0,0,w,h);
+  const lMin=400,lMax=1000;
+  const res=resLambda(),dep=dDepth(),dw=dWidth();
+  const pL=44,pR=16,pT=16,pB=32,pw=w-pL-pR,ph=h-pT-pB;
+  const toX=l=>pL+(l-lMin)/(lMax-lMin)*pw;
+  const toY=r=>pT+(1-r)*ph;
+
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=1;
+  for(let r=0;r<=1;r+=0.2){ctx.beginPath();ctx.moveTo(pL,toY(r));ctx.lineTo(pL+pw,toY(r));ctx.stroke();}
+  for(let l=400;l<=1000;l+=100){ctx.beginPath();ctx.moveTo(toX(l),pT);ctx.lineTo(toX(l),pT+ph);ctx.stroke();}
+
+  // Axes labels
+  ctx.fillStyle='rgba(110,198,222,0.5)';ctx.font='9px DM Mono,monospace';ctx.textAlign='center';
+  for(let l=400;l<=1000;l+=100)ctx.fillText(l,toX(l),pT+ph+14);
+  ctx.textAlign='right';
+  for(let r=0;r<=1;r+=0.2)ctx.fillText(r.toFixed(1),pL-5,toY(r)+3);
+  ctx.fillStyle='rgba(110,198,222,0.35)';
+  ctx.textAlign='center';ctx.fillText('Wavelength (nm)',pL+pw/2,h-2);
+  ctx.save();ctx.translate(12,pT+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText('Reflectance (Ip/Is)',0,0);ctx.restore();
+
+  // Reference line if n > water
+  if(S.n>1.335){
+    const refR={n:1.333,ag:S.ag,pitch:S.pitch,illum:S.illum,sens:S.sens};
+    const oldN=S.n;S.n=1.333;const resRef=resLambda();S.n=oldN;
+    ctx.strokeStyle='rgba(192,122,32,0.3)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.moveTo(toX(resRef),pT);ctx.lineTo(toX(resRef),pT+ph);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(192,122,32,0.45)';ctx.font='8px DM Mono,monospace';ctx.textAlign='center';
+    ctx.fillText('n=1.333',toX(resRef),pT-3);
+  }
+
+  // SPR curve
+  ctx.beginPath();
+  ctx.strokeStyle=S.illum==='back'?'rgba(110,198,222,0.55)':'rgba(93,195,216,0.9)';
+  ctx.lineWidth=2;
+  let first=true;
+  for(let l=lMin;l<=lMax;l+=2){
+    let ref=0.80+0.06*Math.sin((l-400)/600*Math.PI);
+    const dx=(l-res)/dw;
+    ref-=(dep/100)*Math.exp(-dx*dx*0.5);
+    ref=Math.max(0.02,Math.min(0.99,ref));
+    if(first){ctx.moveTo(toX(l),toY(ref));first=false;}
+    else ctx.lineTo(toX(l),toY(ref));
   }
   ctx.stroke();
-  ctx.strokeStyle = 'rgba(200,146,42,0.7)'; ctx.lineWidth = 1; ctx.setLineDash([3,4]);
-  ctx.beginPath(); ctx.moveTo(toX(res),pT); ctx.lineTo(toX(res),pT+ph); ctx.stroke();
+
+  // Resonance marker
+  ctx.strokeStyle='rgba(93,195,216,0.5)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(toX(res),pT);ctx.lineTo(toX(res),pT+ph);ctx.stroke();
   ctx.setLineDash([]);
-  ctx.fillStyle = 'rgba(200,146,42,0.9)'; ctx.font = 'bold 10px DM Mono, monospace'; ctx.textAlign = 'center';
-  ctx.fillText('λ=' + Math.round(res) + 'nm', toX(res), pT - 4);
-  document.getElementById('stat-lambda').innerHTML = Math.round(res) + '<span> nm</span>';
-  document.getElementById('stat-depth').innerHTML = Math.round(depth) + '<span> %</span>';
-  document.getElementById('stat-sens').innerHTML = sens(state.pitch) + '<span> nm/RIU</span>';
+  ctx.fillStyle='rgba(93,195,216,0.8)';ctx.font='bold 9px DM Mono,monospace';ctx.textAlign='center';
+  ctx.fillText('lambda='+Math.round(res)+'nm',toX(res),pT-3);
+
+  document.getElementById('stat-lam').innerHTML=Math.round(res)+'<span> nm</span>';
+  document.getElementById('stat-dep').innerHTML=Math.round(dep)+'<span> %</span>';
+  document.getElementById('stat-s').innerHTML=S.sens+'<span> nm/RIU</span>';
 }
-document.getElementById('n-slider').addEventListener('input', e => {
-  state.n = parseInt(e.target.value) / 1000;
-  document.getElementById('n-display').innerHTML = state.n.toFixed(3) + '<span> n</span>';
-  drawSPR();
+
+document.getElementById('n-sl').addEventListener('input',e=>{
+  S.n=parseInt(e.target.value)/1000;
+  document.getElementById('n-disp').innerHTML=S.n.toFixed(3)+'<span> RIU</span>';
+  drawChart();
 });
-document.getElementById('ag-slider').addEventListener('input', e => {
-  state.ag = parseInt(e.target.value);
-  document.getElementById('ag-display').innerHTML = state.ag + '<span> nm</span>';
-  drawSPR();
+document.getElementById('ag-sl').addEventListener('input',e=>{
+  S.ag=parseInt(e.target.value);
+  document.getElementById('ag-disp').innerHTML=S.ag+'<span> nm</span>';
+  drawChart();
 });
-document.querySelectorAll('.disc-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.disc-btn').forEach(b => b.classList.remove('active'));
+document.querySelectorAll('.disc-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.disc-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    state.pitch = parseInt(btn.dataset.pitch);
-    drawSPR();
+    S.pitch=parseInt(btn.dataset.pitch);
+    S.sens=parseInt(btn.dataset.sens);
+    drawChart();
   });
 });
-document.querySelectorAll('.illum-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.illum-btn').forEach(b => b.classList.remove('active'));
+document.querySelectorAll('.illum-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.illum-btn').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    state.illum = btn.dataset.illum;
-    drawSPR();
+    S.illum=btn.dataset.illum;
+    drawChart();
   });
 });
-drawSPR();
+drawChart();
+
+/* ===== SPR LEARN TABS ===== */
+document.querySelectorAll('.sl-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.sl-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.spr-learn-content').forEach(c=>c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+  });
+});
+
+/* ===== ANALOGY TABS ===== */
+document.querySelectorAll('.atab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.atab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.analogy-content').forEach(c=>c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('ac-'+tab.dataset.ac).classList.add('active');
+  });
+});
+
+/* ===== SENSITIVITY BARS ===== */
+function animBars(){
+  setTimeout(()=>{document.getElementById('sbar-cdr').style.width='100%';},100);
+  setTimeout(()=>{document.getElementById('sbar-bdr').style.width=(321/394*100)+'%';},250);
+  setTimeout(()=>{document.getElementById('sbar-dvdr').style.width=(290/394*100)+'%';},400);
+}
+function animCostBars(){
+  setTimeout(()=>{document.getElementById('bar-lab').style.width='100%';},100);
+  setTimeout(()=>{document.getElementById('bar-hplc').style.width='40%';},250);
+  setTimeout(()=>{document.getElementById('bar-disc').style.width='1%';},400);
+}
 
 /* ===== SCROLL REVEAL ===== */
-const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }); }, { threshold: 0.08 });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('in');
+    }
+  });
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+const barsEl=document.querySelector('.sens-chart');
+if(barsEl){
+  const bo=new IntersectionObserver(es=>{if(es[0].isIntersecting)animBars();},{threshold:0.2});
+  bo.observe(barsEl);
+}
+const costEl=document.querySelector('.cost-compare');
+if(costEl){
+  const co=new IntersectionObserver(es=>{if(es[0].isIntersecting)animCostBars();},{threshold:0.2});
+  co.observe(costEl);
+}
+
+/* ===== LIGHTBOX ===== */
+function openLb(gphoto){
+  const img=gphoto.querySelector('img');
+  if(!img)return;
+  const cap=gphoto.querySelector('.gphoto-cap strong');
+  const sub=gphoto.querySelector('.gphoto-cap span');
+  document.getElementById('lb-img').src=img.src;
+  document.getElementById('lb-cap').textContent=(cap?cap.textContent:'')+(sub?' -- '+sub.textContent:'');
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLb(){document.getElementById('lightbox').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb();});
 </script>
 </body>
 </html>
